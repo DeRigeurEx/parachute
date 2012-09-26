@@ -93,6 +93,11 @@ public class EntityParachute extends Entity {
 	public double getMountedYOffset() {
 		return -2.5D;
 	}
+	
+	public void destroyParachute() {
+		setDead();
+		ItemParachute.deployed = false;
+	}
 
 	// parachute takes additional damage from being hit
 	public boolean attackEntityFrom(DamageSource damagesource, int damage) {
@@ -109,7 +114,7 @@ public class EntityParachute extends Entity {
 				// drop a parachute item
 				//dropItemWithOffset(Parachute.getItemID() + 256, 1, 0.0F);
 				dropRemains();
-				setDead(); // aaaaiiiiieeeeee!!! ... thud!
+				destroyParachute(); // aaaaiiiiieeeeee!!! ... thud!
 			}
 		}
 		return true;
@@ -184,7 +189,7 @@ public class EntityParachute extends Entity {
 		if (riddenByEntity == null) {
 			if (!worldObj.isRemote) {
 				dropRemains();
-				setDead();
+				destroyParachute();
 			}
 			return;
 		}
@@ -307,7 +312,7 @@ public class EntityParachute extends Entity {
 					riddenByEntity = null;
 					if (!worldObj.isRemote) {
 						dropRemains();
-						setDead();
+						destroyParachute();
 					}
 				}
 			}
@@ -360,7 +365,7 @@ public class EntityParachute extends Entity {
 				riddenByEntity.fallDistance = 0.0F;
 				riddenByEntity.mountEntity(this);
 				if (!worldObj.isRemote) {
-					setDead();
+					destroyParachute();
 				} else {
 					riddenByEntity = null;
 				}

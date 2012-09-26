@@ -40,11 +40,16 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 		try {
 			type = dis.readByte();
 			EntityPlayer player = (EntityPlayer)p;
+			if (player == null) {
+				return;
+			}
 			
 			if (type == KeyPress) {
 				PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
-				if (pi == null)
+				if (pi == null) {
 					return;
+				}
+					
 				
 				keyCode = dis.readByte();
 				pressed = dis.readBoolean();

@@ -24,12 +24,16 @@ public class ParachuteKeyHandler extends KeyHandler {
 
     @Override
     public void keyDown(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd, boolean isRepeat) {
-		ParachutePacketHandler.sendKeyPress(kb.keyCode, true);
+    	if (ItemParachute.deployed) {
+    		ParachutePacketHandler.sendKeyPress(kb.keyCode, true);
+    	}
     }
 
     @Override
     public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) {
-		ParachutePacketHandler.sendKeyPress(kb.keyCode, false);
+    	if (ItemParachute.deployed) {
+    		ParachutePacketHandler.sendKeyPress(kb.keyCode, false);
+    	}
     }
 
     @Override

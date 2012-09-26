@@ -10,6 +10,8 @@ import net.minecraft.src.*;
 //
 
 public class ItemParachute extends Item {
+	static public boolean deployed = false;
+	
 	public ItemParachute(int i, EnumToolMaterial enumtoolmaterial) {
 		super(i);
 		maxStackSize = 16;
@@ -57,6 +59,8 @@ public class ItemParachute extends Item {
 		if (!entityplayer.capabilities.isCreativeMode) {
 			itemstack.damageItem(2, entityplayer);
 		}
+		
+		deployed = true;
 
 		return itemstack;
 	}

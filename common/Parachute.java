@@ -54,8 +54,8 @@ public class Parachute
 	public final Properties props = new Properties();
 
 	@SidedProxy (
-		clientSide = "Parachute.client.ClientProxyParachute",
-		serverSide = "Parachute.common.CommonProxyParachute"
+		clientSide = "parachute.client.ClientProxyParachute",
+		serverSide = "parachute.common.CommonProxyParachute"
 	)
 	public static CommonProxyParachute proxy;
 
