@@ -1,8 +1,8 @@
 #!/bin/bash
 
-MCCLIENTDIR="/home/mike/minecraft-1.3.2-fml-251/mods"
-MCSERVERDIR="/home/mike/mc-server-fml-251/mods"
-JARDIR="/home/mike/miscellaneous/mymods/jars"
+MCCLIENTDIR="$HOME/minecraft-1.3.2-fml-251/mods"
+MCSERVERDIR="$HOME/mc-server-fml-251/mods"
+JARDIR="$HOME/projects/parachute-src-1.3.2"
 JAR="parachute-1.3.2-fml-251.jar"
 
 cp -f "$JARDIR/$JAR" $MCCLIENTDIR

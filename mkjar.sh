@@ -31,7 +31,7 @@ echo "> copying files"
 REOBF="reobf/minecraft/"
 cd $REOBF
 
-PDIR="/home/mike/projects/parachute-src-1.3.2"
+PDIR="$HOME/projects/parachute-src-1.3.2"
 
 rm -f $PDIR/parachute/common/*.class
 rm -f $PDIR/parachute/client/*.class
