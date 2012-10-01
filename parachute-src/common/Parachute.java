@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import parachute.common.EntityParachute;
 import net.minecraft.src.*;
+import net.minecraftforge.common.ForgeVersion;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.PreInit;
@@ -28,6 +29,7 @@ import cpw.mods.fml.common.SidedProxy;
 interface ModInfo {
 	public final static String version = "1.3.2";
 	public final static String channel = "Parachute";
+	public final static String FMLVersion = "4.1.1.251";
 }
 
 @Mod (
@@ -70,6 +72,7 @@ public class Parachute
 	
 	@PreInit
     public void preLoad(FMLPreInitializationEvent event) {
+		checkFMLVersion();
 		File configFile = event.getSuggestedConfigurationFile();
 		try {
 			init(configFile);
@@ -96,6 +99,21 @@ public class Parachute
 	
 	public String getVersion() {
 		return ModInfo.version;
+	}
+	
+	public void checkFMLVersion() {
+		String runningVersion = ForgeVersion.getVersion();
+		if (!compareVersions()) {
+			System.err.println("WARNING: The parachute mod was built with ForgeModLoader version " + ModInfo.FMLVersion +
+					" and may not work correctly with ForgeModLoader version " + runningVersion);
+		} else {
+			System.err.println("INFO: FMLVersion requirements for the parachute mod have been satisfied.");
+		}
+	}
+	
+	public boolean compareVersions() {
+		return (ForgeVersion.getMajorVersion() == 4 && ForgeVersion.getMinorVersion() == 1 &&
+				 ForgeVersion.getRevisionVersion() == 1 && ForgeVersion.getBuildVersion() == 251); 
 	}
 
 	public void loadConfig(File cfgFile) throws IOException {
