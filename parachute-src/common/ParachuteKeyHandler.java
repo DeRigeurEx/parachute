@@ -12,7 +12,7 @@ import cpw.mods.fml.common.TickType;
 public class ParachuteKeyHandler extends KeyHandler {
 	static KeyBinding ascendBinding = new KeyBinding("Parachute Ascend", Keyboard.KEY_C);
 	static KeyBinding descendBinding = new KeyBinding("Parachute Descend", Keyboard.KEY_X);
-
+	
     public ParachuteKeyHandler() {
         super(new KeyBinding[] {ascendBinding, descendBinding}, new boolean[] {true, true});
     }

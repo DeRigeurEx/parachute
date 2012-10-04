@@ -13,7 +13,7 @@ public class PlayerInfo
         networkManager = nm;
     }
     
-    public void switchLiftMode(int m) {
+    public void setLiftMode(int m) {
     	mode = m;
     }
 }

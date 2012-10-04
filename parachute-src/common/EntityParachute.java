@@ -296,8 +296,7 @@ public class EntityParachute extends Entity {
 			setRotation(rotationYaw, rotationPitch);
 
 			if (!worldObj.isRemote) {
-				List list = worldObj.getEntitiesWithinAABBExcludingEntity(this,
-						boundingBox.expand(0.2D, 0.0D, 0.2D));
+				List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.2D, 0.0D, 0.2D));
 				if (list != null && list.size() > 0) {
 					for (int k = 0; k < list.size(); k++) {
 						Entity entity = (Entity) list.get(k);
@@ -355,7 +354,6 @@ public class EntityParachute extends Entity {
 		
 		return descentRate;
 	}
-	
 	
 	protected boolean checkShouldDropChute(double x, double y, double z, double distance) {
 		boolean shouldDrop = false;

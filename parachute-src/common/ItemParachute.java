@@ -16,14 +16,14 @@ public class ItemParachute extends Item {
 		super(i);
 		maxStackSize = 16;
 		setMaxDamage(enumtoolmaterial.getMaxUses()); // this damage is for number of uses only
-		setTabToDisplayOn(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
+		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 	}
 
 	public ItemParachute(int i) {
 		super(i);
 		maxStackSize = 16;
 		setMaxDamage(EnumToolMaterial.WOOD.getMaxUses()); // this damage is for number of uses only
-		setTabToDisplayOn(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
+		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 	}
 
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {

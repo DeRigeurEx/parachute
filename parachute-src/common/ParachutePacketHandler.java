@@ -50,22 +50,21 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 					return;
 				}
 					
-				
 				keyCode = dis.readByte();
 				pressed = dis.readBoolean();
 				if (keyCode == KEY_ASCEND) {
 					if (pressed) {
-						pi.switchLiftMode(1); // ascend
+						pi.setLiftMode(1); // ascend
 					} else {
-						pi.switchLiftMode(0); // drift
+						pi.setLiftMode(0); // drift
 					}
 				}
 				
 				if (keyCode == KEY_DESCEND) {
 					if (pressed) {
-						pi.switchLiftMode(2); // descend
+						pi.setLiftMode(2); // descend
 					} else {
-						pi.switchLiftMode(0); // drift
+						pi.setLiftMode(0); // drift
 					}
 				}
 			}
