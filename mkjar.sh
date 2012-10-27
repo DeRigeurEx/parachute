@@ -1,24 +1,27 @@
 #!/bin/bash
 
-echo "== Creating jars =="
+echo "== Creating jar =="
+
+MCVER=1.4.2
+FMLVER=337
 
 DATE=`date +%Y%m%d`
 
 MCMODDATA="
 [\n
 {\n
-  \"modid\": \"ReptileMod\",\n
-  \"name\": \"Reptile Mod\",\n
-  \"description\": \"Reptile mod adds monitor lizards, turtles, iguanas, chameleons, and crocodiles. Komodo Dragons! Man-eating Crocodiles! And cute little turtles.\",\n
+  \"modid\": \"ParachuteMod\",\n
+  \"name\": \"Parachute Mod\",\n
+  \"description\": \"Adds a Parachute to the game. Jump off cliffs! Base Jumping!! Soar to new heights!\",\n
   \"version\": \"$DATE\",\n
-  \"mcversion\": \"1.3.2\",\n
-  \"url\": \"http://www.minecraftforum.net/topic/585469-132modloader-crackedeggs-mods-reptiles-parachute-updated-08272012/\",\n
+  \"mcversion\": \"$MCVER\",\n
+  \"url\": \"http://www.minecraftforum.net/topic/585469-132fmlsplanmp-crackedeggs-mods-reptiles-parachute-updated-09272012/\",\n
   \"updateUrl\": \"\",\n
   \"authors\": [\n
     \"crackedEgg\"\n
   ],\n
   \"credits\": \"Authored by crackedEgg\",\n
-  \"logoFile\": \"/logo/reptileLogo.png\",\n
+  \"logoFile\": \"/textures/chuteLogo.png\",\n
   \"screenshots\": [],\n
   \"parent\": \"\",\n
   \"dependencies\": []\n
@@ -30,22 +33,22 @@ echo "> copying files"
 REOBF="reobf/minecraft/"
 cd $REOBF
 
-RDIR="$HOME/projects/reptiles-src-1.3.2"
+PDIR="$HOME/projects/parachute-src-1.4.x"
 
-rm -f $RDIR/reptiles/common/*.class
-rm -f $RDIR/reptiles/client/*.class
+rm -f $PDIR/parachute/common/*.class
+rm -f $PDIR/parachute/client/*.class
 
-cp -R reptiles/ $RDIR
-echo -e $MCMODDATA > $RDIR/mcmod.info
+cp -R parachute/ $PDIR
+echo -e $MCMODDATA > $PDIR/mcmod.info
 
 echo "> making mod jar file"
 
-cd $RDIR
+cd $PDIR
 
-JAR="reptiles-1.3.2-fml-298.jar"
-
+JAR="parachute-$MCVER-fml-$FMLVER.jar"
 rm -f $JAR
-jar -cf $JAR reptiles/  mcmod.info mob/ sound/ logo/
+
+jar -cf $JAR parachute/ mcmod.info textures/
 
 echo " - Mod build complete"
 

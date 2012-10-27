@@ -27,9 +27,9 @@ import cpw.mods.fml.common.SidedProxy;
 
 // mod info, version
 interface ModInfo {
-	public final static String version = "1.3.2";
+	public final static String version = "1.4.2";
 	public final static String channel = "Parachute";
-	public final static String FMLVersion = "4.1.4.298";
+//	public final static String FMLVersion = "4.1.4.298";
 }
 
 @Mod (

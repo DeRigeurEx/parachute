@@ -12,7 +12,7 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.NetHandler;
 import net.minecraft.src.NetLoginHandler;
 import net.minecraft.src.NetServerHandler;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.Packet1Login;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.World;
@@ -31,7 +31,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 	
 	@Override
 	// server handles key press custom packets from the player
-	public void onPacketData(NetworkManager manager, Packet250CustomPayload packet, Player p) {
+	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player p) {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet.data));
 		byte keyCode = 0;
 		boolean pressed;
@@ -102,27 +102,27 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 	}
 
 	@Override
-	public void playerLoggedIn(Player p, NetHandler netHandler, NetworkManager manager) {
+	public void playerLoggedIn(Player p, NetHandler netHandler, INetworkManager manager) {
 		PlayerManagerParachute.getInstance().Players.add(new PlayerInfo(((EntityPlayer)p).username, manager));
 	}
 
 	@Override
-	public String connectionReceived(NetLoginHandler netHandler, NetworkManager manager) {
+	public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager) {
 		return null;
 	}
 
 	@Override
-	public void connectionOpened(NetHandler netClientHandler, String server, int port, NetworkManager manager) {
+	public void connectionOpened(NetHandler netClientHandler, String server, int port, INetworkManager manager) {
 		
 	}
 
 	@Override
-	public void connectionOpened(NetHandler netClientHandler, MinecraftServer server, NetworkManager manager) {
+	public void connectionOpened(NetHandler netClientHandler, MinecraftServer server, INetworkManager manager) {
 		
 	}
 
 	@Override
-	public void connectionClosed(NetworkManager manager) {
+	public void connectionClosed(INetworkManager manager) {
 		PlayerInfo PI = new PlayerInfo("", manager);
 		for(int i = 0; i < PlayerManagerParachute.getInstance().Players.size() && PI != null; i++) {
 			if(PlayerManagerParachute.getInstance().Players.get(i).networkManager == manager) {
@@ -132,7 +132,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 	}
 
 	@Override
-	public void clientLoggedIn(NetHandler clientHandler, NetworkManager manager, Packet1Login login) {
+	public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login) {
 		PlayerManagerParachute.getInstance().Players.add(new PlayerInfo(clientHandler.getPlayer().username, manager));
 	}
 
