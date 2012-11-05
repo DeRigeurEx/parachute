@@ -1,5 +1,6 @@
 package parachute.common;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 
 import org.lwjgl.opengl.GL11;
@@ -101,7 +102,10 @@ public class RenderParachute extends Render {
 
 	public void renderCords(EntityPlayer rider, float center) {
 		float x = -5.0F;
-		float y = (float) (rider.prevPosY + (rider.posY - rider.prevPosY) * (double) center) * 0.0125F + 0.75F;
+		float y = 2.0F;
+		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+			y = 1.25F; //(float) (rider.prevPosY + (rider.posY - rider.prevPosY) * (double) center) * 0.0125F + 0.75F;
+		}
 		float z = 0.0F;
 
 		float b = rider.getBrightness(center);
