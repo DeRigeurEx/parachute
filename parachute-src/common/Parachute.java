@@ -27,7 +27,7 @@ import cpw.mods.fml.common.SidedProxy;
 
 // mod info, version
 interface ModInfo {
-	public final static String version = "1.4.2";
+	public final static String version = "1.4.4";
 	public final static String channel = "Parachute";
 //	public final static String FMLVersion = "4.1.4.298";
 }
@@ -135,7 +135,7 @@ public class Parachute
 	public void saveConfig(File cfgFile) throws IOException {
 		String comments = " Parachute Mod Config\n"
 				+ " Michael Sheppard (crackedEgg)\n\n"
-				+ " itemID=2011 is the default\n"
+				+ " itemID=2500 is the default\n"
 				+ " heightLimit=0 disables altitude limiting\n"
 				+ " thermals - enable|disable space key thermals\n\n"
 				+ " Color index numbers:\n" + " random     - -1\n"
@@ -215,7 +215,7 @@ public class Parachute
 	protected void initDefaults() {
 		heightLimit = 225;
 		chuteColor = -1;
-		itemID = 2011;
+		itemID = 2500;
 		thermals = true;
 	}
 
