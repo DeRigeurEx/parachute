@@ -2,8 +2,8 @@
 
 echo "== Creating jar =="
 
-MCVER=1.4.2
-FMLVER=337
+MCVER=1.4.5
+FMLVER=381
 
 DATE=`date +%Y%m%d`
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-MCVER=1.4.2
-FMLVER=337
+MCVER=1.4.5
+FMLVER=381
 MCCLIENTDIR="$HOME/minecraft-$MCVER-fml-$FMLVER/mods"
 MCSERVERDIR="$HOME/mc-server-fml-$FMLVER/mods"
 JARDIR="$HOME/projects/parachute-src-1.4.x"
