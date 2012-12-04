@@ -7,6 +7,7 @@ import parachute.common.RenderParachute;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.Packet;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;

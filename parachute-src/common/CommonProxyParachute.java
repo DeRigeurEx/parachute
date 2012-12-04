@@ -1,6 +1,8 @@
 package parachute.common;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.registry.TickRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.Packet;
 
@@ -11,6 +13,10 @@ public class CommonProxyParachute
 	public void registerRenderer() {}
 	
 	public void registerKeyHandler() {}
+	
+	public void registerServerTickHandler() {
+		TickRegistry.registerTickHandler(new ServerTickHandler(), Side.SERVER);
+	}
 	
 	public void sendCustomPacket(Packet packet) {
 		try {

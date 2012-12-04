@@ -16,4 +16,5 @@ public class PlayerInfo
     public void setLiftMode(int m) {
     	mode = m;
     }
+    
 }

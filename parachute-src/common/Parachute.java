@@ -50,6 +50,7 @@ public class Parachute
 	private int heightLimit;
 	private int chuteColor;
 	private boolean thermals;
+	private boolean autoDeploy;
 	private static int itemID;
 	private int entityID = EntityRegistry.findGlobalUniqueEntityId();
 	public final Properties props = new Properties();
@@ -79,7 +80,8 @@ public class Parachute
 		}
 		proxy.registerRenderTextures();
 		proxy.registerRenderer();
-		proxy.registerKeyHandler();
+		proxy.registerKeyHandler(); // for keyboard control of parachute
+		proxy.registerServerTickHandler(); // for auto deployment feature
     }
 
 	@Init
@@ -120,7 +122,8 @@ public class Parachute
 				+ " Michael Sheppard (crackedEgg)\n\n"
 				+ " itemID=2500 is the default\n"
 				+ " heightLimit=0 disables altitude limiting\n"
-				+ " thermals - enable|disable space key thermals\n\n"
+				+ " thermals - enable|disable thermals\n"
+				+ " autoDeploy - enable|disable auto parachute deployment\n\n"
 				+ " Color index numbers:\n" + " random     - -1\n"
 				+ " black      -  0\n" + " red        -  1\n"
 				+ " green      -  2\n" + " brown      -  3\n"
@@ -163,6 +166,10 @@ public class Parachute
 			if (props.containsKey("allowThermals")) {
 				thermals = Boolean.parseBoolean(props.getProperty("allowThermals"));
 			}
+			
+			if (props.containsKey("autoDeploy")) {
+				autoDeploy = Boolean.parseBoolean(props.getProperty("autoDeploy"));
+			}
 
 			if (props.containsKey("itemID")) {
 				itemID = Integer.parseInt(props.getProperty("itemID"));
@@ -171,6 +178,8 @@ public class Parachute
 			props.setProperty("heightLimit", Integer.toString(heightLimit));
 
 			props.setProperty("allowThermals", Boolean.toString(thermals));
+			
+			props.setProperty("autoDeploy", Boolean.toString(autoDeploy));
 
 			props.setProperty("chuteColor", Integer.toString(chuteColor));
 
@@ -191,6 +200,10 @@ public class Parachute
 		return thermals;
 	}
 	
+	public boolean getAutoDeploy() {
+		return autoDeploy;
+	}
+	
 	public int getChuteColor() {
 		return chuteColor;
 	}
@@ -200,6 +213,7 @@ public class Parachute
 		chuteColor = -1;
 		itemID = 2500;
 		thermals = true;
+		autoDeploy = false;
 	}
 
 	public static int getItemID() {
