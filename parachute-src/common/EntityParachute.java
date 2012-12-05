@@ -96,7 +96,7 @@ public class EntityParachute extends Entity {
 	
 	public void destroyParachute() {
 		setDead();
-		ItemParachute.deployed = false;
+//		ItemParachute.deployed = false;
 	}
 
 	// parachute takes additional damage from being hit

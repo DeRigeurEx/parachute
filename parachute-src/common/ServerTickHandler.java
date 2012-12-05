@@ -7,6 +7,7 @@ import java.util.Random;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.Packet15Place;
 import net.minecraft.src.World;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -14,31 +15,30 @@ import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
 public class ServerTickHandler implements ITickHandler {
+	private final int maxFallDistance = 5;
 
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData) {
 		if (type.equals(EnumSet.of(TickType.PLAYER))) {
-	         onPlayerTick((EntityPlayer)tickData[0]);
-	     }
+			onPlayerTick((EntityPlayer)tickData[0]);
+		}
 	}
 	
-	// set a fallDistance greater than 2 to offset the unmount falling distance
+	// set a fallDistance greater than maxFallDistance to offset the unmount falling distance
+	// and call ItemParachute.deployParachute if the player is falling
 	private void onPlayerTick(EntityPlayer player) {
-		if (player.fallDistance > 2 && !player.onGround && !player.isOnLadder()) {
-			autoDeployParachute(player.worldObj, player);
-		}
-	}
-	
-	// if a parachute is found in the inventory then deploy it automagically
-	public void autoDeployParachute(World world, EntityPlayer player) {
-//		ItemStack itemstack = player.inventory.getCurrentItem();
-//		if (itemstack.getItem() instanceof ItemParachute) {
-		ItemStack itemstack = inventoryContainsParachute(player.inventory);
-		if (itemstack != null) {
-			ItemParachute chute = (ItemParachute)itemstack.getItem();
-			chute.autoDeployParachute(itemstack, world, player);
-		}
-		// else fall to death!
+//		PlayerInfo pInfo = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
+//		if (pInfo == null) {
+//			return;
+//		}
+//		boolean auto = pInfo.autoDeploy;
+		boolean auto = Parachute.instance.getAutoDeploy();
+		if (auto && player.fallDistance > maxFallDistance && !player.onGround && !player.isOnLadder()) {
+			ItemStack itemstack = inventoryContainsParachute(player.inventory);
+			if (itemstack != null) {
+				((ItemParachute)itemstack.getItem()).deployParachute(itemstack, player.worldObj, player);
+			}
+		} // else fall to death!
 	}
 	
 	// search inventory for a parachute

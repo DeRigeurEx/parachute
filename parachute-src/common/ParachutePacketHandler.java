@@ -26,8 +26,9 @@ import cpw.mods.fml.common.network.Player;
 public class ParachutePacketHandler implements IPacketHandler, IConnectionHandler {
 	
 	public static final byte KeyPress = 0;
-	private static final int KEY_ASCEND = 46; // Keyboard.KEY_C
+//	private static final int KEY_AUTO = 44; // Keyboard.KEY_Z
 	private static final int KEY_DESCEND = 45; // Keyboard.KEY_X
+	private static final int KEY_ASCEND = 46; // Keyboard.KEY_C
 	
 	@Override
 	// server handles key press custom packets from the player
@@ -67,6 +68,12 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 						pi.setLiftMode(0); // drift
 					}
 				}
+				
+//				if (keyCode == KEY_AUTO) {
+//					if (pressed) {
+//						pi.toggleAutoDeploy();
+//					}
+//				}
 			}
 		} catch (IOException e) {
 			return;

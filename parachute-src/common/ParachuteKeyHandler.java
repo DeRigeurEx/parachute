@@ -12,9 +12,10 @@ import cpw.mods.fml.common.TickType;
 public class ParachuteKeyHandler extends KeyHandler {
 	static KeyBinding ascendBinding = new KeyBinding("Parachute Ascend", Keyboard.KEY_C);
 	static KeyBinding descendBinding = new KeyBinding("Parachute Descend", Keyboard.KEY_X);
+//	static KeyBinding autoBinding = new KeyBinding("Parachute Auto", Keyboard.KEY_Z);
 	
     public ParachuteKeyHandler() {
-        super(new KeyBinding[] {ascendBinding, descendBinding}, new boolean[] {true, true});
+        super(new KeyBinding[] {ascendBinding, descendBinding/*, autoBinding*/}, new boolean[] {true, true/*, false*/});
     }
 
     @Override
@@ -24,16 +25,20 @@ public class ParachuteKeyHandler extends KeyHandler {
 
     @Override
     public void keyDown(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd, boolean isRepeat) {
-    	if (ItemParachute.deployed) {
+//    	if (ItemParachute.deployed) {
     		ParachutePacketHandler.sendKeyPress(kb.keyCode, true);
-    	}
+//    	}
     }
 
     @Override
     public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) {
-    	if (ItemParachute.deployed) {
+//    	if (kb.keyCode == Keyboard.KEY_Z) {
+//    		ParachutePacketHandler.sendKeyPress(kb.keyCode, true);
+//    		return;
+//    	}
+//    	if (ItemParachute.deployed) {
     		ParachutePacketHandler.sendKeyPress(kb.keyCode, false);
-    	}
+//    	}
     }
 
     @Override
