@@ -177,6 +177,12 @@ public class Parachute
 			
 			if (props.containsKey("fallDistance")) {
 				fallDistance = Integer.parseInt(props.getProperty("fallDistance"));
+				if (fallDistance < 2) {
+					fallDistance = 2;
+				}
+				if (fallDistance > 20) {
+					fallDistance = 20;
+				}
 			}
 
 			if (props.containsKey("itemID")) {

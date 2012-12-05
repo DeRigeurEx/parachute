@@ -15,8 +15,6 @@ import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
 public class ServerTickHandler implements ITickHandler {
-//	private final int maxFallDistance = 5;
-
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData) {
 		if (type.equals(EnumSet.of(TickType.PLAYER))) {
