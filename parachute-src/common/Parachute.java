@@ -51,6 +51,7 @@ public class Parachute
 	private int chuteColor;
 	private boolean thermals;
 	private boolean autoDeploy;
+	private int fallDistance;
 	private static int itemID;
 	private int entityID = EntityRegistry.findGlobalUniqueEntityId();
 	public final Properties props = new Properties();
@@ -95,6 +96,7 @@ public class Parachute
 
 		LanguageRegistry.addName(parachuteItem, "Parachute");
 		NetworkRegistry.instance().registerConnectionHandler(new ParachutePacketHandler());
+//		NetworkRegistry.instance().registerGuiHandler(this, GuiParachute);
 	}
 	
 	public String getVersion() {
@@ -124,6 +126,7 @@ public class Parachute
 				+ " heightLimit=0 disables altitude limiting\n"
 				+ " thermals - enable|disable thermals\n"
 				+ " autoDeploy - enable|disable auto parachute deployment\n"
+				+ " fallDistance - maximum falling distance before auto deploy\n"
 				+ "\n"
 				+ " Color index numbers:\n" + " random     - -1\n"
 				+ " black      -  0\n" + " red        -  1\n"
@@ -171,6 +174,10 @@ public class Parachute
 			if (props.containsKey("autoDeploy")) {
 				autoDeploy = Boolean.parseBoolean(props.getProperty("autoDeploy"));
 			}
+			
+			if (props.containsKey("fallDistance")) {
+				fallDistance = Integer.parseInt(props.getProperty("fallDistance"));
+			}
 
 			if (props.containsKey("itemID")) {
 				itemID = Integer.parseInt(props.getProperty("itemID"));
@@ -181,6 +188,8 @@ public class Parachute
 			props.setProperty("allowThermals", Boolean.toString(thermals));
 			
 			props.setProperty("autoDeploy", Boolean.toString(autoDeploy));
+			
+			props.setProperty("fallDistance", Integer.toString(fallDistance));
 
 			props.setProperty("chuteColor", Integer.toString(chuteColor));
 
@@ -208,6 +217,10 @@ public class Parachute
 	public int getChuteColor() {
 		return chuteColor;
 	}
+	
+	public int getFallDistance() {
+		return fallDistance;
+	}
 
 	protected void initDefaults() {
 		heightLimit = 225;
@@ -215,6 +228,7 @@ public class Parachute
 		itemID = 2500;
 		thermals = true;
 		autoDeploy = false;
+		fallDistance = 5;
 	}
 
 	public static int getItemID() {

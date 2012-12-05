@@ -15,7 +15,7 @@ import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
 public class ServerTickHandler implements ITickHandler {
-	private final int maxFallDistance = 5;
+//	private final int maxFallDistance = 5;
 
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData) {
@@ -33,6 +33,7 @@ public class ServerTickHandler implements ITickHandler {
 //		}
 //		boolean auto = pInfo.autoDeploy;
 		boolean auto = Parachute.instance.getAutoDeploy();
+		int maxFallDistance = Parachute.instance.getFallDistance();
 		if (auto && player.fallDistance > maxFallDistance && !player.onGround && !player.isOnLadder()) {
 			ItemStack itemstack = inventoryContainsParachute(player.inventory);
 			if (itemstack != null) {
