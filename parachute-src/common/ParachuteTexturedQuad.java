@@ -1,6 +1,8 @@
 package parachute.common;
 
-import net.minecraft.src.*;
+import net.minecraft.client.model.PositionTextureVertex;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.Vec3;
 
 
 public class ParachuteTexturedQuad

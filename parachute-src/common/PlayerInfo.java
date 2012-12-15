@@ -1,6 +1,7 @@
 package parachute.common;
 
-import net.minecraft.src.INetworkManager;
+import net.minecraft.network.INetworkManager;
+
 
 public class PlayerInfo
 {

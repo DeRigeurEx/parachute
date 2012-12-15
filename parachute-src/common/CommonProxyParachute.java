@@ -2,11 +2,12 @@ package parachute.common;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.TickRegistry;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.Packet;
 
-public class CommonProxyParachute
+public class CommonProxyParachute// implements IGuiHandler
 {
 	public void registerRenderTextures() {}
 	
@@ -29,5 +30,18 @@ public class CommonProxyParachute
 			return;
 		}
     }
-	
+
+//	@Override
+//	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+//		// TODO add container code here
+//		System.out.println("getServerGuiElement");
+//		return null;
+//	}
+//
+//	@Override
+//	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+//		// TODO Auto-generated method stub
+//		System.out.println("getClientGuiElement");
+//		return null;
+//	}
 }

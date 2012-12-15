@@ -3,7 +3,8 @@ package parachute.common;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayer;
+
 
 public class PlayerManagerParachute
 {

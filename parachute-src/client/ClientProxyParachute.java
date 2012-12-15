@@ -4,8 +4,6 @@ import parachute.common.CommonProxyParachute;
 import parachute.common.EntityParachute;
 import parachute.common.ParachuteKeyHandler;
 import parachute.common.RenderParachute;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.Packet;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;

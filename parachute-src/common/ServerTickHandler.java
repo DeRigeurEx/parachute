@@ -4,11 +4,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.InventoryPlayer;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Packet15Place;
-import net.minecraft.src.World;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ITickHandler;
@@ -25,17 +24,13 @@ public class ServerTickHandler implements ITickHandler {
 	// set a fallDistance greater than maxFallDistance to offset the unmount falling distance
 	// and call ItemParachute.deployParachute if the player is falling
 	private void onPlayerTick(EntityPlayer player) {
-//		PlayerInfo pInfo = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
-//		if (pInfo == null) {
-//			return;
-//		}
-//		boolean auto = pInfo.autoDeploy;
-		boolean auto = Parachute.instance.getAutoDeploy();
+		World world = player.worldObj;
+		boolean auto = (Parachute.instance.getAutoDeploy() && !player.capabilities.isCreativeMode);
 		int maxFallDistance = Parachute.instance.getFallDistance();
 		if (auto && player.fallDistance > maxFallDistance && !player.onGround && !player.isOnLadder()) {
 			ItemStack itemstack = inventoryContainsParachute(player.inventory);
 			if (itemstack != null) {
-				((ItemParachute)itemstack.getItem()).deployParachute(itemstack, player.worldObj, player);
+				((ItemParachute)itemstack.getItem()).deployParachute(itemstack, world, player);
 			}
 		} // else fall to death!
 	}
@@ -64,7 +59,7 @@ public class ServerTickHandler implements ITickHandler {
 
 	@Override
 	public String getLabel() {
-		return null;
+		return "Parachute Server";
 	}
 
 }
