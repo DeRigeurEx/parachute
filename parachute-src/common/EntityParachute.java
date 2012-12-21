@@ -5,10 +5,13 @@ import java.util.Random;
 import java.lang.Thread;
 import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.asm.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -226,7 +229,7 @@ public class EntityParachute extends Entity {
 				double y = posY + (newPosY - posY) / (double) newRotationInc;
 				double z = posZ + (newPosZ - posZ) / (double) newRotationInc;
 
-				double adjYaw = MathHelper.wrapAngleTo180_double(newRotationYaw 	- (double) rotationYaw);
+				double adjYaw = MathHelper.wrapAngleTo180_double(newRotationYaw - (double) rotationYaw);
 
 				rotationYaw += adjYaw / (double) newRotationInc;
 				rotationPitch += (newRotationPitch - (double) rotationPitch) / (double) newRotationInc;
@@ -291,8 +294,7 @@ public class EntityParachute extends Entity {
 				yaw = (float) ((Math.atan2(delta_Z, delta_X) * 57.2957795F));
 			}
 
-			double adjustedYaw = MathHelper.wrapAngleTo180_double(yaw
-					- (double) rotationYaw);
+			double adjustedYaw = MathHelper.wrapAngleTo180_double(yaw - (double) rotationYaw);
 
 			if (adjustedYaw > 45.0D) {
 				adjustedYaw = 45.0D;

@@ -46,7 +46,7 @@ public class ServerTickHandler implements ITickHandler {
 		}
 		return itemstack;
 	}
-
+	
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
 
