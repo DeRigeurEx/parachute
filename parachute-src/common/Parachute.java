@@ -24,16 +24,10 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.common.SidedProxy;
 
-// mod info, version
-interface ModInfo {
-	public final static String version = "1.4.6";
-	public final static String channel = "Parachute";
-}
-
 @Mod (
-	modid = "ParachuteMod",
+	modid = Parachute.ID,
 	name = "Parachute Mod",
-	version = ModInfo.version
+	version = Parachute.VER
 )
 
 @NetworkMod (
@@ -41,11 +35,15 @@ interface ModInfo {
 	serverSideRequired = true,
 	packetHandler = ParachutePacketHandler.class,
 	connectionHandler = ParachutePacketHandler.class,
-	channels = {ModInfo.channel}
+	channels = {Parachute.CHANNEL}
 )
 
 public class Parachute
 {
+	public static final String ID = "Parachute";
+	public static final String VER = "1.4.6";
+	public static final String CHANNEL = "Parachute";
+	
 	private int heightLimit;
 	private int chuteColor;
 	private boolean thermals;
@@ -124,7 +122,7 @@ public class Parachute
 	}
 	
 	public String getVersion() {
-		return ModInfo.version;
+		return Parachute.VER;
 	}
 	
 	public double getMaxAltitude() {

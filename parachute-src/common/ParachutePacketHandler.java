@@ -92,7 +92,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 				dos.writeBoolean(pressed);  // true if key is pressed 
 				dos.close();
 
-				packet.channel = ModInfo.channel;
+				packet.channel = Parachute.CHANNEL;
 				packet.data = bos.toByteArray();
 				packet.length = bos.size();
 				packet.isChunkDataPacket = false;
