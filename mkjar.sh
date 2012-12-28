@@ -2,8 +2,11 @@
 
 echo "== Creating jar =="
 
-MCVER=1.4.5
-FMLVER=381
+KEYPASS=ds1b8zs
+STOREPASS=ds1b8zs
+
+MCVER=1.4.6
+FMLVER=471
 
 DATE=`date +%Y%m%d`
 
@@ -45,10 +48,15 @@ echo "> making mod jar file"
 
 cd $PDIR
 
-JAR="parachute-$MCVER-fml-$FMLVER.jar"
+JAR="parachute-$MCVER-forge-$FMLVER.jar"
+
+echo -e "Main-Class: parachute.common.Parachute\nClass-Path: $JAR\n" > $PDIR/manifest.txt
+
 rm -f $JAR
+jar -cfm $JAR manifest.txt parachute/ mcmod.info textures/
 
-jar -cf $JAR parachute/ mcmod.info textures/
+echo "> signing $JAR"
+jarsigner -storetype pkcs12 -keystore $HOME/.keystore -keypass $KEYPASS -storepass $STOREPASS $JAR cracked
 
-echo " - Mod build complete"
+echo " - Mod build complete - `date "+%H:%M:%S"`"
 

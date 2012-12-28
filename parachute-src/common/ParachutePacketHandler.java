@@ -7,6 +7,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import net.java.games.input.Keyboard;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.NetLoginHandler;
@@ -17,6 +19,7 @@ import net.minecraft.server.MinecraftServer;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -74,25 +77,28 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 	@SideOnly(Side.CLIENT)
 	// send key press events in a custom packet to the server
 	public static void sendKeyPress(int keyCode, boolean pressed) {
-		if (!FMLClientHandler.instance().getClient().theWorld.isRemote) {
+		Minecraft client = FMLClientHandler.instance().getClient();
+		WorldClient world = client.theWorld;
+		if (world == null || !world.isRemote) {
 			return;
 		} else {
 			try	{
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				DataOutputStream dos = new DataOutputStream(bos);
-				Packet250CustomPayload pkt = new Packet250CustomPayload();
+				Packet250CustomPayload packet = new Packet250CustomPayload();
 
 				dos.write(KeyPress);        // key press type packet
 				dos.writeByte(keyCode);		// the keycode
 				dos.writeBoolean(pressed);  // true if key is pressed 
 				dos.close();
 
-				pkt.channel = ModInfo.channel;
-				pkt.data = bos.toByteArray();
-				pkt.length = bos.size();
-				pkt.isChunkDataPacket=false;
+				packet.channel = ModInfo.channel;
+				packet.data = bos.toByteArray();
+				packet.length = bos.size();
+				packet.isChunkDataPacket = false;
 
-				Parachute.proxy.sendCustomPacket(pkt);
+//				Parachute.proxy.sendCustomPacket(pkt);
+				PacketDispatcher.sendPacketToServer(packet);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
