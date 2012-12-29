@@ -136,7 +136,7 @@ public class EntityParachute extends Entity {
 	// use shears to cut the parachute coords...
 	public boolean interact(EntityPlayer entityplayer) {
 		ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-		if (itemstack != null && itemstack.itemID == Item.shears.shiftedIndex && riddenByEntity != null) {
+		if (itemstack != null && itemstack.itemID == Item.shears.itemID && riddenByEntity != null) {
 			if (!worldObj.isRemote) {
 				// instead of killing the parachute, remove riding entity
 				// parachute death is handled in onUpdate()
@@ -409,7 +409,7 @@ public class EntityParachute extends Entity {
 	// when parachute is destroyed drop the 'remains'
 	protected void dropRemains() {
 		dropItem(Block.cloth.blockID, 2);
-		dropItem(Item.silk.shiftedIndex, 1);
+		dropItem(Item.silk.itemID, 1);
 	}
 
 	protected void writeEntityToNBT(NBTTagCompound nbttagcompound) {

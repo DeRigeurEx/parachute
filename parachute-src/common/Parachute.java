@@ -26,7 +26,7 @@ import cpw.mods.fml.common.SidedProxy;
 
 @Mod (
 	modid = Parachute.ID,
-	name = "Parachute Mod",
+	name = Parachute.name,
 	version = Parachute.VER
 )
 
@@ -40,9 +40,10 @@ import cpw.mods.fml.common.SidedProxy;
 
 public class Parachute
 {
-	public static final String ID = "Parachute";
-	public static final String VER = "1.4.6";
+	public static final String ID = "ParachuteMod";
+	public static final String VER = "1.4.7";
 	public static final String CHANNEL = "Parachute";
+	public static final String name = "Parachute Mod";
 	
 	private int heightLimit;
 	private int chuteColor;
@@ -69,7 +70,7 @@ public class Parachute
 	
 	@PreInit
     public void preLoad(FMLPreInitializationEvent event) {
-		String generalComments = "Parachute Mod Config\nMichael Sheppard (crackedEgg)";
+		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)";
 		String itemComment = "itemID - customize the ItemID (2500)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (225)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
