@@ -1,9 +1,11 @@
-package parachute.common;
+package parachute.client;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.entity.Entity;
 
 import org.lwjgl.opengl.GL11;
+
+import parachute.common.ParachuteModelRenderer;
 
 //
 // Copyright 2011 Michael Sheppard (crackedEgg)

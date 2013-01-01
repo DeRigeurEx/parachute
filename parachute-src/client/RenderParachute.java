@@ -1,4 +1,4 @@
-package parachute.common;
+package parachute.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -8,6 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 
 import org.lwjgl.opengl.GL11;
+
+import parachute.common.EntityParachute;
+import parachute.common.Parachute;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 

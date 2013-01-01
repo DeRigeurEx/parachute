@@ -3,7 +3,6 @@ package parachute.client;
 import parachute.common.CommonProxyParachute;
 import parachute.common.EntityParachute;
 import parachute.common.ParachuteKeyHandler;
-import parachute.common.RenderParachute;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
