@@ -1,3 +1,9 @@
+//
+// This work is licensed under the Creative Commons
+// Attribution-ShareAlike 3.0 Unported License. To view a copy of this
+// license, visit http://creativecommons.org/licenses/by-sa/3.0/
+//
+
 package parachute.common;
 
 import parachute.client.RenderParachute;
@@ -10,10 +16,6 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
-//
-// Copyright 2011 Michael Sheppard (crackedEgg)
-//
 
 public class ItemParachute extends Item {
 //	static public boolean deployed = false;
