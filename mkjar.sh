@@ -2,8 +2,8 @@
 
 echo "== Creating jar =="
 
-KEYPASS=ds1b8zs
-STOREPASS=ds1b8zs
+KEYPASS=
+STOREPASS=
 
 MCVER=1.4.6
 FMLVER=471
@@ -18,7 +18,7 @@ MCMODDATA="
   \"description\": \"Adds a Parachute to the game. Jump off cliffs! Base Jumping!! Soar to new heights!\",\n
   \"version\": \"$DATE\",\n
   \"mcversion\": \"$MCVER\",\n
-  \"url\": \"http://www.minecraftforum.net/topic/585469-132fmlsplanmp-crackedeggs-mods-reptiles-parachute-updated-09272012/\",\n
+  \"url\": \"\",\n
   \"updateUrl\": \"\",\n
   \"authors\": [\n
     \"crackedEgg\"\n
