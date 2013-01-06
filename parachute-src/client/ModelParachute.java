@@ -11,7 +11,7 @@ import net.minecraft.entity.Entity;
 
 import org.lwjgl.opengl.GL11;
 
-import parachute.common.ParachuteModelRenderer;
+import parachute.client.ParachuteModelRenderer;
 
 public class ModelParachute extends ModelBase {
 	
