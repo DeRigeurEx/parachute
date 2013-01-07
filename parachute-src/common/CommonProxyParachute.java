@@ -27,15 +27,15 @@ public class CommonProxyParachute// implements IGuiHandler
 		TickRegistry.registerTickHandler(new ServerTickHandler(), Side.SERVER);
 	}
 	
-//	public void sendCustomPacket(Packet packet) {
-//		try {
-////			FMLClientHandler.instance().sendPacket(packet);
-//			PacketDispatcher.sendPacketToServer(packet);
-//		} catch (NullPointerException e) {
-//			System.err.println("NPE in sendCustomPacket: " + e.toString());
-//			return;
-//		}
-//    }
+	@Deprecated
+	public void sendCustomPacket(Packet packet) {
+		try {
+			FMLClientHandler.instance().sendPacket(packet);
+		} catch (NullPointerException e) {
+			System.err.println("NPE in sendCustomPacket: " + e.toString());
+			return;
+		}
+    }
 
 //	@Override
 //	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {

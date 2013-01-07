@@ -86,6 +86,15 @@ public class EntityParachute extends Entity {
 		prevPosY = y;
 		prevPosZ = z;
 	}
+	
+	// skydiver should 'hang' when on the parachute and then
+	// 'pick up legs' when landing
+	public boolean shouldRiderSit() {
+		if (isNearGround(posX, posY, posZ, 4.0)) {
+			return true;
+		}
+		return false;
+	}
 
 	protected boolean canTriggerWalking() {
 		return false;
