@@ -162,7 +162,7 @@ public class EntityParachute extends Entity {
 			}
 			return true;
 		}
-		return true;
+		return false;
 	}
 
 	public boolean canBeCollidedWith() {
@@ -211,7 +211,7 @@ public class EntityParachute extends Entity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		// the player has probably been killed or mounted another entity ::snicker::
+		// the player has probably been killed or mounted another entity,
 		// perhaps a boat, minecart or pig? This also happens when the player has
 		// cut away the chute with shears.
 		if (riddenByEntity == null) {

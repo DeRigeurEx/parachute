@@ -107,7 +107,10 @@ public class Parachute
 		proxy.registerRenderTextures();
 		proxy.registerRenderer();
 		proxy.registerKeyHandler(); // for keyboard control of parachute
-		proxy.registerServerTickHandler(); // for auto deployment feature
+		// only register tick handler if autoDeploy is enabled
+		if (autoDeploy) {
+			proxy.registerServerTickHandler(); // for auto deployment feature
+		}
     }
 
 	@Init
