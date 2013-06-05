@@ -6,6 +6,11 @@
 
 package parachute.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.client.model.ModelBox;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
@@ -28,15 +33,28 @@ public class ParachuteModelRenderer {
 	private int displayList;
 	public boolean mirror;
 	public boolean showModel;
+	public float textureWidth;
+    public float textureHeight;
+    private int textureOffsetX;
+    private int textureOffsetY;
+    public List cubeList;
 
 	public ParachuteModelRenderer(int x, int y) {
-		compiled = false;
-		displayList = 0;
-		mirror = false;
-		showModel = true;
-		left = x;
-		top = y;
+		textureWidth = 64.0F;
+        textureHeight = 32.0F;
+        compiled = false;
+        displayList = 0;
+        mirror = false;
+        showModel = true;
+        cubeList = new ArrayList();
+        setTextureSize(textureWidth, textureHeight);
 	}
+	
+	public ParachuteModelRenderer setTextureOffset(int u, int v) {
+        textureOffsetX = u;
+        textureOffsetY = v;
+        return this;
+    }
 
 	public void addBox(float x, float y, float z, int i, int j, int k) {
 		corners = new PositionTextureVertex[8];
@@ -95,20 +113,6 @@ public class ParachuteModelRenderer {
 				faces[l].flipFace();
 			}
 		}
-	}
-
-	public void updateTextureCoords(int left, int top, int w, int h, int d) {
-		int r1 = (w > 16) ? 16 : w;
-		int r2 = (d > 16) ? 16 : d;
-		int bottom = (h > 16) ? 16 : h;
-
-		faces[0].updateTextureCoords(left, top, left + r1, top + bottom);
-		faces[1].updateTextureCoords(left, top, left + r1, top + bottom);
-		faces[2].updateTextureCoords(left, top, left + r1, top + r2);
-		faces[3].updateTextureCoords(left, top, left + r1, top + r2);
-		faces[4].updateTextureCoords(left, top, left + r1, top + bottom);
-		faces[5].updateTextureCoords(left, top, left + r1, top + bottom);
-		compiled = false;
 	}
 
 	public void setRotationPoint(float x, float y, float z) {
@@ -204,5 +208,11 @@ public class ParachuteModelRenderer {
 		GL11.glEndList();
 		compiled = true;
 	}
+	
+	public ParachuteModelRenderer setTextureSize(float x, float y) {
+        textureWidth = x;
+        textureHeight = y;
+        return this;
+    }
 
 }

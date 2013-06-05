@@ -50,14 +50,15 @@ public class EntityParachute extends Entity {
 	private double motionFactor;
 	private double maxAltitude;
 	private boolean allowThermals;
-	private static double descentRate;
 
 	private final int hitTime = 10;
 	private final int maxDamage = 40;
 
-	final static double ascend = -0.020;
+	final static double ascend = -0.040;
 	final static double drift = 0.005;
-	final static double descend = 0.030;
+	final static double descend = 0.040;
+	
+	private static double descentRate = drift;
 
 	public EntityParachute(World world) {
 		super(world);
@@ -123,7 +124,7 @@ public class EntityParachute extends Entity {
 	}
 	
 	public void destroyParachute() {
-		setDead();
+		this.setDead();
 //		ItemParachute.deployed = false;
 	}
 
@@ -140,7 +141,7 @@ public class EntityParachute extends Entity {
 					riddenByEntity.mountEntity(this);
 				}
 				// drop a parachute item
-				//dropItemWithOffset(Parachute.getItemID() + 256, 1, 0.0F);
+				//dropItemWithOffset(Parachute.getItemID(), 1, 0.0F);
 				dropRemains();
 				destroyParachute(); // aaaaiiiiieeeeee!!! ... thud!
 			}
@@ -296,10 +297,25 @@ public class EntityParachute extends Entity {
 			}
 
 			moveEntity(motionX, motionY, motionZ);
-
-			motionX *= 0.99D;
-			motionY *= 0.95D;
-			motionZ *= 0.99D;
+			
+//			if (isCollidedHorizontally && velocity > 0.2D) {
+//                if (!worldObj.isRemote) {
+//                    destroyParachute();
+//                    
+//                    int count;
+//                    for (count = 0; count < 3; ++count) {
+//                        dropItemWithOffset(Block.cloth.blockID, 1, 0.0F);
+//                    }
+//
+//                    for (count = 0; count < 2; ++count) {
+//                        dropItemWithOffset(Item.silk.itemID, 1, 0.0F);
+//                    }
+//                }
+//            } else {
+				motionX *= 0.99D;
+				motionY *= 0.95D;
+				motionZ *= 0.99D;
+//            }
 
 			rotationPitch = 0.0F;
 			double yaw = rotationYaw;
@@ -343,17 +359,31 @@ public class EntityParachute extends Entity {
 				}
 			}
 		}
+		descentRate = drift;
 	}
 
 	public double currentDescentRate() {
+		descentRate = drift;
 		EntityPlayer player = (EntityPlayer)riddenByEntity;
 		if (player == null) {
 			return descentRate;
 		}
+		
 		PlayerInfo pInfo = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
 		if (pInfo == null) {
 			return descentRate;
 		} else {
+//			GameSettings gs = FMLClientHandler.instance().getClient().gameSettings;
+//			if (gs.isKeyDown(gs.keyBindJump)) {
+//				descentRate = ascend;
+//			} 
+//			if (gs.isKeyDown(gs.keyBindSneak)) {
+//				descentRate = descend;
+//			} 
+//			if (!gs.isKeyDown(gs.keyBindJump) && !gs.isKeyDown(gs.keyBindSneak)) {
+//				descentRate = drift;
+//			}
+//		}
 			switch(pInfo.mode) {
 			case 0:
 				descentRate = drift;
@@ -390,6 +420,7 @@ public class EntityParachute extends Entity {
 				riddenByEntity.fallDistance = 0.0F;
 				riddenByEntity.mountEntity(this);
 				if (!worldObj.isRemote) {
+//					dropItemWithOffset(Parachute.getItemID(), 1, 0.0F);
 					destroyParachute();
 				} else {
 					riddenByEntity = null;

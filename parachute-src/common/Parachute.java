@@ -8,13 +8,20 @@ package parachute.common;
 
 import java.util.*;
 
+import org.lwjgl.input.Keyboard;
+
 import parachute.common.EntityParachute;
 import net.minecraft.block.Block;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.EnumHelper;
+import cpw.mods.fml.client.registry.KeyBindingRegistry;
+import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -40,10 +47,12 @@ import cpw.mods.fml.common.SidedProxy;
 	channels = {Parachute.CHANNEL}
 )
 
-public class Parachute
-{
+public class Parachute {
+	
+//	static EnumToolMaterial EnumParachuteMaterial = EnumHelper.addToolMaterial("nylon", 0, 59, 2.0F, 0, 15);
+	
 	public static final String ID = "ParachuteMod";
-	public static final String VER = "1.4.7";
+	public static final String VER = "1.5.2";
 	public static final String CHANNEL = "Parachute";
 	public static final String name = "Parachute Mod";
 	
@@ -104,9 +113,9 @@ public class Parachute
 		
 		config.save();
 		
-		proxy.registerRenderTextures();
 		proxy.registerRenderer();
 		proxy.registerKeyHandler(); // for keyboard control of parachute
+		
 		// only register tick handler if autoDeploy is enabled
 		if (autoDeploy) {
 			proxy.registerServerTickHandler(); // for auto deployment feature
@@ -115,7 +124,9 @@ public class Parachute
 
 	@Init
 	public void load(FMLInitializationEvent event) {
-		parachuteItem = (new ItemParachute(itemID, EnumToolMaterial.WOOD)).setIconIndex(0).setItemName("Parachute");
+//		parachuteItem = (new ItemParachute(itemID, EnumParachuteMaterial));
+		parachuteItem = (new ItemParachute(itemID, EnumToolMaterial.WOOD));
+		parachuteItem.setUnlocalizedName("Parachute");
 		EntityRegistry.registerModEntity(EntityParachute.class, "Parachute", entityID, this, 64, 10, true);
 
 		GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
@@ -154,4 +165,5 @@ public class Parachute
 	public static int getItemID() {
 		return itemID;
 	}
+	
 }

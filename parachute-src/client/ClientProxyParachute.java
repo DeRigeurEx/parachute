@@ -16,13 +16,7 @@ import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 
-public class ClientProxyParachute extends CommonProxyParachute
-{
-    @Override
-    public void registerRenderTextures() {
-    	MinecraftForgeClient.preloadTexture("/textures/parachuteItem.png");
-    }
-    
+public class ClientProxyParachute extends CommonProxyParachute {
     @Override
     public void registerRenderer() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute());   

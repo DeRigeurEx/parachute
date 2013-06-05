@@ -11,7 +11,6 @@ import net.minecraft.entity.Entity;
 
 import org.lwjgl.opengl.GL11;
 
-import parachute.client.ParachuteModelRenderer;
 
 public class ModelParachute extends ModelBase {
 	
@@ -23,16 +22,16 @@ public class ModelParachute extends ModelBase {
 	public ParachuteModelRenderer rhalf;
 	public ParachuteModelRenderer center;
 	
-	public ModelParachute(int u, int v) {
-		center = new ParachuteModelRenderer(u, v);
+	public ModelParachute() {
+		center = new ParachuteModelRenderer(0, 0);
 		center.addBox(-8F, 0F, -8F, w, h, d);
 
-		lhalf = new ParachuteModelRenderer(u, v);
+		lhalf = new ParachuteModelRenderer(0, 0);
 		lhalf.addBox(-8F, 0F, -16F, w, h, d);
 		lhalf.setRotationPoint(0F, 0F, -8F);
 		lhalf.rotateAngleX = 6.021385919380437F;
 
-		rhalf = new ParachuteModelRenderer(u, v);
+		rhalf = new ParachuteModelRenderer(0, 0);
 		rhalf.addBox(-8F, 0F, 0F, w, h, d);
 		rhalf.setRotationPoint(0F, 0F, 8F);
 		rhalf.rotateAngleX = 0.2617993877991494F;
@@ -44,9 +43,4 @@ public class ModelParachute extends ModelBase {
 		rhalf.render(f5);
 	}
 
-	public void updateTextureCoords(int u, int v) {
-		center.updateTextureCoords(u, v, w, h, d);
-		lhalf.updateTextureCoords(u, v, w, h, d);
-		rhalf.updateTextureCoords(u, v, w, h, d);
-	}
 }

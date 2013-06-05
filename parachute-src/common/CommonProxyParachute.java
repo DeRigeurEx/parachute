@@ -15,9 +15,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
 
-public class CommonProxyParachute// implements IGuiHandler
-{
-	public void registerRenderTextures() {}
+public class CommonProxyParachute { // implements IGuiHandler
 	
 	public void registerRenderer() {}
 	
