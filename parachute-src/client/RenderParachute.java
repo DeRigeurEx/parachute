@@ -36,12 +36,21 @@ public class RenderParachute extends Render {
 		shadowSize = 0.0F;
 		colorIndex = Parachute.instance.getChuteColor();
 		randomColor = (colorIndex == -1);
+		boolean useTexturePack = Parachute.instance.getTextureRule();
 
 		rand = new Random(System.currentTimeMillis());
 		if (randomColor) {
-			clothColor = "/mods/ParachuteMod/textures/blocks/cloth_" + rand.nextInt(16) + ".png";
+			if (useTexturePack) {
+				clothColor = "/textures/blocks/cloth_" + rand.nextInt(16) + ".png";
+			} else {
+				clothColor = "/mods/ParachuteMod/textures/blocks/cloth_" + rand.nextInt(16) + ".png";
+			}
 		} else {
-			clothColor = "/mods/ParachuteMod/textures/blocks/cloth_" + colorIndex + ".png";
+			if (useTexturePack) {
+				clothColor = "/textures/blocks/cloth_" + colorIndex + ".png";
+			} else {
+				clothColor = "/mods/ParachuteMod/textures/blocks/cloth_" + colorIndex + ".png";
+			}
 		}
 
 		modelParachute = new ModelParachute();
@@ -136,12 +145,21 @@ public class RenderParachute extends Render {
 	
 	public static void setParachuteColor(int index) {
 		colorIndex = index;
+		boolean useTexturePack = Parachute.instance.getTextureRule();
 
 		if (index == -1) { // get a random color
-			clothColor = "/mods/ParachuteMod/textures/blocks/cloth_" + rand.nextInt(16) + ".png";
+			if (useTexturePack) {
+				clothColor = "/textures/blocks/cloth_" + rand.nextInt(16) + ".png";
+			} else {
+				clothColor = "/mods/ParachuteMod/textures/blocks/cloth_" + rand.nextInt(16) + ".png";
+			}
 			randomColor = true;
 		} else {
-			clothColor = "/mods/ParachuteMod/textures/blocks/cloth_" + index + ".png";
+			if (useTexturePack) {
+				clothColor = "/textures/blocks/cloth_" + colorIndex + ".png";
+			} else {
+				clothColor = "/mods/ParachuteMod/textures/blocks/cloth_" + colorIndex + ".png";
+			}
 			randomColor = false;
 		}
 	}

@@ -61,6 +61,7 @@ public class Parachute {
 	private boolean thermals;
 	private boolean autoDeploy;
 	private int fallDistance;
+	private boolean useTexturePack;
 	private static int itemID;
 	private int entityID = EntityRegistry.findGlobalUniqueEntityId();
 
@@ -82,6 +83,8 @@ public class Parachute {
 	@PreInit
     public void preLoad(FMLPreInitializationEvent event) {
 		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)";
+		String textureComment = "useTexturePack - use the texture pack textures instead of the\n"
+				+ "built in textures (false)";
 		String itemComment = "itemID - customize the ItemID (2500)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (225)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
@@ -106,6 +109,7 @@ public class Parachute {
 		autoDeploy = config.get(Configuration.CATEGORY_GENERAL, "autoDeploy", false, deployComment).getBoolean(false);
 		fallDistance = config.get(Configuration.CATEGORY_GENERAL, "fallDistance", 5, fallComment).getInt();
 		itemID = config.get(Configuration.CATEGORY_GENERAL, "itemID", 2500, itemComment).getInt();
+		useTexturePack = config.get(Configuration.CATEGORY_GENERAL, "useTexturepack", false, textureComment).getBoolean(false);
 		
 		// fix fallDistance  (2 < fallDistance < 20)
 		fallDistance = (fallDistance < 2) ? 2 : (fallDistance > 20) ? 20 : fallDistance;
@@ -160,6 +164,10 @@ public class Parachute {
 	
 	public int getFallDistance() {
 		return fallDistance;
+	}
+	
+	public boolean getTextureRule() {
+		return useTexturePack;
 	}
 
 	public static int getItemID() {
