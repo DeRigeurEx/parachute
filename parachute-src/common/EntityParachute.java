@@ -373,35 +373,35 @@ public class EntityParachute extends Entity {
 		if (pInfo == null) {
 			return descentRate;
 		} else {
-//			GameSettings gs = FMLClientHandler.instance().getClient().gameSettings;
-//			if (gs.isKeyDown(gs.keyBindJump)) {
-//				descentRate = ascend;
-//			} 
-//			if (gs.isKeyDown(gs.keyBindSneak)) {
-//				descentRate = descend;
-//			} 
+			GameSettings gs = FMLClientHandler.instance().getClient().gameSettings;
+			if (gs.isKeyDown(gs.keyBindJump)) {
+				descentRate = ascend;
+			} 
+			if (gs.isKeyDown(gs.keyBindSneak)) {
+				descentRate = descend;
+			} 
 //			if (!gs.isKeyDown(gs.keyBindJump) && !gs.isKeyDown(gs.keyBindSneak)) {
 //				descentRate = drift;
 //			}
-//		}
-			switch(pInfo.mode) {
-			case 0:
-				descentRate = drift;
-				break;
-				
-			case 1:
-				descentRate = ascend;
-				break;
-				
-			case 2:
-				descentRate = descend;
-				break;
-			
-			default:
-				descentRate = drift;
-				break;
-			}
 		}
+//			switch(pInfo.mode) {
+//			case 0:
+//				descentRate = drift;
+//				break;
+//				
+//			case 1:
+//				descentRate = ascend;
+//				break;
+//				
+//			case 2:
+//				descentRate = descend;
+//				break;
+//			
+//			default:
+//				descentRate = drift;
+//				break;
+//			}
+//		}
 		
 		if (maxAltitude > 0.0D) { // altitude limiting
 			if (posY >= maxAltitude) {
