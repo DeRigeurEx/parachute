@@ -43,7 +43,8 @@ public class ItemParachute extends Item {
 	public ItemParachute(int i) {
 		super(i);
 		maxStackSize = 16;
-		setMaxDamage(EnumToolMaterial.WOOD.getMaxUses()); // this damage is for number of uses only
+//		setMaxDamage(EnumToolMaterial.WOOD.getMaxUses()); // this damage is for number of uses only
+		setMaxDamage(Parachute.NYLON.getMaxUses()); // this damage is for number of uses only
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 	}
 
@@ -71,7 +72,7 @@ public class ItemParachute extends Item {
 		entityplayer.mountEntity(chute);
 
 		if (!entityplayer.capabilities.isCreativeMode) {
-			itemstack.damageItem(2, entityplayer);
+			itemstack.damageItem(1, entityplayer);
 		}
 		
 		return itemstack;

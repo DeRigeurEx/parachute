@@ -62,6 +62,9 @@ import cpw.mods.fml.common.SidedProxy;
 )
 
 public class Parachute {
+	
+	static EnumToolMaterial NYLON = EnumHelper.addToolMaterial("nylon", 0, 30, 2.0F, 0, 15);
+	
 	public static final String ID = "ParachuteMod";
 	public static final String VER = "1.6.2";
 	public static final String CHANNEL = ID;
@@ -144,7 +147,8 @@ public class Parachute {
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
 		EntityRegistry.registerModEntity(EntityParachute.class, entityName, entityID, this, 64, 10, true);
-		parachuteItem = new ItemParachute(itemID, EnumToolMaterial.WOOD).setUnlocalizedName(entityName);
+		parachuteItem = new ItemParachute(itemID, NYLON).setUnlocalizedName(entityName);
+//		parachuteItem = new ItemParachute(itemID, EnumToolMaterial.WOOD).setUnlocalizedName(entityName);
 		parachuteItem.func_111206_d("parachute");
 		
 		GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {

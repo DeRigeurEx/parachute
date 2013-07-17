@@ -70,9 +70,9 @@ public class EntityParachute extends Entity {
 	final static double ascend = -0.040;
 	final static double drift = 0.004;
 	final static double descend = 0.040;
+//	final static double lift = 0.3;
 	
 	private static double descentRate = drift;
-//	private final double piOver180 = 0.0174532925199433;
 
 	public EntityParachute(World world) {
 		super(world);
@@ -178,7 +178,7 @@ public class EntityParachute extends Entity {
 				riddenByEntity = null; // ...rider plummets to death.
 			}
 			if (!entityplayer.capabilities.isCreativeMode) {
-				itemstack.damageItem(2, entityplayer); // one use worth of damage
+				itemstack.damageItem(1, entityplayer); // one use worth of damage
 			}
 			return true;
 		}
@@ -274,7 +274,7 @@ public class EntityParachute extends Entity {
 				setPosition(x, y, z);
 				setRotation(rotationYaw, rotationPitch);
 			} else {
-				motionY -= currentDescentRate();
+				motionY -= currentDescentRate(/*lift*/);
 
 				double x = posX + motionX;
 				double y = posY + motionY;
@@ -286,8 +286,9 @@ public class EntityParachute extends Entity {
 				motionZ *= 0.99D;
 			}
 		} else { // single player world - integrated server
+			double forwardMovement = 0.5;
 			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
-                double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward;
+                forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward;
 
                 if (forwardMovement > 0.0) {
                     double x = -Math.sin((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
@@ -319,7 +320,7 @@ public class EntityParachute extends Entity {
 				}
 			}
 
-			motionY -= currentDescentRate();
+			motionY -= currentDescentRate(/*forwardMovement*/);
 
 			moveEntity(motionX, motionY, motionZ);
 			
@@ -387,8 +388,8 @@ public class EntityParachute extends Entity {
 		descentRate = drift;
 	}
 
-	public double currentDescentRate() {
-		descentRate = drift;
+	public double currentDescentRate(/*double forward*/) {
+		descentRate = /*forward > 0.9 ? drift * (forward + lift) * drift : */drift;
 		EntityPlayer player = (EntityPlayer)riddenByEntity;
 		if (player == null) {
 			return descentRate;
