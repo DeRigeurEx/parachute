@@ -1,8 +1,20 @@
+//  
+//  =====GPL=============================================================
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; version 2 dated June, 1991.
+// 
+//  This program is distributed in the hope that it will be useful, 
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+// 
+//  You should have received a copy of the GNU General Public License
+//  along with this program;  if not, write to the Free Software
+//  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+//  =====================================================================
 //
-// This work is licensed under the Creative Commons
-// Attribution-ShareAlike 3.0 Unported License. To view a copy of this
-// license, visit http://creativecommons.org/licenses/by-sa/3.0/
-//
+
 
 package parachute.common;
 
@@ -15,7 +27,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
 
-public class CommonProxyParachute { // implements IGuiHandler
+public class CommonProxyParachute {
 	
 	public void registerRenderer() {}
 	
@@ -35,17 +47,4 @@ public class CommonProxyParachute { // implements IGuiHandler
 		}
     }
 
-//	@Override
-//	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-//		// TODO add container code here
-//		System.out.println("getServerGuiElement");
-//		return null;
-//	}
-//
-//	@Override
-//	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-//		// TODO Auto-generated method stub
-//		System.out.println("getClientGuiElement");
-//		return null;
-//	}
 }

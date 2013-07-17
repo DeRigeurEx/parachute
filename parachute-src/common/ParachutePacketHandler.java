@@ -1,7 +1,18 @@
-//
-// This work is licensed under the Creative Commons
-// Attribution-ShareAlike 3.0 Unported License. To view a copy of this
-// license, visit http://creativecommons.org/licenses/by-sa/3.0/
+//  
+//  =====GPL=============================================================
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; version 2 dated June, 1991.
+// 
+//  This program is distributed in the hope that it will be useful, 
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+// 
+//  You should have received a copy of the GNU General Public License
+//  along with this program;  if not, write to the Free Software
+//  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+//  =====================================================================
 //
 
 package parachute.common;
@@ -12,6 +23,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import parachute.client.RenderParachute;
 import net.java.games.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -33,8 +45,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ParachutePacketHandler implements IPacketHandler, IConnectionHandler {
 	
 	public static final byte KeyPress = 0;
-	private static final int KEY_DESCEND = 45; // Keyboard.KEY_X
-	private static final int KEY_ASCEND = 46; // Keyboard.KEY_C
+	private static final int KEY_DESCEND = 45; // Keyboard.KEY_X = 45
+	private static final int KEY_ASCEND = 46; // Keyboard.KEY_C = 46
+	private static final int KEY_COLOR = 52; // Keyboard.KEY_PERIOD = 52
 	
 	@Override
 	// server handles key press custom packets from the player
@@ -74,6 +87,13 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 						pi.setLiftMode(0); // drift
 					}
 				}
+				
+				if (keyCode == KEY_COLOR) {
+					if (pressed) {
+						int idx = pi.changeColor();
+						RenderParachute.setParachuteColor(idx);
+					}
+				}
 			}
 		} catch (IOException e) {
 			return;
@@ -103,7 +123,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 				packet.length = bos.size();
 				packet.isChunkDataPacket = false;
 
-//				Parachute.proxy.sendCustomPacket(pkt);
+//				Parachute.proxy.sendCustomPacket(packet);
 				PacketDispatcher.sendPacketToServer(packet);
 			} catch (IOException e) {
 				throw new RuntimeException(e);

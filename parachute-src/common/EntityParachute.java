@@ -1,25 +1,38 @@
-//
-// This work is licensed under the Creative Commons
-// Attribution-ShareAlike 3.0 Unported License. To view a copy of this
-// license, visit http://creativecommons.org/licenses/by-sa/3.0/
+//  
+//  =====GPL=============================================================
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; version 2 dated June, 1991.
+// 
+//  This program is distributed in the hope that it will be useful, 
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+// 
+//  You should have received a copy of the GNU General Public License
+//  along with this program;  if not, write to the Free Software
+//  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+//  =====================================================================
 //
 
 package parachute.common;
 
 import java.util.List;
-import java.util.Random;
-import java.lang.Thread;
-import org.lwjgl.input.Keyboard;
+//import java.util.Random;
+//import java.lang.Thread;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
+//import org.lwjgl.input.Keyboard;
+
+
+//import cpw.mods.fml.client.FMLClientHandler;
+//import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.settings.GameSettings;
+//import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -34,7 +47,7 @@ import net.minecraft.world.World;
 //
 
 public class EntityParachute extends Entity {
-	private boolean isRotating;
+	private boolean isTurning;
 	private int newRotationInc;
 	private double newPosX;
 	private double newPosY;
@@ -46,29 +59,30 @@ public class EntityParachute extends Entity {
 	@SideOnly(Side.CLIENT)
 	private double velocityY;
 	@SideOnly(Side.CLIENT)
-	private double newMotionZ;
+	private double velocityZ;
 	private double motionFactor;
 	private double maxAltitude;
 	private boolean allowThermals;
 
 	private final int hitTime = 10;
-	private final int maxDamage = 40;
+	private final float maxDamage = 40.0F;
 
 	final static double ascend = -0.040;
-	final static double drift = 0.005;
+	final static double drift = 0.004;
 	final static double descend = 0.040;
 	
 	private static double descentRate = drift;
+//	private final double piOver180 = 0.0174532925199433;
 
 	public EntityParachute(World world) {
 		super(world);
 
 		preventEntitySpawning = true;
-		setSize(1.0F, 0.5F);
+		setSize(2.0F, 1.0F);
 		yOffset = height / 2F;
 		descentRate = drift;
 		motionFactor = 0.07D;
-		isRotating = true;
+		isTurning = true;
 		
 		allowThermals = Parachute.instance.getAllowThermals();
 		maxAltitude = Parachute.instance.getMaxAltitude();
@@ -88,27 +102,33 @@ public class EntityParachute extends Entity {
 		prevPosZ = z;
 	}
 	
+	// FIXME: This fucks up movement in 1.6.2
+	// need for shouldRiderSit to return true in order to receive packets. need for it to return
+	// false for player to not be in the sitting position on the parachute.
 	// skydiver should 'hang' when on the parachute and then
 	// 'pick up legs' when landing
-	public boolean shouldRiderSit() {
-		if (isNearGround(posX, posY, posZ, 4.0)) {
-			return true;
-		}
-		return false;
-	}
+//	public boolean shouldRiderSit() {
+//		if (isNearGround(posX, posY, posZ, 4.0)) {
+//			return true;
+//		}
+//		return false;
+//	}
 
 	protected boolean canTriggerWalking() {
 		return false;
 	}
-
+	
 	protected void entityInit() {
 		dataWatcher.addObject(17, new Integer(0)); // time since last hit
 		dataWatcher.addObject(18, new Integer(1)); // forward direction
-		dataWatcher.addObject(19, new Integer(0)); // damage taken | current damage
+		dataWatcher.addObject(19, new Float(0.0F)); // damage taken | current damage
 	}
 
 	public AxisAlignedBB getCollisionBox(Entity entity) {
-		return entity.boundingBox;
+		if (entity != riddenByEntity && entity.ridingEntity != this) {
+			return entity.boundingBox;
+		}
+		return null;
 	}
 
 	public AxisAlignedBB getBoundingBox() {
@@ -120,20 +140,19 @@ public class EntityParachute extends Entity {
 	}
 
 	public double getMountedYOffset() {
-		return -2.5D;
+		return -3.5D;
 	}
 	
 	public void destroyParachute() {
 		this.setDead();
-//		ItemParachute.deployed = false;
 	}
-
+	
 	// parachute takes additional damage from being hit
-	public boolean attackEntityFrom(DamageSource damagesource, int damage) {
+	public boolean attackEntityFrom(DamageSource damagesource, float damage) {
 		if (!worldObj.isRemote && !isDead) {
 			setForwardDirection(-getForwardDirection());
 			setTimeSinceHit(hitTime);
-			setDamageTaken(getDamageTaken() + damage);
+			setDamageTaken(getDamageTaken() + damage * 10.0F);
 			setBeenAttacked();
 
 			if (getDamageTaken() > maxDamage) {
@@ -150,7 +169,7 @@ public class EntityParachute extends Entity {
 	}
 
 	// use shears to cut the parachute coords...
-	public boolean interact(EntityPlayer entityplayer) {
+	public boolean func_130002_c(EntityPlayer entityplayer) { // old interact(EntityPlayer entityplayer)
 		ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 		if (itemstack != null && itemstack.itemID == Item.shears.itemID && riddenByEntity != null) {
 			if (!worldObj.isRemote) {
@@ -169,10 +188,10 @@ public class EntityParachute extends Entity {
 	public boolean canBeCollidedWith() {
 		return !isDead;
 	}
-
-	@SideOnly(Side.CLIENT)
+	
+//	@SideOnly(Side.CLIENT)
 	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int inc) {
-		if (isRotating) {
+		if (isTurning) {
 			newRotationInc = inc + 5;
 		} else {
 			double newX = x - posX;
@@ -196,17 +215,17 @@ public class EntityParachute extends Entity {
 		newRotationYaw = yaw;
 		newRotationPitch = pitch;
 
-		// verticalMotion
+		// forward/vertical motion
 		motionX = velocityX;
 		motionY = velocityY;
-		motionZ = newMotionZ;
+		motionZ = velocityZ;
 	}
 	
-	@SideOnly(Side.CLIENT)
+//	@SideOnly(Side.CLIENT)
 	public void setVelocity(double x, double y, double z) {
 		velocityX = motionX = x;
 		velocityY = motionY = y;
-		newMotionZ = motionZ = z;
+		velocityZ = motionZ = z;
 	}
 
 	public void onUpdate() {
@@ -226,21 +245,21 @@ public class EntityParachute extends Entity {
 		if (getTimeSinceHit() > 0) {
 			setTimeSinceHit(getTimeSinceHit() - 1);
 		}
-		if (getDamageTaken() > 0) {
-			setDamageTaken(getDamageTaken() - 1);
+		if (getDamageTaken() > 0.0F) {
+			setDamageTaken(getDamageTaken() - 1.0F);
 		}
 
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
-
+		
 		// drop the chute when close to ground
-		checkShouldDropChute(posX, posY, posZ, 3.0D);
+		checkShouldDropChute(posX, posY, posZ, 4.0D); // 3.0D original 
 
 		// forward velocity
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
-		if (worldObj.isRemote && isRotating) { // external (remote) server
+		if (worldObj.isRemote && isTurning) { // external (remote) server
 			if (newRotationInc > 0) {
 				double x = posX + (newPosX - posX) / (double) newRotationInc;
 				double y = posY + (newPosY - posY) / (double) newRotationInc;
@@ -267,34 +286,40 @@ public class EntityParachute extends Entity {
 				motionZ *= 0.99D;
 			}
 		} else { // single player world - integrated server
-			if (riddenByEntity != null) {
-				motionX += riddenByEntity.motionX * motionFactor;
-				motionZ += riddenByEntity.motionZ * motionFactor;
+			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
+                double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward;
 
-				// forward velocity
-				double localvelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
+                if (forwardMovement > 0.0) {
+                    double x = -Math.sin((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
+                    double z = Math.cos((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
+                    motionX += x * motionFactor * 0.05;
+                    motionZ += z * motionFactor * 0.05;
+                }
+            }
 
-				if (localvelocity > 0.35D) {
-					double motionAdj = 0.35D / localvelocity;
-					motionX *= motionAdj;
-					motionZ *= motionAdj;
-					localvelocity = 0.35D;
-				}
+			// forward velocity
+			double localvelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
-				if (localvelocity > velocity && motionFactor < 0.35D) {
-					motionFactor += (0.35D - motionFactor) / 35.0D;
-					if (motionFactor > 0.35D) {
-						motionFactor = 0.35D;
-					}
-				} else {
-					motionFactor -= (motionFactor - 0.07D) / 35.0D;
-					if (motionFactor < 0.07D) {
-						motionFactor = 0.07D;
-					}
-				}
-
-				motionY -= currentDescentRate();
+			if (localvelocity > 0.35D) {
+				double motionAdj = 0.35D / localvelocity;
+				motionX *= motionAdj;
+				motionZ *= motionAdj;
+				localvelocity = 0.35D;
 			}
+
+			if (localvelocity > velocity && motionFactor < 0.35D) {
+				motionFactor += (0.35D - motionFactor) / 35.0D;
+				if (motionFactor > 0.35D) {
+					motionFactor = 0.35D;
+				}
+			} else {
+				motionFactor -= (motionFactor - 0.07D) / 35.0D;
+				if (motionFactor < 0.07D) {
+					motionFactor = 0.07D;
+				}
+			}
+
+			motionY -= currentDescentRate();
 
 			moveEntity(motionX, motionY, motionZ);
 			
@@ -328,11 +353,11 @@ public class EntityParachute extends Entity {
 
 			double adjustedYaw = MathHelper.wrapAngleTo180_double(yaw - (double) rotationYaw);
 
-			if (adjustedYaw > 45.0D) {
-				adjustedYaw = 45.0D;
+			if (adjustedYaw > 20.0D) {
+				adjustedYaw = 20.0D;
 			}
-			if (adjustedYaw < -45.0D) {
-				adjustedYaw = -45.0D;
+			if (adjustedYaw < -20.0D) {
+				adjustedYaw = -20.0D;
 			}
 
 			rotationYaw += adjustedYaw;
@@ -373,35 +398,27 @@ public class EntityParachute extends Entity {
 		if (pInfo == null) {
 			return descentRate;
 		} else {
-			GameSettings gs = FMLClientHandler.instance().getClient().gameSettings;
-			if (gs.isKeyDown(gs.keyBindJump)) {
-				descentRate = ascend;
-			} 
-			if (gs.isKeyDown(gs.keyBindSneak)) {
-				descentRate = descend;
-			} 
+//			GameSettings gs = FMLClientHandler.instance().getClient().gameSettings;
+//			if (gs.isKeyDown(gs.keyBindJump)) {
+//				descentRate = ascend;
+//			} 
+//			if (gs.isKeyDown(gs.keyBindSneak)) {
+//				descentRate = descend;
+//			} 
 //			if (!gs.isKeyDown(gs.keyBindJump) && !gs.isKeyDown(gs.keyBindSneak)) {
 //				descentRate = drift;
 //			}
-		}
-//			switch(pInfo.mode) {
-//			case 0:
-//				descentRate = drift;
-//				break;
-//				
-//			case 1:
-//				descentRate = ascend;
-//				break;
-//				
-//			case 2:
-//				descentRate = descend;
-//				break;
-//			
-//			default:
-//				descentRate = drift;
-//				break;
-//			}
 //		}
+			switch(pInfo.mode) {
+			case 1:
+				descentRate = ascend;
+				break;
+				
+			case 2:
+				descentRate = descend;
+				break;
+			}
+		}
 		
 		if (maxAltitude > 0.0D) { // altitude limiting
 			if (posY >= maxAltitude) {
@@ -444,6 +461,7 @@ public class EntityParachute extends Entity {
 		return nearGround;
 	}
 
+//	@Override
 	public void updateRiderPosition() {
 		if (riddenByEntity != null) {
 			double cosYaw = Math.cos((double) rotationYaw * 0.01745329252D) * 0.4D;
@@ -458,23 +476,21 @@ public class EntityParachute extends Entity {
 		dropItem(Item.silk.itemID, 1);
 	}
 
-	protected void writeEntityToNBT(NBTTagCompound nbttagcompound) {
-	}
+	protected void writeEntityToNBT(NBTTagCompound nbt) {}
 
-	protected void readEntityFromNBT(NBTTagCompound nbttagcompound) {
-	}
-
+	protected void readEntityFromNBT(NBTTagCompound nbt) {}
+	
 	@SideOnly(Side.CLIENT)
 	public float getShadowSize() {
 		return 0.0F;
 	}
 	
-	public void setDamageTaken(int damage) {
-		dataWatcher.updateObject(19, Integer.valueOf(damage));
+	public void setDamageTaken(float f) {
+		dataWatcher.updateObject(19, Float.valueOf(f));
 	}
 
-	public int getDamageTaken() {
-		return dataWatcher.getWatchableObjectInt(19);
+	public float getDamageTaken() {
+		return dataWatcher.func_111145_d(19);
 	}
 
 	public void setTimeSinceHit(int time) {
@@ -494,8 +510,12 @@ public class EntityParachute extends Entity {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void func_70270_d(boolean par1) {
-		isRotating = par1;
+	public void func_70270_d(boolean turning) {
+		isTurning = turning;
 	}
+	
+	public boolean isOnLadder() {
+        return false;
+    }
 	
 }

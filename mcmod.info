@@ -3,15 +3,15 @@
  "modid": "ParachuteMod",
  "name": "Parachute Mod",
  "description": "Adds a Parachute to the game. Jump off cliffs! Base Jumping!! Soar to new heights!",
- "version": "20130615",
- "mcversion": "1.5.2",
+ "version": "20130716",
+ "mcversion": "1.6.2",
  "url": "",
  "updateUrl": "",
  "authors": [
  "crackedEgg"
  ],
  "credits": "Authored by crackedEgg",
- "logoFile": "/logo/chuteLogo.png",
+ "logoFile": "pack.png",
  "screenshots": [],
  "parent": "",
  "dependencies": []
