@@ -70,7 +70,6 @@ public class EntityParachute extends Entity {
 	final static double ascend = -0.040;
 	final static double drift = 0.004;
 	final static double descend = 0.040;
-//	final static double lift = 0.3;
 	
 	private static double descentRate = drift;
 
@@ -102,7 +101,8 @@ public class EntityParachute extends Entity {
 		prevPosZ = z;
 	}
 	
-	// FIXME: This fucks up movement in 1.6.2
+	// FIXME: This fucks up movement in 1.6.2, packets are not sent to server if
+	// shouldRiderSit returns false. 
 	// need for shouldRiderSit to return true in order to receive packets. need for it to return
 	// false for player to not be in the sitting position on the parachute.
 	// skydiver should 'hang' when on the parachute and then
@@ -274,7 +274,7 @@ public class EntityParachute extends Entity {
 				setPosition(x, y, z);
 				setRotation(rotationYaw, rotationPitch);
 			} else {
-				motionY -= currentDescentRate(/*lift*/);
+				motionY -= currentDescentRate();
 
 				double x = posX + motionX;
 				double y = posY + motionY;
@@ -320,28 +320,13 @@ public class EntityParachute extends Entity {
 				}
 			}
 
-			motionY -= currentDescentRate(/*forwardMovement*/);
+			motionY -= currentDescentRate();
 
 			moveEntity(motionX, motionY, motionZ);
 			
-//			if (isCollidedHorizontally && velocity > 0.2D) {
-//                if (!worldObj.isRemote) {
-//                    destroyParachute();
-//                    
-//                    int count;
-//                    for (count = 0; count < 3; ++count) {
-//                        dropItemWithOffset(Block.cloth.blockID, 1, 0.0F);
-//                    }
-//
-//                    for (count = 0; count < 2; ++count) {
-//                        dropItemWithOffset(Item.silk.itemID, 1, 0.0F);
-//                    }
-//                }
-//            } else {
-				motionX *= 0.99D;
-				motionY *= 0.95D;
-				motionZ *= 0.99D;
-//            }
+			motionX *= 0.99D;
+			motionY *= 0.95D;
+			motionZ *= 0.99D;
 
 			rotationPitch = 0.0F;
 			double yaw = rotationYaw;
@@ -388,10 +373,13 @@ public class EntityParachute extends Entity {
 		descentRate = drift;
 	}
 
-	public double currentDescentRate(/*double forward*/) {
-		descentRate = /*forward > 0.9 ? drift * (forward + lift) * drift : */drift;
+	public double currentDescentRate() {
+		descentRate = drift;
 		EntityPlayer player = (EntityPlayer)riddenByEntity;
 		if (player == null) {
+			return descentRate;
+		}
+		if (!allowThermals) {
 			return descentRate;
 		}
 		
