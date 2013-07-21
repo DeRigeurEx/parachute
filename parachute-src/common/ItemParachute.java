@@ -43,7 +43,6 @@ public class ItemParachute extends Item {
 	public ItemParachute(int i) {
 		super(i);
 		maxStackSize = 16;
-//		setMaxDamage(EnumToolMaterial.WOOD.getMaxUses()); // this damage is for number of uses only
 		setMaxDamage(Parachute.NYLON.getMaxUses()); // this damage is for number of uses only
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 	}
@@ -64,7 +63,13 @@ public class ItemParachute extends Item {
 		double y = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) + 1.62D) - (double) entityplayer.yOffset;
 		double z = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ);
 
-		EntityParachute chute = new EntityParachute(world, (float) x, (float) y - 2.5F, (float) z);
+		float offset = 2.5F;
+		if (Parachute.instance.getCanopyType()) {
+			offset = 2.5F;  // small canopy
+		} else {
+			offset = 3.5F;  // large canopy
+		}
+		EntityParachute chute = new EntityParachute(world, (float) x, (float) y - offset, (float) z);
 		chute.rotationYaw = (float)(((MathHelper.floor_double((double)(entityplayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3) - 1) * 90);
 		if (!world.isRemote) {
 			world.spawnEntityInWorld(chute);

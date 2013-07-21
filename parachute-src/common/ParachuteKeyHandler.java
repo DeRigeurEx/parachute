@@ -33,11 +33,10 @@ public class ParachuteKeyHandler extends KeyHandler {
 	static KeyBinding ascendBinding = new KeyBinding("Parachute Ascend", Keyboard.KEY_C);
 	static KeyBinding descendBinding = new KeyBinding("Parachute Descend", Keyboard.KEY_X);
 	static KeyBinding colorBinding = new KeyBinding("Parachute Color", Keyboard.KEY_PERIOD);
-//	static KeyBinding typeBinding = new KeyBinding("Parachute Canopy", Keyboard.KEY_P);
 	
     public ParachuteKeyHandler() {
-        super(new KeyBinding[] {ascendBinding, descendBinding, colorBinding/*, typeBinding*/},
-        	new boolean[] {true, true, false/*, false*/});
+        super(new KeyBinding[] {ascendBinding, descendBinding, colorBinding},
+        	new boolean[] {true, true, false});
     }
 
     @Override
@@ -47,12 +46,18 @@ public class ParachuteKeyHandler extends KeyHandler {
 
     @Override
     public void keyDown(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd, boolean isRepeat) {
-		ParachutePacketHandler.sendKeyPress(kb.keyCode, true);
+    	if (tickEnd) {
+//    		System.out.println("ParachuteKeyHandler: Sending KEYDOWN");
+    		ParachutePacketHandler.sendKeyPress(kb.keyCode, true);
+    	}
     }
 
     @Override
     public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) {
-		ParachutePacketHandler.sendKeyPress(kb.keyCode, false);
+    	if (tickEnd) {
+//    		System.out.println("ParachuteKeyHandler: Sending KEYUP");
+    		ParachutePacketHandler.sendKeyPress(kb.keyCode, false);
+    	}
     }
 
     @Override

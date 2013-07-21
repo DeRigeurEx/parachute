@@ -24,7 +24,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import parachute.client.RenderParachute;
-import net.java.games.input.Keyboard;
+import org.lwjgl.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,10 +45,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ParachutePacketHandler implements IPacketHandler, IConnectionHandler {
 	
 	public static final byte KeyPress = 0;
-	private static final int KEY_DESCEND = 45; // Keyboard.KEY_X = 45
-	private static final int KEY_ASCEND = 46;  // Keyboard.KEY_C = 46
-	private static final int KEY_COLOR = 52;   // Keyboard.KEY_PERIOD = 52
-	private static final int KEY_CANOPY = 25;  // Keyboard.KEY_P = 25
 	
 	@Override
 	// server handles key press custom packets from the player
@@ -58,13 +54,18 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 		boolean keyDown;
 		byte type;
 		
+		if (packet.channel != Parachute.CHANNEL) { // check the channel - CYA
+			System.out.println("Received a packet not intended for channel " + Parachute.CHANNEL);
+			return;
+		}
+		
 		try {
-			type = dis.readByte();
 			EntityPlayer player = (EntityPlayer)p;
 			if (player == null) {
 				return;
 			}
 			
+			type = dis.readByte();
 			if (type == KeyPress) {
 				PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
 				if (pi == null) {
@@ -74,7 +75,9 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 				keyCode = dis.readByte();
 				keyDown = dis.readBoolean();
 				
-				if (keyCode == KEY_ASCEND) {
+//				System.out.println("ParachutePacketHandler: \n\tkeyCode: " + keyCode + "\n\tkeyDown: " + keyDown);
+				
+				if (keyCode == Keyboard.KEY_C) { // keycode: 46
 					if (keyDown) {
 						pi.setLiftMode(1); // ascend
 					} else {
@@ -82,7 +85,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 					}
 				}
 				
-				if (keyCode == KEY_DESCEND) {
+				if (keyCode == Keyboard.KEY_X) { // keycode: 45
 					if (keyDown) {
 						pi.setLiftMode(2); // descend
 					} else {
@@ -90,15 +93,9 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 					}
 				}
 				
-				if (keyCode == KEY_COLOR) {
+				if (keyCode == Keyboard.KEY_PERIOD) { // keycode: 52
 					if (keyDown) {
 						RenderParachute.setParachuteColor(pi.changeColor());
-					}
-				}
-				
-				if (keyCode == KEY_CANOPY) {
-					if (keyDown) {
-						pi.setCanopyType(Parachute.instance.getCanopyType());
 					}
 				}
 			}
@@ -120,7 +117,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 				DataOutputStream dos = new DataOutputStream(bos);
 				Packet250CustomPayload packet = new Packet250CustomPayload();
 
-				dos.write(KeyPress);        // key press type packet
+				dos.writeByte(KeyPress);    // key press type packet
 				dos.writeByte(keyCode);		// the keycode
 				dos.writeBoolean(keyDown);  // true if key is pressed
 				dos.close();
@@ -130,7 +127,6 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 				packet.length = bos.size();
 				packet.isChunkDataPacket = false;
 
-//				Parachute.proxy.sendCustomPacket(packet);
 				PacketDispatcher.sendPacketToServer(packet);
 			} catch (IOException e) {
 				throw new RuntimeException(e);

@@ -63,7 +63,7 @@ public class EntityParachute extends Entity {
 	private double motionFactor;
 	private double maxAltitude;
 	private boolean allowThermals;
-	private int smallCanopy;
+	private boolean smallCanopy;
 
 	private final int hitTime = 10;
 	private final float maxDamage = 40.0F;
@@ -143,7 +143,7 @@ public class EntityParachute extends Entity {
 	}
 
 	public double getMountedYOffset() {
-		return (smallCanopy == 1) ? -2.5 : -3.5;
+		return smallCanopy ? -2.5 : -3.5;
 	}
 	
 	public void destroyParachute() {
@@ -257,7 +257,7 @@ public class EntityParachute extends Entity {
 		prevPosZ = posZ;
 		
 		// drop the chute when close to ground
-		checkShouldDropChute(posX, posY, posZ, (smallCanopy == 1) ? 3.0 : 4.0); // 3.0D original 
+		checkShouldDropChute(posX, posY, posZ, smallCanopy ? 3.0 : 4.0); // 3.0D original 
 
 		// forward velocity
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
@@ -289,7 +289,7 @@ public class EntityParachute extends Entity {
 				motionZ *= 0.99D;
 			}
 		} else { // single player world - integrated server
-			double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward * ((smallCanopy == 1) ? 1.0 : 0.85);
+			double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward * (smallCanopy ? 1.0 : 0.85);
 			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
                 if (forwardMovement > 0.0) {
                     double x = -Math.sin((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
