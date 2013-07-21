@@ -26,6 +26,7 @@ public class PlayerInfo
 	public int mode; // 0 = drift, 1 = ascend, 2 = descend
     public INetworkManager networkManager;
     private int colorIdx = Parachute.instance.getChuteColor();
+    private int smallCanopy; // 0 = large canopy, 1 = small canopy
     
     public PlayerInfo(String name, INetworkManager nm) {
         Name = name;
@@ -46,6 +47,11 @@ public class PlayerInfo
     
     public int getCurrentColor() {
     	return colorIdx;
+    }
+    
+    public void setCanopyType(int t) {
+    	smallCanopy = t;
+    	Parachute.instance.setCanopyType(t);
     }
     
 }

@@ -69,7 +69,11 @@ public class RenderParachute extends Render {
 
 		if (entityparachute.riddenByEntity != null) {
 			EntityPlayer rider = (EntityPlayer) entityparachute.riddenByEntity;
-			renderCords(rider, center);
+			if (Parachute.instance.getCanopyType() == 1) {
+				renderSmallParachuteCords(rider, center);
+			} else { 
+				renderLargeParachuteCords(rider, center);
+			}
 		}
 
 		GL11.glPopMatrix();
@@ -79,8 +83,8 @@ public class RenderParachute extends Render {
 		renderParachute((EntityParachute) entity, x, y, z, rotation, center);
 	}
 
-	public void renderCords(EntityPlayer rider, float center) {
-		float x = -8.0F;
+	public void renderLargeParachuteCords(EntityPlayer rider, float center) {
+		float x = -5.0F;
 		float y = 3.0F;
 		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
 			y = 2.25F;
@@ -142,6 +146,59 @@ public class RenderParachute extends Render {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 	
+	public void renderSmallParachuteCords(EntityPlayer rider, float center) {
+		float x = -5.0F;
+		float y = 2.0F;
+		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+			y = 1.25F;
+		}
+		float z = 0.0F;
+
+		float b = rider.getBrightness(center);
+
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_LIGHTING);
+
+		GL11.glScalef(0.0625F, -1.0F, 0.0625F);
+
+		GL11.glBegin(GL11.GL_LINES);
+		// left side
+		GL11.glColor3f(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
+
+		GL11.glVertex3f(-8F, 0.25F, -23.5F);
+		GL11.glVertex3f(x, y, z);
+
+		GL11.glVertex3f(8F, 0.25F, -23.5F);
+		GL11.glVertex3f(x, y, z);
+
+		// front
+		GL11.glVertex3f(-8F, 0F, -8F);
+		GL11.glVertex3f(x, y, z);
+
+		GL11.glVertex3f(8F, 0F, -8F);
+		GL11.glVertex3f(x, y, z);
+
+		// right side
+		GL11.glColor3f(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
+
+		GL11.glVertex3f(-8F, 0.25F, 23.5F);
+		GL11.glVertex3f(x, y, z);
+
+		GL11.glVertex3f(8F, 0.25F, 23.5F);
+		GL11.glVertex3f(x, y, z);
+
+		// back
+		GL11.glVertex3f(-8F, 0F, 8F);
+		GL11.glVertex3f(x, y, z);
+
+		GL11.glVertex3f(8F, 0F, 8F);
+		GL11.glVertex3f(x, y, z);
+		GL11.glEnd();
+
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+	
 	public static void setParachuteColor(int index) {
 		parachuteTexture = getParachuteColor(index);
 	}
@@ -156,7 +213,7 @@ public class RenderParachute extends Render {
 
 	@Override
 	protected ResourceLocation func_110775_a(Entity entity) {
-		parachuteTexture = getParachuteColor(Parachute.instance.getChuteColor());
+		parachuteTexture = getParachuteColor(curIndex);
 		return parachuteTexture;
 	}
 	

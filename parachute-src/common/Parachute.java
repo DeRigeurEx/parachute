@@ -23,6 +23,7 @@ import org.lwjgl.input.Keyboard;
 
 import parachute.common.EntityParachute;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.item.EnumToolMaterial;
@@ -30,6 +31,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.EnumHelper;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.Mod;
@@ -76,9 +78,11 @@ public class Parachute {
 	private boolean thermals;
 	private boolean autoDeploy;
 	private int fallDistance;
-	private boolean useTexturePack;
+	private int smallCanopy;
+//	private boolean useTexturePack;
 	private static int itemID;
 	private int entityID = EntityRegistry.findGlobalUniqueEntityId();
+	private Minecraft mcinstance;
 
 	@SidedProxy (
 		clientSide = "parachute.client.ClientProxyParachute",
@@ -105,6 +109,8 @@ public class Parachute {
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
 		String deployComment = "autoDeploy - true|false enable/disable auto parachute deployment (false)";
 		String fallComment = "fallDistance - maximum falling distance before auto deploy (2 - 20) (5)";
+		String typeComment = "smallCanopy - set to 1 to use the smaller 3 panel canopy, 0 for the\n"
+							+ "larger 5 panel canopy (0)";
 		String colorComment = "Color index numbers:\n"
 							+ "black        -  0\nblue         -  1\n"
 							+ "brown        -  2\ncyan         -  3\n"
@@ -126,6 +132,7 @@ public class Parachute {
 		autoDeploy = config.get(Configuration.CATEGORY_GENERAL, "autoDeploy", false, deployComment).getBoolean(false);
 		fallDistance = config.get(Configuration.CATEGORY_GENERAL, "fallDistance", 5, fallComment).getInt();
 		itemID = config.get(Configuration.CATEGORY_GENERAL, "itemID", 2500, itemComment).getInt();
+		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", 0, typeComment).getInt();
 //		useTexturePack = config.get(Configuration.CATEGORY_GENERAL, "useTexturepack", false, textureComment).getBoolean(false);
 		
 		// fix fallDistance  (2 > fallDistance < 20)
@@ -148,14 +155,16 @@ public class Parachute {
 	public void load(FMLInitializationEvent event) {
 		EntityRegistry.registerModEntity(EntityParachute.class, entityName, entityID, this, 64, 10, true);
 		parachuteItem = new ItemParachute(itemID, NYLON).setUnlocalizedName(entityName);
-//		parachuteItem = new ItemParachute(itemID, EnumToolMaterial.WOOD).setUnlocalizedName(entityName);
 		parachuteItem.func_111206_d("parachute");
 		
 		GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
 			"###", "X X", " L ", '#', Block.cloth, 'X', Item.silk, 'L', Item.leather
 		});
+		
 		LanguageRegistry.addName(parachuteItem, entityName);
 		NetworkRegistry.instance().registerConnectionHandler(new ParachutePacketHandler());
+		
+		mcinstance = FMLClientHandler.instance().getClient();
 		
 		instance = this;
 	}
@@ -182,6 +191,15 @@ public class Parachute {
 	
 	public int getFallDistance() {
 		return fallDistance;
+	}
+	
+	public int getCanopyType() {
+		return smallCanopy;
+	}
+	
+	public void setCanopyType(int type) { // true small | false large
+		smallCanopy = type;
+		mcinstance.ingameGUI.getChatGUI().printChatMessage("Canopy type: " + (smallCanopy == 1 ? "small" : "large"));
 	}
 	
 //	public boolean getTextureRule() {

@@ -46,15 +46,16 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 	
 	public static final byte KeyPress = 0;
 	private static final int KEY_DESCEND = 45; // Keyboard.KEY_X = 45
-	private static final int KEY_ASCEND = 46; // Keyboard.KEY_C = 46
-	private static final int KEY_COLOR = 52; // Keyboard.KEY_PERIOD = 52
+	private static final int KEY_ASCEND = 46;  // Keyboard.KEY_C = 46
+	private static final int KEY_COLOR = 52;   // Keyboard.KEY_PERIOD = 52
+	private static final int KEY_CANOPY = 25;  // Keyboard.KEY_P = 25
 	
 	@Override
 	// server handles key press custom packets from the player
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player p) {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet.data));
 		byte keyCode = 0;
-		boolean pressed;
+		boolean keyDown;
 		byte type;
 		
 		try {
@@ -71,9 +72,10 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 				}
 					
 				keyCode = dis.readByte();
-				pressed = dis.readBoolean();
+				keyDown = dis.readBoolean();
+				
 				if (keyCode == KEY_ASCEND) {
-					if (pressed) {
+					if (keyDown) {
 						pi.setLiftMode(1); // ascend
 					} else {
 						pi.setLiftMode(0); // drift
@@ -81,7 +83,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 				}
 				
 				if (keyCode == KEY_DESCEND) {
-					if (pressed) {
+					if (keyDown) {
 						pi.setLiftMode(2); // descend
 					} else {
 						pi.setLiftMode(0); // drift
@@ -89,9 +91,14 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 				}
 				
 				if (keyCode == KEY_COLOR) {
-					if (pressed) {
-						int idx = pi.changeColor();
-						RenderParachute.setParachuteColor(idx);
+					if (keyDown) {
+						RenderParachute.setParachuteColor(pi.changeColor());
+					}
+				}
+				
+				if (keyCode == KEY_CANOPY) {
+					if (keyDown) {
+						pi.setCanopyType(Parachute.instance.getCanopyType());
 					}
 				}
 			}
@@ -102,7 +109,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 	
 	@SideOnly(Side.CLIENT)
 	// send key press events in a custom packet to the server
-	public static void sendKeyPress(int keyCode, boolean pressed) {
+	public static void sendKeyPress(int keyCode, boolean keyDown) {
 		Minecraft client = FMLClientHandler.instance().getClient();
 		WorldClient world = client.theWorld;
 		if (world == null || !world.isRemote) {
@@ -115,7 +122,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 
 				dos.write(KeyPress);        // key press type packet
 				dos.writeByte(keyCode);		// the keycode
-				dos.writeBoolean(pressed);  // true if key is pressed 
+				dos.writeBoolean(keyDown);  // true if key is pressed
 				dos.close();
 
 				packet.channel = Parachute.CHANNEL;

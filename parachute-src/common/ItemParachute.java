@@ -58,7 +58,7 @@ public class ItemParachute extends Item {
 			return itemstack;
 		}
 
-		world.playSoundAtEntity(entityplayer, "step.cloth", 1.0F, 0.5F/* / (itemRand.nextFloat() * 0.4F + 0.8F)*/);
+		world.playSoundAtEntity(entityplayer, "step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
 		double x = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX);
 		double y = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) + 1.62D) - (double) entityplayer.yOffset;

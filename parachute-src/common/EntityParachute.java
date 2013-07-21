@@ -63,6 +63,7 @@ public class EntityParachute extends Entity {
 	private double motionFactor;
 	private double maxAltitude;
 	private boolean allowThermals;
+	private int smallCanopy;
 
 	private final int hitTime = 10;
 	private final float maxDamage = 40.0F;
@@ -75,6 +76,8 @@ public class EntityParachute extends Entity {
 
 	public EntityParachute(World world) {
 		super(world);
+		
+		smallCanopy = Parachute.instance.getCanopyType();
 
 		preventEntitySpawning = true;
 		setSize(2.0F, 1.0F);
@@ -101,14 +104,14 @@ public class EntityParachute extends Entity {
 		prevPosZ = z;
 	}
 	
-	// FIXME: This fucks up movement in 1.6.2, packets are not sent to server if
+	// FIXME: This fucks up movement in 1.6.2, movement packets are not sent to server if
 	// shouldRiderSit returns false. 
 	// need for shouldRiderSit to return true in order to receive packets. need for it to return
 	// false for player to not be in the sitting position on the parachute.
 	// skydiver should 'hang' when on the parachute and then
 	// 'pick up legs' when landing
 //	public boolean shouldRiderSit() {
-//		if (isNearGround(posX, posY, posZ, 4.0)) {
+//		if (isNearGround(posX, posY, posZ, smallCanopy ? 3.0 : 4.0)) {
 //			return true;
 //		}
 //		return false;
@@ -140,7 +143,7 @@ public class EntityParachute extends Entity {
 	}
 
 	public double getMountedYOffset() {
-		return -3.5D;
+		return (smallCanopy == 1) ? -2.5 : -3.5;
 	}
 	
 	public void destroyParachute() {
@@ -254,7 +257,7 @@ public class EntityParachute extends Entity {
 		prevPosZ = posZ;
 		
 		// drop the chute when close to ground
-		checkShouldDropChute(posX, posY, posZ, 4.0D); // 3.0D original 
+		checkShouldDropChute(posX, posY, posZ, (smallCanopy == 1) ? 3.0 : 4.0); // 3.0D original 
 
 		// forward velocity
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
@@ -286,10 +289,8 @@ public class EntityParachute extends Entity {
 				motionZ *= 0.99D;
 			}
 		} else { // single player world - integrated server
-			double forwardMovement = 0.5;
+			double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward * ((smallCanopy == 1) ? 1.0 : 0.85);
 			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
-                forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward;
-
                 if (forwardMovement > 0.0) {
                     double x = -Math.sin((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
                     double z = Math.cos((double)(riddenByEntity.rotationYaw * 0.0174532925199433));

@@ -33,10 +33,11 @@ public class ParachuteKeyHandler extends KeyHandler {
 	static KeyBinding ascendBinding = new KeyBinding("Parachute Ascend", Keyboard.KEY_C);
 	static KeyBinding descendBinding = new KeyBinding("Parachute Descend", Keyboard.KEY_X);
 	static KeyBinding colorBinding = new KeyBinding("Parachute Color", Keyboard.KEY_PERIOD);
+//	static KeyBinding typeBinding = new KeyBinding("Parachute Canopy", Keyboard.KEY_P);
 	
     public ParachuteKeyHandler() {
-        super(new KeyBinding[] {ascendBinding, descendBinding, colorBinding},
-        	new boolean[] {true, true, false});
+        super(new KeyBinding[] {ascendBinding, descendBinding, colorBinding/*, typeBinding*/},
+        	new boolean[] {true, true, false/*, false*/});
     }
 
     @Override
