@@ -1,4 +1,3 @@
-//  
 //  =====GPL=============================================================
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,19 +17,9 @@
 package parachute.common;
 
 import java.util.List;
-//import java.util.Random;
-//import java.lang.Thread;
-
-//import org.lwjgl.input.Keyboard;
-
-
-//import cpw.mods.fml.client.FMLClientHandler;
-//import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-//import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -117,16 +106,19 @@ public class EntityParachute extends Entity {
 //		return false;
 //	}
 
+    @Override
 	protected boolean canTriggerWalking() {
 		return false;
 	}
 	
+    @Override
 	protected void entityInit() {
 		dataWatcher.addObject(17, new Integer(0)); // time since last hit
 		dataWatcher.addObject(18, new Integer(1)); // forward direction
 		dataWatcher.addObject(19, new Float(0.0F)); // damage taken | current damage
 	}
 
+    @Override
 	public AxisAlignedBB getCollisionBox(Entity entity) {
 		if (entity != riddenByEntity && entity.ridingEntity != this) {
 			return entity.boundingBox;
@@ -134,14 +126,17 @@ public class EntityParachute extends Entity {
 		return null;
 	}
 
+    @Override
 	public AxisAlignedBB getBoundingBox() {
 		return boundingBox;
 	}
 
+    @Override
 	public boolean canBePushed() {
 		return false;
 	}
 
+    @Override
 	public double getMountedYOffset() {
 		return smallCanopy ? -2.5 : -3.5;
 	}
@@ -151,6 +146,7 @@ public class EntityParachute extends Entity {
 	}
 	
 	// parachute takes additional damage from being hit
+    @Override
 	public boolean attackEntityFrom(DamageSource damagesource, float damage) {
 		if (!worldObj.isRemote && !isDead) {
 			setForwardDirection(-getForwardDirection());
@@ -172,6 +168,7 @@ public class EntityParachute extends Entity {
 	}
 
 	// use shears to cut the parachute coords...
+    @Override
 	public boolean func_130002_c(EntityPlayer entityplayer) { // old interact(EntityPlayer entityplayer)
 		ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 		if (itemstack != null && itemstack.itemID == Item.shears.itemID && riddenByEntity != null) {
@@ -188,11 +185,13 @@ public class EntityParachute extends Entity {
 		return false;
 	}
 
+    @Override
 	public boolean canBeCollidedWith() {
 		return !isDead;
 	}
 	
 //	@SideOnly(Side.CLIENT)
+    @Override
 	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int inc) {
 		if (isTurning) {
 			newRotationInc = inc + 5;
@@ -225,12 +224,14 @@ public class EntityParachute extends Entity {
 	}
 	
 //	@SideOnly(Side.CLIENT)
+    @Override
 	public void setVelocity(double x, double y, double z) {
 		velocityX = motionX = x;
 		velocityY = motionY = y;
 		velocityZ = motionZ = z;
 	}
 
+    @Override
 	public void onUpdate() {
 		super.onUpdate();
 
@@ -400,13 +401,16 @@ public class EntityParachute extends Entity {
 //			}
 //		}
 			switch(pInfo.mode) {
-			case 1:
-				descentRate = ascend;
-				break;
-				
-			case 2:
-				descentRate = descend;
-				break;
+                case 0:
+                    descentRate = drift;
+                    break;
+                case 1:
+                    descentRate = ascend;
+                    break;
+
+                case 2:
+                    descentRate = descend;
+                    break;
 			}
 		}
 		
@@ -451,7 +455,7 @@ public class EntityParachute extends Entity {
 		return nearGround;
 	}
 
-//	@Override
+	@Override
 	public void updateRiderPosition() {
 		if (riddenByEntity != null) {
 			double cosYaw = Math.cos((double) rotationYaw * 0.01745329252D) * 0.4D;
@@ -466,11 +470,14 @@ public class EntityParachute extends Entity {
 		dropItem(Item.silk.itemID, 1);
 	}
 
+    @Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {}
 
+    @Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {}
 	
 	@SideOnly(Side.CLIENT)
+    @Override
 	public float getShadowSize() {
 		return 0.0F;
 	}

@@ -17,17 +17,17 @@
 
 package parachute.common;
 
-import parachute.client.RenderParachute;
+//import parachute.client.RenderParachute;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+//import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.FMLCommonHandler;
+//import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -47,6 +47,7 @@ public class ItemParachute extends Item {
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 	}
 
+    @Override
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
 		return deployParachute(itemstack, world, entityplayer);
 	}
