@@ -24,15 +24,12 @@ import net.minecraft.client.renderer.entity.Render;
 //import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityBoat;
-import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 
 import org.lwjgl.opengl.GL11;
 
 import parachute.common.EntityParachute;
-import parachute.common.ItemParachute;
 import parachute.common.Parachute;
 
 public class RenderParachute extends Render {
@@ -79,6 +76,7 @@ public class RenderParachute extends Render {
 		GL11.glPopMatrix();
 	}
 
+    @Override
 	public void doRender(Entity entity, double x, double y, double z, float rotation, float center) {
 		renderParachute((EntityParachute) entity, x, y, z, rotation, center);
 	}

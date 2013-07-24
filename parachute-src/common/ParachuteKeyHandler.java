@@ -19,12 +19,8 @@ package parachute.common;
 
 import java.util.EnumSet;
 
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
-
 import org.lwjgl.input.Keyboard;
-
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
 

@@ -19,13 +19,9 @@
 package parachute.common;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.server.MinecraftServer;
 
 public class CommonProxyParachute {
 	
@@ -43,7 +39,6 @@ public class CommonProxyParachute {
 			FMLClientHandler.instance().sendPacket(packet);
 		} catch (NullPointerException e) {
 			System.err.println("NPE in sendCustomPacket: " + e.toString());
-			return;
 		}
     }
 

@@ -18,13 +18,11 @@
 package parachute.common;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.EnumHelper;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -36,27 +34,27 @@ import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.common.SidedProxy;
 
 @Mod (
-	modid = Parachute.ID,
+	modid = Parachute.modid,
 	name = Parachute.name,
-	version = Parachute.VER
+	version = Parachute.version
 )
 
 @NetworkMod (
-	versionBounds = "[1.6.2]",
+	versionBounds = "[" + Parachute.version + "]",
 	clientSideRequired = true,
 	serverSideRequired = false,
 	packetHandler = ParachutePacketHandler.class,
 	connectionHandler = ParachutePacketHandler.class,
-	channels = {Parachute.CHANNEL}
+	channels = {Parachute.channel}
 )
 
 public class Parachute {
 	
 	static EnumToolMaterial NYLON = EnumHelper.addToolMaterial("nylon", 0, 30, 2.0F, 0, 15);
 	
-	public static final String ID = "ParachuteMod";
-	public static final String VER = "1.6.2";
-	public static final String CHANNEL = ID;
+	public static final String modid = "ParachuteMod";
+	public static final String version = "1.6.2";
+	public static final String channel = modid;
 	public static final String name = "Parachute Mod";
 	public static final String entityName = "Parachute";
 	
@@ -69,7 +67,6 @@ public class Parachute {
 //	private boolean useTexturePack;
 	private static int itemID;
 	private int entityID = EntityRegistry.findGlobalUniqueEntityId();
-	private Minecraft mcinstance;
 
 	@SidedProxy (
 		clientSide = "parachute.client.ClientProxyParachute",
@@ -151,13 +148,11 @@ public class Parachute {
 		LanguageRegistry.addName(parachuteItem, entityName);
 		NetworkRegistry.instance().registerConnectionHandler(new ParachutePacketHandler());
 		
-		mcinstance = FMLClientHandler.instance().getClient();
-		
 		instance = this;
 	}
 	
 	public String getVersion() {
-		return Parachute.VER;
+		return Parachute.version;
 	}
 	
 	public double getMaxAltitude() {

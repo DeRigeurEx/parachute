@@ -18,10 +18,8 @@
 package parachute.client;
 
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-import org.lwjgl.opengl.GL11;
 
 import parachute.common.Parachute;
 
@@ -83,6 +81,7 @@ public class ModelParachute extends ModelBase {
 		}
 	}
 
+    @Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		if (smallCanopy) {
 			renderSmallCanopy(f5);

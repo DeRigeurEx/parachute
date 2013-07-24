@@ -29,7 +29,7 @@ public class PlayerManagerParachute
     
     private static final PlayerManagerParachute instance = new PlayerManagerParachute();
     
-    public static final PlayerManagerParachute getInstance() {
+    public static PlayerManagerParachute getInstance() {
         return instance;
     }
     

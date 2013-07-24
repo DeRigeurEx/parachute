@@ -50,12 +50,12 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 	// server handles key press custom packets from the player
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player p) {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet.data));
-		byte keyCode = 0;
+		byte keyCode;
 		boolean keyDown;
 		byte type;
 		
-		if (packet.channel != Parachute.CHANNEL) { // check the channel - CYA
-			System.out.println("Received a packet not intended for channel " + Parachute.CHANNEL);
+		if (!packet.channel.equals(Parachute.channel)) { // check the channel - CYA
+			System.out.println("Received a packet not intended for channel " + Parachute.channel);
 			return;
 		}
 		
@@ -74,8 +74,6 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 					
 				keyCode = dis.readByte();
 				keyDown = dis.readBoolean();
-				
-//				System.out.println("ParachutePacketHandler: \n\tkeyCode: " + keyCode + "\n\tkeyDown: " + keyDown);
 				
 				if (keyCode == Keyboard.KEY_C) { // keycode: 46
 					if (keyDown) {
@@ -100,7 +98,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 				}
 			}
 		} catch (IOException e) {
-			return;
+            throw new RuntimeException(e);
 		}
 	}
 	
@@ -110,7 +108,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 		Minecraft client = FMLClientHandler.instance().getClient();
 		WorldClient world = client.theWorld;
 		if (world == null || !world.isRemote) {
-			return;
+//            return;
 		} else {
 			try	{
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -122,7 +120,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 				dos.writeBoolean(keyDown);  // true if key is pressed
 				dos.close();
 
-				packet.channel = Parachute.CHANNEL;
+				packet.channel = Parachute.channel;
 				packet.data = bos.toByteArray();
 				packet.length = bos.size();
 				packet.isChunkDataPacket = false;
@@ -157,7 +155,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 	@Override
 	public void connectionClosed(INetworkManager manager) {
 		PlayerInfo PI = new PlayerInfo("", manager);
-		for(int i = 0; i < PlayerManagerParachute.getInstance().Players.size() && PI != null; i++) {
+		for(int i = 0; i < PlayerManagerParachute.getInstance().Players.size()/* && PI != null*/; i++) {
 			if(PlayerManagerParachute.getInstance().Players.get(i).networkManager == manager) {
 				PlayerManagerParachute.getInstance().Players.remove(i);
 			}  

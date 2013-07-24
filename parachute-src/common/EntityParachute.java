@@ -190,7 +190,7 @@ public class EntityParachute extends Entity {
 		return !isDead;
 	}
 	
-//	@SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     @Override
 	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int inc) {
 		if (isTurning) {
@@ -223,7 +223,7 @@ public class EntityParachute extends Entity {
 		motionZ = velocityZ;
 	}
 	
-//	@SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
     @Override
 	public void setVelocity(double x, double y, double z) {
 		velocityX = motionX = x;

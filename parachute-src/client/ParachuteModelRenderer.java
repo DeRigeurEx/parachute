@@ -20,8 +20,6 @@ package parachute.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.model.ModelBox;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
@@ -220,7 +218,7 @@ public class ParachuteModelRenderer {
 		compiled = true;
 	}
 	
-	public ParachuteModelRenderer setTextureSize(float x, float y) {
+	public final ParachuteModelRenderer setTextureSize(float x, float y) {
         textureWidth = x;
         textureHeight = y;
         return this;
