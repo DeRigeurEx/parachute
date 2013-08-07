@@ -27,10 +27,13 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+//import net.minecraft.item.EnumArmorMaterial;
+//import net.minecraft.item.ItemArmor;
 
 public class ItemParachute extends Item {
 	
 	public ItemParachute(int i, EnumToolMaterial enumtoolmaterial) {
+//    public ItemParachute(int id, EnumArmorMaterial enumarmormaterial, int renderIndex, int armorType) {
 		super(i);
 		maxStackSize = 16;
 		setMaxDamage(enumtoolmaterial.getMaxUses()); // this damage is for number of uses only
@@ -44,12 +47,12 @@ public class ItemParachute extends Item {
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 	}
 
-    @Override
-	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
-		return deployParachute(itemstack, world, entityplayer);
-	}
-
-	public ItemStack deployParachute(ItemStack itemstack, World world,	EntityPlayer entityplayer) {
+//    @Override
+//	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
+//		return deployParachute(itemstack, world, entityplayer);
+//	}
+    
+	public ItemStack deployParachute(ItemStack itemstack, World world, EntityPlayer entityplayer) {
 		// don't deploy if entityplayer is null or if player is not falling or if already on a parachute.
 		if (entityplayer == null || !isFalling(entityplayer) || entityplayer.ridingEntity != null) {
 			return itemstack;
