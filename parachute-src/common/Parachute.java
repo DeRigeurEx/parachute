@@ -61,15 +61,17 @@ public class Parachute {
 	public static final String name = "Parachute Mod";
 	public static final String entityName = "Parachute";
     public static final String ripcordName = "Ripcord";
+    public static final String aadName = "AutoActivationDevice";
 	
 	private int heightLimit;
 	private int chuteColor;
 	private boolean thermals;
-	private boolean autoDeploy;
+//	private boolean autoDeploy;
 	private int fallDistance;
 	private boolean smallCanopy;
 	private static int itemID;
     private static int ripcordID;
+    private static int aadID;
 	private int entityID = EntityRegistry.findGlobalUniqueEntityId();
     private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs. 3 = boots
     public static final int armorSlot = 2;  // armor slot: 0 = ??, 1 = ??, 2 = chestplate, 3 = ??
@@ -82,6 +84,7 @@ public class Parachute {
 
 	public static Item parachuteItem;
     public static Item ripcordItem;
+    public static Item aadItem;
 	
 	@Instance
 	public static Parachute instance;
@@ -95,9 +98,10 @@ public class Parachute {
 		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)";
 		String itemComment = "itemID - customize the Item ID (2500)";
         String cordComment = "ripcordID - customize the Ripcord Item ID (2501)";
+        String aadComment = "auto activation device ID - customize the AAD Item ID (2502)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (225)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
-		String deployComment = "autoDeploy - true|false enable/disable auto parachute deployment (false)";
+//		String deployComment = "autoDeploy - true|false enable/disable auto parachute deployment (false)";
 		String fallComment = "fallDistance - maximum falling distance before auto deploy (2 - 20) (5)";
 		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\n"
 							+ "larger 4 panel canopy (false)";
@@ -119,10 +123,12 @@ public class Parachute {
 		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 225, heightComment).getInt();
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", 18, colorComment).getInt();
 		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
-		autoDeploy = config.get(Configuration.CATEGORY_GENERAL, "autoDeploy", false, deployComment).getBoolean(false);
+//		autoDeploy = config.get(Configuration.CATEGORY_GENERAL, "autoDeploy", false, deployComment).getBoolean(false);
 		fallDistance = config.get(Configuration.CATEGORY_GENERAL, "fallDistance", 5, fallComment).getInt();
 		itemID = config.get(Configuration.CATEGORY_GENERAL, "itemID", 2500, itemComment).getInt();
         ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
+        ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
+        aadID = config.get(Configuration.CATEGORY_GENERAL, "aadID", 2502, aadComment).getInt();
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", false, typeComment).getBoolean(false);
 		
 		// fix fallDistance  (2 > fallDistance < 20)
@@ -135,9 +141,9 @@ public class Parachute {
 		proxy.registerKeyHandler(); // for keyboard control of parachute
 		
 		// only register tick handler if autoDeploy is enabled
-		if (autoDeploy) {
+//		if (autoDeploy) {
 			proxy.registerServerTickHandler(); // for auto deployment feature
-		}
+//		}
 		
     }
 
@@ -150,17 +156,23 @@ public class Parachute {
 		parachuteItem.func_111206_d("parachute");
         
         ripcordItem = new ItemRipCord(ripcordID).setUnlocalizedName(ripcordName);
+        aadItem = new ItemAutoActivateDevice(aadID).setUnlocalizedName(aadName);
 		
-		GameRegistry.addRecipe(new ItemStack(ripcordItem, 1), new Object[] {
-			"  #", " # ", "#  ", '#', Item.silk
-		});
-        
         GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
 			"###", "X X", " L ", '#', Block.cloth, 'X', Item.silk, 'L', Item.leather
+		});
+        
+        GameRegistry.addRecipe(new ItemStack(ripcordItem, 1), new Object[] {
+			"#  ", " # ", "  *", '#', Item.silk, '*', Item.ingotIron
+		});
+        
+        GameRegistry.addRecipe(new ItemStack(aadItem, 1), new Object[] {
+			" * ", " % ", " # ", '*', Item.comparator, '%', Item.redstone, '#', ripcordItem,
 		});
 		
 		LanguageRegistry.addName(parachuteItem, entityName);
         LanguageRegistry.addName(ripcordItem, ripcordName);
+        LanguageRegistry.addName(aadItem, aadName);
         
 		NetworkRegistry.instance().registerConnectionHandler(new ParachutePacketHandler());
 		
@@ -179,9 +191,9 @@ public class Parachute {
 		return thermals;
 	}
 	
-	public boolean getAutoDeploy() {
-		return autoDeploy;
-	}
+//	public boolean getAutoDeploy() {
+//		return autoDeploy;
+//	}
 	
 	public int getChuteColor() {
 		return chuteColor;

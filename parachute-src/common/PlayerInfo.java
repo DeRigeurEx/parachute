@@ -24,13 +24,15 @@ public class PlayerInfo
 {
 	public String Name;
 	public int mode; // 0 = drift, 1 = ascend, 2 = descend
+    public boolean aad;  // true = AAD is activated, false = deactivated
     public INetworkManager networkManager;
     private int colorIdx = Parachute.instance.getChuteColor();
-//    private boolean smallCanopy; // false = large canopy, true = small canopy
     
     public PlayerInfo(String name, INetworkManager nm) {
         Name = name;
         networkManager = nm;
+        aad = true;
+        mode = 0;
     }
     
     public void setLiftMode(int m) {
@@ -49,8 +51,8 @@ public class PlayerInfo
     	return colorIdx;
     }
     
-//    public void setCanopyType(boolean t) {
-//    	smallCanopy = t;
-//    }
+    public void setAAD(boolean active) {
+        aad = active;
+    }
     
 }

@@ -41,6 +41,8 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.item.ItemStack;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.world.World;
 
@@ -98,6 +100,14 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 						RenderParachute.setParachuteColor(pi.changeColor());
 					}
 				}
+                ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
+                if (keyCode == Keyboard.KEY_Z && aad != null) { // auto deploy parachute
+                    if (keyDown) {
+                        pi.setAAD(pi.aad == true ? false : true);
+                        GuiNewChat chat = FMLClientHandler.instance().getClient().ingameGUI.getChatGUI();
+                        chat.printChatMessage("Auto Activation Device is " + (pi.aad ? "on" : "off"));
+                    }
+                }
                 
 //                if (keyCode == Keyboard.KEY_Z) { // deploy parachute
 //                    if (keyDown) {

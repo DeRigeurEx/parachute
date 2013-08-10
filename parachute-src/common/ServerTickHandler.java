@@ -20,7 +20,7 @@ package parachute.common;
 import java.util.EnumSet;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
+//import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -39,29 +39,34 @@ public class ServerTickHandler implements ITickHandler {
 	// and call ItemParachute.deployParachute if the player is falling
 	private void onPlayerTick(EntityPlayer player) {
 		World world = player.worldObj;
-		boolean auto = (Parachute.instance.getAutoDeploy() && !player.capabilities.isCreativeMode);
+//		boolean auto = (Parachute.instance.getAutoDeploy() && !player.capabilities.isCreativeMode);
+        PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
+        if (pi == null) {
+            return;
+        }
+        boolean auto = (pi.aad && !player.capabilities.isCreativeMode);
 		int maxFallDistance = Parachute.instance.getFallDistance();
 		if (auto && player.fallDistance > maxFallDistance && !player.onGround && !player.isOnLadder()) {
-//			ItemStack itemstack = inventoryContainsParachute(player.inventory);
-//			if (itemstack != null) {
-            if (Parachute.playerIsWearingParachute(player)) {
-                ItemStack itemstack = player.getCurrentArmor(Parachute.armorSlot);
-				((ItemParachute)itemstack.getItem()).deployParachute(/*itemstack, */world, player);
+			ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
+			if (aad != null) {
+//            if (Parachute.playerIsWearingParachute(player)) {
+                ItemStack parachute = player.getCurrentArmor(Parachute.armorSlot);
+				((ItemParachute)parachute.getItem()).deployParachute(/*itemstack, */world, player);
 			}
 		} // else fall to death!
 	}
 	
 	// search inventory for a parachute
-	public ItemStack inventoryContainsParachute(InventoryPlayer inventory) {
-		ItemStack itemstack = null;
-		for (ItemStack s : inventory.mainInventory) {
-			if (s != null && s.getItem() instanceof ItemParachute) {
-				itemstack = s;
-				break;
-			}
-		}
-		return itemstack;
-	}
+//	public ItemStack inventoryContainsParachute(InventoryPlayer inventory) {
+//		ItemStack itemstack = null;
+//		for (ItemStack s : inventory.mainInventory) {
+//			if (s != null && s.getItem() instanceof ItemParachute) {
+//				itemstack = s;
+//				break;
+//			}
+//		}
+//		return itemstack;
+//	}
 	
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
@@ -75,7 +80,7 @@ public class ServerTickHandler implements ITickHandler {
 
 	@Override
 	public String getLabel() {
-		return "Parachute Server";
+		return "Parachute AAD";
 	}
 
 }

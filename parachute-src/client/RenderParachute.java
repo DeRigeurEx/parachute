@@ -81,12 +81,14 @@ public class RenderParachute extends Render {
 	}
 
 	public void renderLargeParachuteCords(EntityPlayer rider, float center) {
+        float zOffset = 3.0F;
 		float x = -5.0F;
 		float y = 3.0F;
 		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
 			y = 2.25F;
 		}
-		float z = 0.0F;
+		float zl = -zOffset;
+        float zr = zOffset;
 
 		float b = rider.getBrightness(center);
 
@@ -100,42 +102,48 @@ public class RenderParachute extends Render {
 		GL11.glColor3f(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
 
 		GL11.glVertex3f(-8F, 0.37F, -31.5F); 	// top - front
-		GL11.glVertex3f(x, y, z); 				// bottom
+		GL11.glVertex3f(x, y, zl); 				// bottom
 
 		GL11.glVertex3f(8F, 0.37F, -31.5F);     // ...back
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zl);
 		
 		// left middle
 		GL11.glVertex3f(-8F, 0.12F, -16F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zl);
 
 		GL11.glVertex3f(8F, 0.12F, -16F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zl);
 
 		// right end
 		GL11.glColor3f(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
 
 		GL11.glVertex3f(-8F, 0.37F, 31.5F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zr);
 
 		GL11.glVertex3f(8F, 0.37F, 31.5F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zr);
 
 		// right middle
 		GL11.glVertex3f(-8F, 0.12F, 16F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zr);
 
 		GL11.glVertex3f(8F, 0.12F, 16F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zr);
 		
 		// center
 		GL11.glColor3f(b * 0.5F, b * 0.65F, b * 0.5F); // slightly green
 		
 		GL11.glVertex3f(-8F, 0F, 0F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zl); // first center cord goes to the left 
 
 		GL11.glVertex3f(8F, 0F, 0F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zl);
+        
+        GL11.glVertex3f(-8F, 0F, 0F); // second center cord goes to the right
+		GL11.glVertex3f(x, y, zr);
+
+		GL11.glVertex3f(8F, 0F, 0F);
+		GL11.glVertex3f(x, y, zr);
 
 		GL11.glEnd();
 		
@@ -144,12 +152,14 @@ public class RenderParachute extends Render {
 	}
 	
 	public void renderSmallParachuteCords(EntityPlayer rider, float center) {
+        float zOffset = 3.0F;
 		float x = -5.0F;
-		float y = 2.0F;
+		float y = 1.5F;
 		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
 			y = 1.25F;
 		}
-		float z = 0.0F;
+		float zl = -zOffset;
+        float zr = zOffset;
 
 		float b = rider.getBrightness(center);
 
@@ -163,33 +173,33 @@ public class RenderParachute extends Render {
 		GL11.glColor3f(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
 
 		GL11.glVertex3f(-8F, 0.25F, -23.5F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zl);
 
 		GL11.glVertex3f(8F, 0.25F, -23.5F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zl);
 
 		// front
 		GL11.glVertex3f(-8F, 0F, -8F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zl);
 
 		GL11.glVertex3f(8F, 0F, -8F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zl);
 
 		// right side
 		GL11.glColor3f(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
 
 		GL11.glVertex3f(-8F, 0.25F, 23.5F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zr);
 
 		GL11.glVertex3f(8F, 0.25F, 23.5F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zr);
 
 		// back
 		GL11.glVertex3f(-8F, 0F, 8F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zr);
 
 		GL11.glVertex3f(8F, 0F, 8F);
-		GL11.glVertex3f(x, y, z);
+		GL11.glVertex3f(x, y, zr);
 		GL11.glEnd();
 
 		GL11.glEnable(GL11.GL_LIGHTING);

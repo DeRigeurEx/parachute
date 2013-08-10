@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 public class ItemRipCord extends Item {
     public ItemRipCord(int id){
         super(id);
-		maxStackSize = 16;
+		maxStackSize = 1;
 		setCreativeTab(CreativeTabs.tabTools); // place in the tools tab in creative mode
     }
 
