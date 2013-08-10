@@ -42,9 +42,11 @@ public class ServerTickHandler implements ITickHandler {
 		boolean auto = (Parachute.instance.getAutoDeploy() && !player.capabilities.isCreativeMode);
 		int maxFallDistance = Parachute.instance.getFallDistance();
 		if (auto && player.fallDistance > maxFallDistance && !player.onGround && !player.isOnLadder()) {
-			ItemStack itemstack = inventoryContainsParachute(player.inventory);
-			if (itemstack != null) {
-				((ItemParachute)itemstack.getItem()).deployParachute(itemstack, world, player);
+//			ItemStack itemstack = inventoryContainsParachute(player.inventory);
+//			if (itemstack != null) {
+            if (Parachute.playerIsWearingParachute(player)) {
+                ItemStack itemstack = player.getCurrentArmor(Parachute.armorSlot);
+				((ItemParachute)itemstack.getItem()).deployParachute(/*itemstack, */world, player);
 			}
 		} // else fall to death!
 	}

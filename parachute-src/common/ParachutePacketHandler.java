@@ -41,9 +41,8 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+//import net.minecraft.item.ItemStack;
+//import net.minecraft.world.World;
 
 public class ParachutePacketHandler implements IPacketHandler, IConnectionHandler {
 	
@@ -100,19 +99,17 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 					}
 				}
                 
-                if (keyCode == Keyboard.KEY_Z) {
-                    if (keyDown) {
-                        World world = player.worldObj;
-//                        boolean auto = (Parachute.instance.getAutoDeploy() && !player.capabilities.isCreativeMode);
-                        int maxFallDistance = Parachute.instance.getFallDistance();
-                        if (/*auto && player.fallDistance > maxFallDistance && */!player.onGround && !player.isOnLadder()) {
-                            ItemStack itemstack = inventoryContainsParachute(player.inventory);
-                            if (itemstack != null) {
-                                ((ItemParachute)itemstack.getItem()).deployParachute(itemstack, world, player);
-                            }
-                        }
-                    }
-                }
+//                if (keyCode == Keyboard.KEY_Z) { // deploy parachute
+//                    if (keyDown) {
+//                        World world = player.worldObj;
+//                        if (!player.onGround && !player.isOnLadder()) {
+//                            if (Parachute.playerIsWearingParachute(player)) {
+//                                ItemStack itemstack = player.getCurrentArmor(Parachute.armorSlot);
+//                                ((ItemParachute)itemstack.getItem()).deployParachute(/*itemstack, */world, player);
+//                            }
+//                        }
+//                    }
+//                }
 			}
 		} catch (IOException e) {
             throw new RuntimeException(e);
@@ -184,16 +181,4 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 		PlayerManagerParachute.getInstance().Players.add(new PlayerInfo(clientHandler.getPlayer().username, manager));
 	}
     
-    // search inventory for a parachute
-	public ItemStack inventoryContainsParachute(InventoryPlayer inventory) {
-		ItemStack itemstack = null;
-		for (ItemStack s : inventory.mainInventory) {
-			if (s != null && s.getItem() instanceof ItemParachute) {
-				itemstack = s;
-				break;
-			}
-		}
-		return itemstack;
-	}
-
 }

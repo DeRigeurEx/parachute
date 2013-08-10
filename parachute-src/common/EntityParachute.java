@@ -258,7 +258,7 @@ public class EntityParachute extends Entity {
 		prevPosZ = posZ;
 		
 		// drop the chute when close to ground
-		checkShouldDropChute(posX, posY, posZ, smallCanopy ? 3.0 : 4.0); // 3.0D original 
+		checkShouldDropChute(posX, posY, posZ, smallCanopy ? 3.5 : 4.5); // 3.0D original 
 
 		// forward velocity
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);

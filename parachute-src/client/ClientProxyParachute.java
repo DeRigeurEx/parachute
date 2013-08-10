@@ -34,5 +34,10 @@ public class ClientProxyParachute extends CommonProxyParachute {
     	KeyBindingRegistry.registerKeyBinding(new ParachuteKeyHandler());
     }
     
+    @Override
+	public int addArmor(String armorName) {
+		return RenderingRegistry.addNewArmourRendererPrefix(armorName);
+	}
+    
 }
 

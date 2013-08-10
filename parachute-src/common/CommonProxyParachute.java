@@ -28,6 +28,8 @@ public class CommonProxyParachute {
 	public void registerRenderer() {}
 	
 	public void registerKeyHandler() {}
+    
+    public int addArmor(String armorName) { return 0; }
 	
 	public void registerServerTickHandler() {
 		TickRegistry.registerTickHandler(new ServerTickHandler(), Side.SERVER);

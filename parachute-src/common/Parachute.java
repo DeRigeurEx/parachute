@@ -18,7 +18,7 @@
 package parachute.common;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.EnumToolMaterial;
+//import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -32,6 +32,8 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.common.SidedProxy;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumArmorMaterial;
 
 @Mod (
 	modid = Parachute.modid,
@@ -50,13 +52,15 @@ import cpw.mods.fml.common.SidedProxy;
 
 public class Parachute {
 	
-	static EnumToolMaterial NYLON = EnumHelper.addToolMaterial("nylon", 0, 30, 2.0F, 0, 15);
+//	static EnumToolMaterial NYLON = EnumHelper.addToolMaterial("nylon", 0, 30, 2.0F, 0, 15);
+    static EnumArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 30, new int[]{1, 2, 2, 1}, 15);
 	
 	public static final String modid = "ParachuteMod";
 	public static final String version = "1.6.2";
 	public static final String channel = modid;
 	public static final String name = "Parachute Mod";
 	public static final String entityName = "Parachute";
+    public static final String ripcordName = "Ripcord";
 	
 	private int heightLimit;
 	private int chuteColor;
@@ -65,7 +69,10 @@ public class Parachute {
 	private int fallDistance;
 	private boolean smallCanopy;
 	private static int itemID;
+    private static int ripcordID;
 	private int entityID = EntityRegistry.findGlobalUniqueEntityId();
+    private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs. 3 = boots
+    public static final int armorSlot = 2;  // armor slot: 0 = ??, 1 = ??, 2 = chestplate, 3 = ??
 
 	@SidedProxy (
 		clientSide = "parachute.client.ClientProxyParachute",
@@ -74,6 +81,7 @@ public class Parachute {
 	public static CommonProxyParachute proxy;
 
 	public static Item parachuteItem;
+    public static Item ripcordItem;
 	
 	@Instance
 	public static Parachute instance;
@@ -85,7 +93,8 @@ public class Parachute {
 	@EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)";
-		String itemComment = "itemID - customize the ItemID (2500)";
+		String itemComment = "itemID - customize the Item ID (2500)";
+        String cordComment = "ripcordID - customize the Ripcord Item ID (2501)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (225)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
 		String deployComment = "autoDeploy - true|false enable/disable auto parachute deployment (false)";
@@ -113,6 +122,7 @@ public class Parachute {
 		autoDeploy = config.get(Configuration.CATEGORY_GENERAL, "autoDeploy", false, deployComment).getBoolean(false);
 		fallDistance = config.get(Configuration.CATEGORY_GENERAL, "fallDistance", 5, fallComment).getInt();
 		itemID = config.get(Configuration.CATEGORY_GENERAL, "itemID", 2500, itemComment).getInt();
+        ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", false, typeComment).getBoolean(false);
 		
 		// fix fallDistance  (2 > fallDistance < 20)
@@ -133,15 +143,25 @@ public class Parachute {
 
 	@EventHandler
 	public void Init(FMLInitializationEvent event) {
+        int chuteID = proxy.addArmor("parachute");
 		EntityRegistry.registerModEntity(EntityParachute.class, entityName, entityID, this, 64, 10, true);
-		parachuteItem = new ItemParachute(itemID, NYLON).setUnlocalizedName(entityName);
+//		parachuteItem = new ItemParachute(itemID, NYLON).setUnlocalizedName(entityName);
+        parachuteItem = new ItemParachute(itemID, NYLON, chuteID, armorType);
 		parachuteItem.func_111206_d("parachute");
+        
+        ripcordItem = new ItemRipCord(ripcordID).setUnlocalizedName(ripcordName);
 		
-		GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
+		GameRegistry.addRecipe(new ItemStack(ripcordItem, 1), new Object[] {
+			"  #", " # ", "#  ", '#', Item.silk
+		});
+        
+        GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
 			"###", "X X", " L ", '#', Block.cloth, 'X', Item.silk, 'L', Item.leather
 		});
 		
 		LanguageRegistry.addName(parachuteItem, entityName);
+        LanguageRegistry.addName(ripcordItem, ripcordName);
+        
 		NetworkRegistry.instance().registerConnectionHandler(new ParachutePacketHandler());
 		
 		instance = this;
@@ -178,4 +198,15 @@ public class Parachute {
 	public static int getItemID() {
 		return itemID;
 	}
+    
+    public static boolean playerIsWearingParachute(EntityPlayer player) {
+    	ItemStack stack = player == null ? null : player.getCurrentArmor(armorSlot);
+        if (stack != null) {
+        	Item item = stack.getItem();
+        	if (item != null && item instanceof ItemParachute) {
+            	return true;
+            }
+        }
+        return false;
+    }
 }
