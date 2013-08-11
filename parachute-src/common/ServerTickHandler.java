@@ -22,7 +22,7 @@ import java.util.EnumSet;
 import net.minecraft.entity.player.EntityPlayer;
 //import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+//import net.minecraft.world.World;
 
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
@@ -38,7 +38,7 @@ public class ServerTickHandler implements ITickHandler {
 	// set a fallDistance greater than maxFallDistance to offset the unmount falling distance
 	// and call ItemParachute.deployParachute if the player is falling
 	private void onPlayerTick(EntityPlayer player) {
-		World world = player.worldObj;
+//		World world = player.worldObj;
 //		boolean auto = (Parachute.instance.getAutoDeploy() && !player.capabilities.isCreativeMode);
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
         if (pi == null) {
@@ -51,7 +51,7 @@ public class ServerTickHandler implements ITickHandler {
 			if (aad != null) {
 //            if (Parachute.playerIsWearingParachute(player)) {
                 ItemStack parachute = player.getCurrentArmor(Parachute.armorSlot);
-				((ItemParachute)parachute.getItem()).deployParachute(/*itemstack, */world, player);
+				((ItemParachute)parachute.getItem()).deployParachute(/*itemstack, */player.worldObj, player);
 			}
 		} // else fall to death!
 	}

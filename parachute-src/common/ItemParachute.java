@@ -40,7 +40,7 @@ public class ItemParachute extends ItemArmor {
 //        super(id);
 		super(id, enumArmorMaterial, renderIndex, armorType);
         setMaxDamage(enumArmorMaterial.getDurability(armorType));
-		maxStackSize = 16;
+		maxStackSize = 1;
 //		setMaxDamage(enumtoolmaterial.getMaxUses()); // this damage is for number of uses only
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 	}

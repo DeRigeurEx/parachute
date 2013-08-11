@@ -69,7 +69,7 @@ public class Parachute {
 //	private boolean autoDeploy;
 	private int fallDistance;
 	private boolean smallCanopy;
-	private static int itemID;
+	private static int parachuteID;
     private static int ripcordID;
     private static int aadID;
 	private int entityID = EntityRegistry.findGlobalUniqueEntityId();
@@ -125,7 +125,7 @@ public class Parachute {
 		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
 //		autoDeploy = config.get(Configuration.CATEGORY_GENERAL, "autoDeploy", false, deployComment).getBoolean(false);
 		fallDistance = config.get(Configuration.CATEGORY_GENERAL, "fallDistance", 5, fallComment).getInt();
-		itemID = config.get(Configuration.CATEGORY_GENERAL, "itemID", 2500, itemComment).getInt();
+		parachuteID = config.get(Configuration.CATEGORY_GENERAL, "itemID", 2500, itemComment).getInt();
         ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
         ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
         aadID = config.get(Configuration.CATEGORY_GENERAL, "aadID", 2502, aadComment).getInt();
@@ -151,8 +151,8 @@ public class Parachute {
 	public void Init(FMLInitializationEvent event) {
         int chuteID = proxy.addArmor("parachute");
 		EntityRegistry.registerModEntity(EntityParachute.class, entityName, entityID, this, 64, 10, true);
-//		parachuteItem = new ItemParachute(itemID, NYLON).setUnlocalizedName(entityName);
-        parachuteItem = new ItemParachute(itemID, NYLON, chuteID, armorType);
+//		parachuteItem = new ItemParachute(parachuteID, NYLON).setUnlocalizedName(entityName);
+        parachuteItem = new ItemParachute(parachuteID, NYLON, chuteID, armorType);
 		parachuteItem.func_111206_d("parachute");
         
         ripcordItem = new ItemRipCord(ripcordID).setUnlocalizedName(ripcordName);
@@ -208,7 +208,7 @@ public class Parachute {
 	}
 	
 	public static int getItemID() {
-		return itemID;
+		return parachuteID;
 	}
     
     public static boolean playerIsWearingParachute(EntityPlayer player) {
