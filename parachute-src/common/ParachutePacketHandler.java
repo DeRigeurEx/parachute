@@ -81,28 +81,6 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 						pi.setLiftMode(0); // drift
 					}
 				}
-//				
-//				if (keyCode == Keyboard.KEY_X) { // keycode: 45
-//					if (keyDown) {
-//						pi.setLiftMode(2); // descend
-//					} else {
-//						pi.setLiftMode(0); // drift
-//					}
-//				}
-//
-//				if (keyCode == Keyboard.KEY_PERIOD) { // keycode: 52
-//					if (keyDown) {
-//						RenderParachute.setParachuteColor(pi.changeColor());
-//					}
-//				}
-//
-//                if (keyCode == Keyboard.KEY_Z) { // auto deploy parachute
-//                    ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
-//                    if (keyDown && aad != null) {
-//                        pi.setAAD(pi.aad == true ? false : true);
-//                        ((ItemAutoActivateDevice)aad.getItem()).setAADIconIndex(pi.aad == true ? 1 : 0);
-//                    }
-//                }
 			}
 		} catch (IOException e) {
             throw new RuntimeException(e);
@@ -114,29 +92,27 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 	public static void sendKeyPress(int keyCode, boolean keyDown) {
 		Minecraft client = FMLClientHandler.instance().getClient();
 		WorldClient world = client.theWorld;
-		if (world == null || !world.isRemote) {
-//            return;
-		} else {
-			try	{
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				DataOutputStream dos = new DataOutputStream(bos);
-				Packet250CustomPayload packet = new Packet250CustomPayload();
+		if (world != null && world.isRemote) {
+            try	{
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                DataOutputStream dos = new DataOutputStream(bos);
+                Packet250CustomPayload packet = new Packet250CustomPayload();
 
-				dos.writeByte(KeyPress);    // key press type packet
-				dos.writeByte(keyCode);		// the keycode
-				dos.writeBoolean(keyDown);  // true if key is pressed
-				dos.close();
+                dos.writeByte(KeyPress);    // key press type packet
+                dos.writeByte(keyCode);		// the keycode
+                dos.writeBoolean(keyDown);  // true if key is pressed
+                dos.close();
 
-				packet.channel = Parachute.channel;
-				packet.data = bos.toByteArray();
-				packet.length = bos.size();
-				packet.isChunkDataPacket = false;
+                packet.channel = Parachute.channel;
+                packet.data = bos.toByteArray();
+                packet.length = bos.size();
+                packet.isChunkDataPacket = false;
 
-				PacketDispatcher.sendPacketToServer(packet);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
+                PacketDispatcher.sendPacketToServer(packet);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 	}
 
 	@Override

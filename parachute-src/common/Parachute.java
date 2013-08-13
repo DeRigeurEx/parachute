@@ -52,7 +52,6 @@ import net.minecraft.item.EnumArmorMaterial;
 
 public class Parachute {
 	
-//	static EnumToolMaterial NYLON = EnumHelper.addToolMaterial("nylon", 0, 30, 2.0F, 0, 15);
     static EnumArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 5, new int[]{1, 1, 1, 1}, 15);
 	
 	public static final String modid = "ParachuteMod";
@@ -66,7 +65,6 @@ public class Parachute {
 	private int heightLimit;
 	private int chuteColor;
 	private boolean thermals;
-//	private boolean autoDeploy;
 	private int fallDistance;
 	private boolean smallCanopy;
 	private static int parachuteID;
@@ -101,7 +99,6 @@ public class Parachute {
         String aadComment = "auto activation device ID - customize the AAD Item ID (2502)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (225)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
-//		String deployComment = "autoDeploy - true|false enable/disable auto parachute deployment (false)";
 		String fallComment = "fallDistance - maximum falling distance before auto deploy (2 - 20) (5)";
 		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\n"
 							+ "larger 4 panel canopy (false)";
@@ -123,7 +120,6 @@ public class Parachute {
 		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 225, heightComment).getInt();
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", 18, colorComment).getInt();
 		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
-//		autoDeploy = config.get(Configuration.CATEGORY_GENERAL, "autoDeploy", false, deployComment).getBoolean(false);
 		fallDistance = config.get(Configuration.CATEGORY_GENERAL, "fallDistance", 5, fallComment).getInt();
 		parachuteID = config.get(Configuration.CATEGORY_GENERAL, "itemID", 2500, itemComment).getInt();
         ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
@@ -140,10 +136,7 @@ public class Parachute {
 		proxy.registerRenderer();
 		proxy.registerKeyHandler(); // for keyboard control of parachute
 		
-		// only register tick handler if autoDeploy is enabled
-//		if (autoDeploy) {
-			proxy.registerServerTickHandler(); // for auto deployment feature
-//		}
+		proxy.registerServerTickHandler(); // for auto deployment feature
 		
     }
 
@@ -151,7 +144,6 @@ public class Parachute {
 	public void Init(FMLInitializationEvent event) {
         int chuteID = proxy.addArmor("parachute");
 		EntityRegistry.registerModEntity(EntityParachute.class, entityName, entityID, this, 64, 10, true);
-//		parachuteItem = new ItemParachute(parachuteID, NYLON).setUnlocalizedName(entityName);
         parachuteItem = (ItemParachute)(new ItemParachute(parachuteID, NYLON, chuteID, armorType)).func_111206_d("parachutemod:Parachute");
         
         // used to repair the parachute
@@ -193,10 +185,6 @@ public class Parachute {
 		return thermals;
 	}
 	
-//	public boolean getAutoDeploy() {
-//		return autoDeploy;
-//	}
-	
 	public int getChuteColor() {
 		return chuteColor;
 	}
@@ -224,7 +212,4 @@ public class Parachute {
         return false;
     }
     
-//    public int getArmorCraftingMaterial() {
-//        return Block.cloth.blockID;
-//    }
 }

@@ -44,8 +44,6 @@ public class ParachuteModelRenderer {
 	public boolean showModel;
 	public float textureWidth;
     public float textureHeight;
-//    private int textureOffsetX;
-//    private int textureOffsetY;
     public List cubeList;
 
 	public ParachuteModelRenderer(int x, int y) {
@@ -59,12 +57,6 @@ public class ParachuteModelRenderer {
         setTextureSize(textureWidth, textureHeight);
 	}
 	
-//	public ParachuteModelRenderer setTextureOffset(int u, int v) {
-//        textureOffsetX = u;
-//        textureOffsetY = v;
-//        return this;
-//    }
-
 	public void addBox(float x, float y, float z, int i, int j, int k) {
 		corners = new PositionTextureVertex[8];
 		faces = new ParachuteTexturedQuad[6];

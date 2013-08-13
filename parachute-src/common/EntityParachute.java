@@ -52,7 +52,7 @@ public class EntityParachute extends Entity {
 	private double motionFactor;
 	private double maxAltitude;
 	private boolean allowThermals;
-	private boolean smallCanopy;
+//	private boolean smallCanopy;
 
 	private final int hitTime = 10;
 	private final float maxDamage = 40.0F;
@@ -69,7 +69,7 @@ public class EntityParachute extends Entity {
 	public EntityParachute(World world) {
 		super(world);
 		
-		smallCanopy = Parachute.instance.getCanopyType();
+//		smallCanopy = Parachute.instance.getCanopyType();
 
 		preventEntitySpawning = true;
 		setSize(2.0F, 1.0F);
@@ -162,7 +162,6 @@ public class EntityParachute extends Entity {
 					riddenByEntity.mountEntity(this);
 				}
 				// drop a parachute item
-				//dropItemWithOffset(Parachute.getItemID(), 1, 0.0F);
 				dropRemains();
 				destroyParachute(); // aaaaiiiiieeeeee!!! ... thud!
 			}
@@ -392,10 +391,6 @@ public class EntityParachute extends Entity {
 		if (pInfo == null) {
 			return descentRate;
 		} else {
-//			GameSettings gs = FMLClientHandler.instance().getClient().gameSettings;
-//			if (GameSettings.isKeyDown(gs.keyBindJump)) {
-//				descentRate = ascend;
-//			} 
 			switch(pInfo.mode) {
                 case modeDrift:
                     descentRate = drift;
@@ -424,7 +419,6 @@ public class EntityParachute extends Entity {
 				riddenByEntity.fallDistance = 0.0F;
 				riddenByEntity.mountEntity(this);
 				if (!worldObj.isRemote) {
-//					dropItemWithOffset(Parachute.getItemID(), 1, 0.0F);
 					destroyParachute();
 				} else {
 					riddenByEntity = null;
