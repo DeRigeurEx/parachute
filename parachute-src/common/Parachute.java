@@ -53,7 +53,7 @@ import net.minecraft.item.EnumArmorMaterial;
 public class Parachute {
 	
 //	static EnumToolMaterial NYLON = EnumHelper.addToolMaterial("nylon", 0, 30, 2.0F, 0, 15);
-    static EnumArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 30, new int[]{1, 2, 2, 1}, 15);
+    static EnumArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 5, new int[]{1, 1, 1, 1}, 15);
 	
 	public static final String modid = "ParachuteMod";
 	public static final String version = "1.6.2";
@@ -82,9 +82,9 @@ public class Parachute {
 	)
 	public static CommonProxyParachute proxy;
 
-	public static Item parachuteItem;
-    public static Item ripcordItem;
-    public static Item aadItem;
+	public static ItemParachute parachuteItem;
+    public static ItemRipCord ripcordItem;
+    public static ItemAutoActivateDevice aadItem;
 	
 	@Instance
 	public static Parachute instance;
@@ -152,11 +152,13 @@ public class Parachute {
         int chuteID = proxy.addArmor("parachute");
 		EntityRegistry.registerModEntity(EntityParachute.class, entityName, entityID, this, 64, 10, true);
 //		parachuteItem = new ItemParachute(parachuteID, NYLON).setUnlocalizedName(entityName);
-        parachuteItem = new ItemParachute(parachuteID, NYLON, chuteID, armorType);
-		parachuteItem.func_111206_d("parachute");
+        parachuteItem = (ItemParachute)(new ItemParachute(parachuteID, NYLON, chuteID, armorType)).func_111206_d("parachutemod:Parachute");
         
-        ripcordItem = new ItemRipCord(ripcordID).setUnlocalizedName(ripcordName);
-        aadItem = new ItemAutoActivateDevice(aadID).setUnlocalizedName(aadName);
+        // used to repair the parachute
+        NYLON.customCraftingMaterial = Item.silk;
+        
+        ripcordItem = (ItemRipCord)(new ItemRipCord(ripcordID)).setUnlocalizedName(ripcordName);
+        aadItem = (ItemAutoActivateDevice)(new ItemAutoActivateDevice(aadID)).setUnlocalizedName(aadName);
 		
         GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
 			"###", "X X", " L ", '#', Block.cloth, 'X', Item.silk, 'L', Item.leather
@@ -221,4 +223,8 @@ public class Parachute {
         }
         return false;
     }
+    
+//    public int getArmorCraftingMaterial() {
+//        return Block.cloth.blockID;
+//    }
 }

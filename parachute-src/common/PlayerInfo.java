@@ -31,7 +31,7 @@ public class PlayerInfo
     public PlayerInfo(String name, INetworkManager nm) {
         Name = name;
         networkManager = nm;
-        aad = true;
+        aad = true; // start enabled
         mode = 0;
     }
     

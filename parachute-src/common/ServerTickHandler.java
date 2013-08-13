@@ -31,30 +31,31 @@ public class ServerTickHandler implements ITickHandler {
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData) {
 		if (type.equals(EnumSet.of(TickType.PLAYER))) {
-			onPlayerTick((EntityPlayer)tickData[0]);
+            onPlayerTick((EntityPlayer)tickData[0]);
 		}
 	}
 	
+    // Handles the Automatic Activation Device
 	// set a fallDistance greater than maxFallDistance to offset the unmount falling distance
 	// and call ItemParachute.deployParachute if the player is falling
 	private void onPlayerTick(EntityPlayer player) {
 //		World world = player.worldObj;
 //		boolean auto = (Parachute.instance.getAutoDeploy() && !player.capabilities.isCreativeMode);
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
-        if (pi == null) {
-            return;
+        if (pi != null) {
+            boolean auto = (pi.aad/* && !player.capabilities.isCreativeMode*/);
+            int maxFallDistance = Parachute.instance.getFallDistance();
+            if (auto && player.fallDistance > maxFallDistance && !player.onGround && !player.isOnLadder()) {
+                ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
+                if (aad != null) {
+                    if (Parachute.playerIsWearingParachute(player)) {
+                        ItemStack parachute = player.getCurrentArmor(Parachute.armorSlot);
+                        ((ItemParachute)parachute.getItem()).deployParachute(/*itemstack, */player.worldObj, player);
+                    }
+                } // else fall to death!
+            }
         }
-        boolean auto = (pi.aad && !player.capabilities.isCreativeMode);
-		int maxFallDistance = Parachute.instance.getFallDistance();
-		if (auto && player.fallDistance > maxFallDistance && !player.onGround && !player.isOnLadder()) {
-			ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
-			if (aad != null) {
-//            if (Parachute.playerIsWearingParachute(player)) {
-                ItemStack parachute = player.getCurrentArmor(Parachute.armorSlot);
-				((ItemParachute)parachute.getItem()).deployParachute(/*itemstack, */player.worldObj, player);
-			}
-		} // else fall to death!
-	}
+    }
 	
 	// search inventory for a parachute
 //	public ItemStack inventoryContainsParachute(InventoryPlayer inventory) {

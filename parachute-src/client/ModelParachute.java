@@ -19,8 +19,6 @@ package parachute.client;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.entity.Entity;
-
-
 import parachute.common.Parachute;
 
 

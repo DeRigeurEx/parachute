@@ -34,11 +34,9 @@ public class ItemRipCord extends Item {
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
-        if (!entityPlayer.onGround && !entityPlayer.isOnLadder()) {
-            if (Parachute.playerIsWearingParachute(entityPlayer)) {
-                ItemStack itemstack = entityPlayer.getCurrentArmor(Parachute.armorSlot);
-                ((ItemParachute)itemstack.getItem()).deployParachute(world, entityPlayer);
-            }
+        if (Parachute.playerIsWearingParachute(entityPlayer) && !entityPlayer.onGround && !entityPlayer.isOnLadder()) {
+            ItemStack itemstack = entityPlayer.getCurrentArmor(Parachute.armorSlot);
+            ((ItemParachute)itemstack.getItem()).deployParachute(world, entityPlayer);
         }
         return itemStack;
     }
@@ -47,7 +45,7 @@ public class ItemRipCord extends Item {
 	@Override
 	public void registerIcons(IconRegister iconReg) {
         super.registerIcons(iconReg);
-		itemIcon = iconReg.registerIcon("parachutemod:Ripcord");
+		itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":Ripcord");
 	}
     
 }

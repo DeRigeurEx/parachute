@@ -27,13 +27,13 @@ import cpw.mods.fml.common.TickType;
 
 public class ParachuteKeyHandler extends KeyHandler {
 	static KeyBinding ascendBinding = new KeyBinding("Parachute Ascend", Keyboard.KEY_C);
-	static KeyBinding descendBinding = new KeyBinding("Parachute Descend", Keyboard.KEY_X);
-	static KeyBinding colorBinding = new KeyBinding("Parachute Color", Keyboard.KEY_PERIOD);
-    static KeyBinding aadBinding = new KeyBinding("Parachute AAD", Keyboard.KEY_Z);
+//	static KeyBinding descendBinding = new KeyBinding("Parachute Descend", Keyboard.KEY_X);
+//	static KeyBinding colorBinding = new KeyBinding("Parachute Color", Keyboard.KEY_PERIOD);
+//    static KeyBinding aadBinding = new KeyBinding("Parachute AAD", Keyboard.KEY_Z);
 	
     public ParachuteKeyHandler() {
-        super(new KeyBinding[] {ascendBinding, descendBinding, colorBinding, aadBinding},
-        	new boolean[] {true, true, false, false});
+        super(new KeyBinding[] {ascendBinding, /*descendBinding, colorBinding, aadBinding*/},
+        	new boolean[] {true, /*true, false, false*/});
     }
 
     @Override

@@ -84,7 +84,10 @@ public class ItemParachute extends ItemArmor {
 
 		if (!entityplayer.capabilities.isCreativeMode) {
 //			itemstack.damageItem(1, entityplayer);
-            entityplayer.inventory.armorItemInSlot(Parachute.armorSlot).damageItem(1, entityplayer);
+            ItemStack parachute = entityplayer.inventory.armorItemInSlot(Parachute.armorSlot);
+            if (parachute != null) {
+                parachute.damageItem(1, entityplayer);
+            } 
 		}
 		
 //		return itemstack;
@@ -94,15 +97,15 @@ public class ItemParachute extends ItemArmor {
 	@Override
 	public void registerIcons(IconRegister iconReg) {
         super.registerIcons(iconReg);
-		itemIcon = iconReg.registerIcon("parachutemod:Parachute");
+		itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":Parachute");
 	}
     
     @Override
 	public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, int layer) {
 		if (itemstack.itemID == Parachute.parachuteItem.itemID) {
-            return "parachutemod:textures/models/armor/parachute-pack.png";
+            return Parachute.modid.toLowerCase() + ":textures/models/armor/parachute-pack.png";
 		}
-		return "parachutemod:textures/models/armor/parachute-pack.png";
+		return Parachute.modid.toLowerCase() + ":textures/models/armor/parachute-pack.png";
 	}
     
     // custom armor renderer

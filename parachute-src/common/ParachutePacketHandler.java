@@ -23,7 +23,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import parachute.client.RenderParachute;
 import org.lwjgl.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -41,10 +40,6 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.item.ItemStack;
-//import net.minecraft.item.ItemStack;
-//import net.minecraft.world.World;
 
 public class ParachutePacketHandler implements IPacketHandler, IConnectionHandler {
 	
@@ -86,38 +81,26 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 						pi.setLiftMode(0); // drift
 					}
 				}
-				
-				if (keyCode == Keyboard.KEY_X) { // keycode: 45
-					if (keyDown) {
-						pi.setLiftMode(2); // descend
-					} else {
-						pi.setLiftMode(0); // drift
-					}
-				}
-				
-				if (keyCode == Keyboard.KEY_PERIOD) { // keycode: 52
-					if (keyDown) {
-						RenderParachute.setParachuteColor(pi.changeColor());
-					}
-				}
-                ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
-                if (keyCode == Keyboard.KEY_Z && aad != null) { // auto deploy parachute
-                    if (keyDown) {
-                        pi.setAAD(pi.aad == true ? false : true);
-                        GuiNewChat chat = FMLClientHandler.instance().getClient().ingameGUI.getChatGUI();
-                        chat.printChatMessage("Auto Activation Device is " + (pi.aad ? "on" : "off"));
-                    }
-                }
-                
-//                if (keyCode == Keyboard.KEY_Z) { // deploy parachute
-//                    if (keyDown) {
-//                        World world = player.worldObj;
-//                        if (!player.onGround && !player.isOnLadder()) {
-//                            if (Parachute.playerIsWearingParachute(player)) {
-//                                ItemStack itemstack = player.getCurrentArmor(Parachute.armorSlot);
-//                                ((ItemParachute)itemstack.getItem()).deployParachute(/*itemstack, */world, player);
-//                            }
-//                        }
+//				
+//				if (keyCode == Keyboard.KEY_X) { // keycode: 45
+//					if (keyDown) {
+//						pi.setLiftMode(2); // descend
+//					} else {
+//						pi.setLiftMode(0); // drift
+//					}
+//				}
+//
+//				if (keyCode == Keyboard.KEY_PERIOD) { // keycode: 52
+//					if (keyDown) {
+//						RenderParachute.setParachuteColor(pi.changeColor());
+//					}
+//				}
+//
+//                if (keyCode == Keyboard.KEY_Z) { // auto deploy parachute
+//                    ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
+//                    if (keyDown && aad != null) {
+//                        pi.setAAD(pi.aad == true ? false : true);
+//                        ((ItemAutoActivateDevice)aad.getItem()).setAADIconIndex(pi.aad == true ? 1 : 0);
 //                    }
 //                }
 			}
@@ -178,8 +161,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 
 	@Override
 	public void connectionClosed(INetworkManager manager) {
-		PlayerInfo PI = new PlayerInfo("", manager);
-		for(int i = 0; i < PlayerManagerParachute.getInstance().Players.size()/* && PI != null*/; i++) {
+		for(int i = 0; i < PlayerManagerParachute.getInstance().Players.size(); i++) {
 			if(PlayerManagerParachute.getInstance().Players.get(i).networkManager == manager) {
 				PlayerManagerParachute.getInstance().Players.remove(i);
 			}  

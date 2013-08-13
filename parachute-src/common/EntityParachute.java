@@ -13,6 +13,9 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
+//
+//Copyright 2013 Michael Sheppard (crackedEgg)
+//
 
 package parachute.common;
 
@@ -31,9 +34,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-//
-//Copyright 2011 Michael Sheppard (crackedEgg)
-//
 
 public class EntityParachute extends Entity {
 	private boolean isTurning;
@@ -60,6 +60,9 @@ public class EntityParachute extends Entity {
 	final static double ascend = -0.040;
 	final static double drift = 0.004;
 	final static double descend = 0.040;
+    
+    final static int modeAscend = 1;
+    final static int modeDrift = 0;
 	
 	private static double descentRate = drift;
 
@@ -138,7 +141,7 @@ public class EntityParachute extends Entity {
 
     @Override
 	public double getMountedYOffset() {
-		return smallCanopy ? -2.5 : -3.5;
+		return /*smallCanopy ? */-2.5;// : -3.5;
 	}
 	
 	public void destroyParachute() {
@@ -258,7 +261,7 @@ public class EntityParachute extends Entity {
 		prevPosZ = posZ;
 		
 		// drop the chute when close to ground
-		checkShouldDropChute(posX, posY, posZ, smallCanopy ? 3.5 : 4.5); // 3.0D original 
+		checkShouldDropChute(posX, posY, posZ, /*smallCanopy ? */3.5/* : 4.5*/); // 3.0D : 4.0D original 
 
 		// forward velocity
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
@@ -290,7 +293,7 @@ public class EntityParachute extends Entity {
 				motionZ *= 0.99D;
 			}
 		} else { // single player world - integrated server
-			double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward * (smallCanopy ? 1.0 : 0.85);
+			double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward;// * (smallCanopy ? 1.0 : 0.85);
 			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
                 if (forwardMovement > 0.0) {
                     double x = -Math.sin((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
@@ -390,26 +393,16 @@ public class EntityParachute extends Entity {
 			return descentRate;
 		} else {
 //			GameSettings gs = FMLClientHandler.instance().getClient().gameSettings;
-//			if (gs.isKeyDown(gs.keyBindJump)) {
+//			if (GameSettings.isKeyDown(gs.keyBindJump)) {
 //				descentRate = ascend;
 //			} 
-//			if (gs.isKeyDown(gs.keyBindSneak)) {
-//				descentRate = descend;
-//			} 
-//			if (!gs.isKeyDown(gs.keyBindJump) && !gs.isKeyDown(gs.keyBindSneak)) {
-//				descentRate = drift;
-//			}
-//		}
 			switch(pInfo.mode) {
-                case 0:
+                case modeDrift:
                     descentRate = drift;
                     break;
-                case 1:
+            
+                case modeAscend:
                     descentRate = ascend;
-                    break;
-
-                case 2:
-                    descentRate = descend;
                     break;
 			}
 		}
