@@ -18,10 +18,8 @@
 
 package parachute.common;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.network.packet.Packet;
 
 public class CommonProxyParachute {
 	
@@ -35,13 +33,4 @@ public class CommonProxyParachute {
 		TickRegistry.registerTickHandler(new ServerTickHandler(), Side.SERVER);
 	}
 	
-	@Deprecated
-	public void sendCustomPacket(Packet packet) {
-		try {
-			FMLClientHandler.instance().sendPacket(packet);
-		} catch (NullPointerException e) {
-			System.err.println("NPE in sendCustomPacket: " + e.toString());
-		}
-    }
-
 }

@@ -14,7 +14,9 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
-
+//
+// Copyright 2013 Michael Sheppard (crackedEgg)
+//
 package parachute.common;
 
 import java.io.ByteArrayInputStream;
@@ -60,28 +62,24 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 		
 		try {
 			EntityPlayer player = (EntityPlayer)p;
-			if (player == null) {
-				return;
-			}
-			
-			type = dis.readByte();
-			if (type == KeyPress) {
-				PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
-				if (pi == null) {
-					return;
-				}
-					
-				keyCode = dis.readByte();
-				keyDown = dis.readBoolean();
-				
-				if (keyCode == Keyboard.KEY_C) { // keycode: 46
-					if (keyDown) {
-						pi.setLiftMode(1); // ascend
-					} else {
-						pi.setLiftMode(0); // drift
-					}
-				}
-			}
+			if (player != null) {
+                type = dis.readByte();
+                if (type == KeyPress) {
+                    PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
+                    if (pi != null) {
+                        keyCode = dis.readByte();
+                        keyDown = dis.readBoolean();
+
+                        if (keyCode == Keyboard.KEY_C) { // keycode: 46
+                            if (keyDown) {
+                                pi.setLiftMode(1); // ascend
+                            } else {
+                                pi.setLiftMode(0); // drift
+                            }
+                        }
+                    }
+                }
+            }
 		} catch (IOException e) {
             throw new RuntimeException(e);
 		}

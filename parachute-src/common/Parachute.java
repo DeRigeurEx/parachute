@@ -14,7 +14,9 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
-
+//
+// Copyright 2013 Michael Sheppard (crackedEgg)
+//
 package parachute.common;
 
 import net.minecraft.block.Block;
@@ -127,7 +129,7 @@ public class Parachute {
         aadID = config.get(Configuration.CATEGORY_GENERAL, "aadID", 2502, aadComment).getInt();
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", false, typeComment).getBoolean(false);
 		
-		// fix fallDistance  (2 > fallDistance < 20)
+		// fix fallDistance must be between 2 and 20
 		fallDistance = (fallDistance < 2) ? 2 : (fallDistance > 20) ? 20 : fallDistance;
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 		
@@ -135,7 +137,6 @@ public class Parachute {
 		
 		proxy.registerRenderer();
 		proxy.registerKeyHandler(); // for keyboard control of parachute
-		
 		proxy.registerServerTickHandler(); // for auto deployment feature
 		
     }

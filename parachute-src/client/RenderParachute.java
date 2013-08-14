@@ -83,9 +83,9 @@ public class RenderParachute extends Render {
 	public void renderLargeParachuteCords(EntityPlayer rider, float center) {
         float zOffset = 3.0F;
 		float x = -5.0F;
-		float y = 1.5F;
+		float y = 2.5F;
 		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
-			y = 1.25F;
+			y = 1.5F;
 		}
 		float zl = -zOffset;
         float zr = zOffset;

@@ -14,7 +14,9 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
-
+//
+// Copyright 2013 Michael Sheppard (crackedEgg)
+//
 package parachute.common;
 
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -39,35 +41,33 @@ public class ItemParachute extends ItemArmor {
 	}
 
 	public void deployParachute(World world, EntityPlayer entityplayer) {
-		// don't deploy if entityplayer is null or if player is not falling or if already on a parachute.
-		if (entityplayer == null || !isFalling(entityplayer) || entityplayer.ridingEntity != null) {
-			return;
-		}
+		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
+		if (entityplayer != null && isFalling(entityplayer) && entityplayer.ridingEntity == null) {
+            world.playSoundAtEntity(entityplayer, "step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-		world.playSoundAtEntity(entityplayer, "step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
+            double x = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX);
+            double y = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) + 1.62D) - (double) entityplayer.yOffset;
+            double z = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ);
 
-		double x = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX);
-		double y = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) + 1.62D) - (double) entityplayer.yOffset;
-		double z = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ);
+            float offset;
+    		if (Parachute.instance.getCanopyType()) {
+    			offset = 2.5F;  // small canopy
+    		} else {
+    			offset = 3.5F;  // large canopy
+    		}
+            EntityParachute chute = new EntityParachute(world, (float) x, (float) y - offset, (float) z);
+            chute.rotationYaw = (float)(((MathHelper.floor_double((double)(entityplayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3) - 1) * 90);
+            if (!world.isRemote) {
+                world.spawnEntityInWorld(chute);
+            }
+            entityplayer.mountEntity(chute);
 
-		float offset = 2.5F;
-//		if (Parachute.instance.getCanopyType()) {
-//			offset = 2.5F;  // small canopy
-//		} else {
-//			offset = 3.5F;  // large canopy
-//		}
-		EntityParachute chute = new EntityParachute(world, (float) x, (float) y - offset, (float) z);
-		chute.rotationYaw = (float)(((MathHelper.floor_double((double)(entityplayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3) - 1) * 90);
-		if (!world.isRemote) {
-			world.spawnEntityInWorld(chute);
-		}
-		entityplayer.mountEntity(chute);
-
-		if (!entityplayer.capabilities.isCreativeMode) {
-            ItemStack parachute = entityplayer.inventory.armorItemInSlot(Parachute.armorSlot);
-            if (parachute != null) {
-                parachute.damageItem(1, entityplayer);
-            } 
+            if (!entityplayer.capabilities.isCreativeMode) {
+                ItemStack parachute = entityplayer.inventory.armorItemInSlot(Parachute.armorSlot);
+                if (parachute != null) {
+                    parachute.damageItem(1, entityplayer);
+                } 
+            }
 		}
 	}
 	
@@ -86,7 +86,7 @@ public class ItemParachute extends ItemArmor {
 		return Parachute.modid.toLowerCase() + ":textures/models/armor/parachute-pack.png";
 	}
     
-    // custom armor renderer
+    // TODO create a custom parachute pack model
 //    @Override
 //    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
 //        return new ModelParachutePack();

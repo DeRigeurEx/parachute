@@ -23,7 +23,7 @@ import net.minecraft.network.INetworkManager;
 public class PlayerInfo
 {
 	public String Name;
-	public int mode; // 0 = drift, 1 = ascend, 2 = descend
+	public int mode; // 0 = drift, 1 = ascend
     public boolean aad;  // true = AAD is activated, false = deactivated
     public INetworkManager networkManager;
     private int colorIdx = Parachute.instance.getChuteColor();

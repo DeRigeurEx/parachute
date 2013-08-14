@@ -14,7 +14,9 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
-
+//
+// Copyright 2013 Michael Sheppard (crackedEgg)
+//
 package parachute.common;
 
 import java.util.EnumSet;
@@ -34,7 +36,7 @@ public class ServerTickHandler implements ITickHandler {
 	}
 	
     // Handles the Automatic Activation Device
-	// set a fallDistance greater than maxFallDistance to offset the unmount falling distance
+	// use a fallDistance greater than maxFallDistance to offset the unmount falling distance
 	// and call ItemParachute.deployParachute if the player is falling
 	private void onPlayerTick(EntityPlayer player) {
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);

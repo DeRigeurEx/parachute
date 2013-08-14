@@ -14,7 +14,7 @@
 //  =====================================================================
 //
 //
-//Copyright 2013 Michael Sheppard (crackedEgg)
+// Copyright 2013 Michael Sheppard (crackedEgg)
 //
 
 package parachute.common;
@@ -52,7 +52,7 @@ public class EntityParachute extends Entity {
 	private double motionFactor;
 	private double maxAltitude;
 	private boolean allowThermals;
-//	private boolean smallCanopy;
+	private boolean smallCanopy;
 
 	private final int hitTime = 10;
 	private final float maxDamage = 40.0F;
@@ -69,7 +69,7 @@ public class EntityParachute extends Entity {
 	public EntityParachute(World world) {
 		super(world);
 		
-//		smallCanopy = Parachute.instance.getCanopyType();
+		smallCanopy = Parachute.instance.getCanopyType();
 
 		preventEntitySpawning = true;
 		setSize(2.0F, 1.0F);
@@ -141,7 +141,7 @@ public class EntityParachute extends Entity {
 
     @Override
 	public double getMountedYOffset() {
-		return /*smallCanopy ? */-2.5;// : -3.5;
+		return smallCanopy ? -2.5 : -3.5;
 	}
 	
 	public void destroyParachute() {
@@ -260,7 +260,7 @@ public class EntityParachute extends Entity {
 		prevPosZ = posZ;
 		
 		// drop the chute when close to ground
-		checkShouldDropChute(posX, posY, posZ, /*smallCanopy ? */3.5/* : 4.5*/); // 3.0D : 4.0D original 
+		checkShouldDropChute(posX, posY, posZ, smallCanopy ? 3.5 : 4.5); // 3.0D : 4.0D original 
 
 		// forward velocity
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
@@ -292,7 +292,7 @@ public class EntityParachute extends Entity {
 				motionZ *= 0.99D;
 			}
 		} else { // single player world - integrated server
-			double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward;// * (smallCanopy ? 1.0 : 0.85);
+			double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward * (smallCanopy ? 1.0 : 0.85);
 			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
                 if (forwardMovement > 0.0) {
                     double x = -Math.sin((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
@@ -378,29 +378,26 @@ public class EntityParachute extends Entity {
 	}
 
 	public double currentDescentRate() {
-		descentRate = drift;
-		EntityPlayer player = (EntityPlayer)riddenByEntity;
-		if (player == null) {
-			return descentRate;
-		}
+		descentRate = drift; // defaults to drift
 		if (!allowThermals) {
 			return descentRate;
 		}
 		
-		PlayerInfo pInfo = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
-		if (pInfo == null) {
-			return descentRate;
-		} else {
-			switch(pInfo.mode) {
-                case modeDrift:
-                    descentRate = drift;
-                    break;
-            
-                case modeAscend:
-                    descentRate = ascend;
-                    break;
-			}
-		}
+        EntityPlayer player = (EntityPlayer)riddenByEntity;
+		if (player != null) {
+            PlayerInfo pInfo = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
+            if (pInfo != null) {
+                switch(pInfo.mode) {
+                    case modeDrift:
+                        descentRate = drift;
+                        break;
+
+                    case modeAscend:
+                        descentRate = ascend;
+                        break;
+                }
+            }
+        }
 		
 		if (maxAltitude > 0.0D) { // altitude limiting
 			if (posY >= maxAltitude) {
