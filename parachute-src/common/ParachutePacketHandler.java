@@ -65,7 +65,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
                         keyCode = dis.readByte();
                         keyDown = dis.readBoolean();
 
-                        if (keyCode == Keyboard.KEY_SPACE) { // keycode: 46
+                        if (keyCode == Keyboard.KEY_SPACE) {
                             if (keyDown) {
                                 pi.setLiftMode(1); // ascend
                             } else {

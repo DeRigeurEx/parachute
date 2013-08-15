@@ -20,7 +20,6 @@
 package parachute.common;
 
 import net.minecraft.block.Block;
-//import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -40,11 +39,11 @@ import net.minecraft.item.EnumArmorMaterial;
 @Mod (
 	modid = Parachute.modid,
 	name = Parachute.name,
-	version = Parachute.version
+	version = Parachute.mcversion
 )
 
 @NetworkMod (
-	versionBounds = "[" + Parachute.version + "]",
+	versionBounds = "[" + Parachute.mcversion + "]",
 	clientSideRequired = true,
 	serverSideRequired = false,
 	packetHandler = ParachutePacketHandler.class,
@@ -57,7 +56,7 @@ public class Parachute {
     static EnumArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 5, new int[]{1, 1, 1, 1}, 15);
 	
 	public static final String modid = "ParachuteMod";
-	public static final String version = "1.6.2";
+	public static final String mcversion = "1.6.2";
 	public static final String channel = modid;
 	public static final String name = "Parachute Mod";
 	public static final String entityName = "Parachute";
@@ -136,7 +135,6 @@ public class Parachute {
 		config.save();
 		
 		proxy.registerRenderer();
-//		proxy.registerKeyHandler(); // for keyboard control of parachute
 		proxy.registerServerTickHandler(); // for auto deployment feature
         proxy.registerPlayerTickHandler();
 		
@@ -154,6 +152,7 @@ public class Parachute {
         ripcordItem = (ItemRipCord)(new ItemRipCord(ripcordID)).setUnlocalizedName(ripcordName);
         aadItem = (ItemAutoActivateDevice)(new ItemAutoActivateDevice(aadID)).setUnlocalizedName(aadName);
 		
+        // recipes to craft the parachute, ripcord and AAD
         GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
 			"###", "X X", " L ", '#', Block.cloth, 'X', Item.silk, 'L', Item.leather
 		});
@@ -166,6 +165,7 @@ public class Parachute {
 			" * ", " % ", " # ", '*', Item.comparator, '%', Item.redstone, '#', ripcordItem,
 		});
 		
+        // add the names of the items
 		LanguageRegistry.addName(parachuteItem, entityName);
         LanguageRegistry.addName(ripcordItem, ripcordName);
         LanguageRegistry.addName(aadItem, aadName);
@@ -176,7 +176,7 @@ public class Parachute {
 	}
 	
 	public String getVersion() {
-		return Parachute.version;
+		return Parachute.mcversion;
 	}
 	
 	public double getMaxAltitude() {

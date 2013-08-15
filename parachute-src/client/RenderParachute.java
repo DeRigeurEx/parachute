@@ -212,7 +212,7 @@ public class RenderParachute extends Render {
 	
 	protected static ResourceLocation getParachuteColor(int idx) {
 		if (parachuteTexture == null || idx != curIndex) {
-			parachuteTexture = new ResourceLocation("parachutemod", "textures/blocks/parachute_canopy" + idx + ".png");
+			parachuteTexture = new ResourceLocation(Parachute.modid.toLowerCase(), "textures/blocks/parachute_canopy" + idx + ".png");
 			curIndex = idx;
 		}
 		return parachuteTexture;

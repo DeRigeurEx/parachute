@@ -41,7 +41,7 @@ public class KeyPressTickHandler implements ITickHandler {
         EntityPlayer player = (EntityPlayer)p;
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
         if (pi != null) {
-            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { 
+            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { // grab space bar key while riding parachute
                 ParachutePacketHandler.sendKeyPress(Keyboard.KEY_SPACE, true);
             } else {
                 ParachutePacketHandler.sendKeyPress(Keyboard.KEY_SPACE, false);
@@ -61,7 +61,7 @@ public class KeyPressTickHandler implements ITickHandler {
 
     @Override
     public String getLabel() {
-        return "ParachutePlayer";
+        return "ParachuteKeyPress";
     }
     
 }
