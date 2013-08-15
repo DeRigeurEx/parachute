@@ -55,11 +55,6 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 		boolean keyDown;
 		byte type;
 		
-		if (!packet.channel.equals(Parachute.channel)) { // check the channel - CYA
-			System.out.println("Received a packet not intended for channel " + Parachute.channel);
-			return;
-		}
-		
 		try {
 			EntityPlayer player = (EntityPlayer)p;
 			if (player != null) {
@@ -70,7 +65,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
                         keyCode = dis.readByte();
                         keyDown = dis.readBoolean();
 
-                        if (keyCode == Keyboard.KEY_C) { // keycode: 46
+                        if (keyCode == Keyboard.KEY_SPACE) { // keycode: 46
                             if (keyDown) {
                                 pi.setLiftMode(1); // ascend
                             } else {

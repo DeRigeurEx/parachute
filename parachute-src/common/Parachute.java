@@ -136,8 +136,9 @@ public class Parachute {
 		config.save();
 		
 		proxy.registerRenderer();
-		proxy.registerKeyHandler(); // for keyboard control of parachute
+//		proxy.registerKeyHandler(); // for keyboard control of parachute
 		proxy.registerServerTickHandler(); // for auto deployment feature
+        proxy.registerPlayerTickHandler();
 		
     }
 

@@ -30,7 +30,9 @@ public class CommonProxyParachute {
     public int addArmor(String armorName) { return 0; }
 	
 	public void registerServerTickHandler() {
-		TickRegistry.registerTickHandler(new ServerTickHandler(), Side.SERVER);
+		TickRegistry.registerTickHandler(new AADTickHandler(), Side.SERVER);
 	}
+    
+    public void registerPlayerTickHandler() {}
 	
 }

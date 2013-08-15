@@ -191,7 +191,7 @@ public class EntityParachute extends Entity {
 	public boolean canBeCollidedWith() {
 		return !isDead;
 	}
-	
+    
 	@SideOnly(Side.CLIENT)
     @Override
 	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int inc) {
@@ -292,7 +292,8 @@ public class EntityParachute extends Entity {
 				motionZ *= 0.99D;
 			}
 		} else { // single player world - integrated server
-			double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward * (smallCanopy ? 1.0 : 0.85);
+            // moveForward happens when the 'W' key is pressed. Value is about 0.0 | 0.98
+			double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward;// * (smallCanopy ? 1.0 : 0.85);
 			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
                 if (forwardMovement > 0.0) {
                     double x = -Math.sin((double)(riddenByEntity.rotationYaw * 0.0174532925199433));

@@ -19,9 +19,12 @@ package parachute.client;
 
 import parachute.common.CommonProxyParachute;
 import parachute.common.EntityParachute;
-import parachute.common.ParachuteKeyHandler;
-import cpw.mods.fml.client.registry.KeyBindingRegistry;
+//import parachute.common.ParachuteKeyHandler;
+//import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
+import parachute.common.KeyPressTickHandler;
 
 public class ClientProxyParachute extends CommonProxyParachute {
     @Override
@@ -29,9 +32,14 @@ public class ClientProxyParachute extends CommonProxyParachute {
 		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute());   
 	}
     
+//    @Override
+//    public void registerKeyHandler() {
+//    	KeyBindingRegistry.registerKeyBinding(new ParachuteKeyHandler());
+//    }
+    
     @Override
-    public void registerKeyHandler() {
-    	KeyBindingRegistry.registerKeyBinding(new ParachuteKeyHandler());
+    public void registerPlayerTickHandler() {
+        TickRegistry.registerTickHandler(new KeyPressTickHandler(), Side.CLIENT);
     }
     
     @Override
