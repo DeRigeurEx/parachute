@@ -102,6 +102,7 @@ public class EntityParachute extends Entity {
 	// false for player to not be in the sitting position on the parachute.
 	// skydiver should 'hang' when on the parachute and then
 	// 'pick up legs' when landing
+//    @Override
 //	public boolean shouldRiderSit() {
 //		if (isNearGround(posX, posY, posZ, smallCanopy ? 3.0 : 4.0)) {
 //			return true;
@@ -448,6 +449,22 @@ public class EntityParachute extends Entity {
 			riddenByEntity.setPosition(posX + cosYaw, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ + sinYaw);
 		}
 	}
+    
+    @Override
+    public void updateRidden() {
+        if (this.ridingEntity.isDead) {
+            this.ridingEntity = null;
+        } else {
+            this.motionX = 0.0D;
+            this.motionY = 0.0D;
+            this.motionZ = 0.0D;
+            this.onUpdate();
+
+            if (this.ridingEntity != null) {
+                this.ridingEntity.updateRiderPosition();
+            }
+        }
+    }
 
 	// when parachute is destroyed drop the 'remains'
 	protected void dropRemains() {
@@ -495,9 +512,5 @@ public class EntityParachute extends Entity {
 	public void func_70270_d(boolean turning) {
 		isTurning = turning;
 	}
-	
-	public boolean isOnLadder() {
-        return false;
-    }
-	
+    
 }

@@ -41,8 +41,8 @@ public class AADTickHandler implements ITickHandler {
 	private void onPlayerTick(EntityPlayer player) {
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
         if (pi != null) {
-            boolean auto = (pi.aad/* && !player.capabilities.isCreativeMode*/);
-            int maxFallDistance = Parachute.instance.getFallDistance();
+            boolean auto = (pi.aad && !player.capabilities.isCreativeMode);
+            int maxFallDistance = ItemAutoActivateDevice.getDelay();//Parachute.instance.getFallDistance();
             if (auto && player.fallDistance > maxFallDistance && !player.onGround && !player.isOnLadder()) {
                 ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
                 if (aad != null) {

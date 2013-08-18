@@ -66,7 +66,7 @@ public class Parachute {
 	private int heightLimit;
 	private int chuteColor;
 	private boolean thermals;
-	private int fallDistance;
+//	private int fallDistance;
 	private boolean smallCanopy;
 	private static int parachuteID;
     private static int ripcordID;
@@ -100,7 +100,7 @@ public class Parachute {
         String aadComment = "auto activation device ID - customize the AAD Item ID (2502)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (225)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
-		String fallComment = "fallDistance - maximum falling distance before auto deploy (2 - 20) (5)";
+//		String fallComment = "fallDistance - maximum falling distance before auto deploy (2 - 20) (5)";
 		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\n"
 							+ "larger 4 panel canopy (false)";
 		String colorComment = "Color index numbers:\n"
@@ -121,7 +121,7 @@ public class Parachute {
 		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 225, heightComment).getInt();
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", 18, colorComment).getInt();
 		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
-		fallDistance = config.get(Configuration.CATEGORY_GENERAL, "fallDistance", 5, fallComment).getInt();
+//		fallDistance = config.get(Configuration.CATEGORY_GENERAL, "fallDistance", 5, fallComment).getInt();
 		parachuteID = config.get(Configuration.CATEGORY_GENERAL, "itemID", 2500, itemComment).getInt();
         ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
         ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
@@ -129,7 +129,7 @@ public class Parachute {
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", false, typeComment).getBoolean(false);
 		
 		// fix fallDistance must be between 2 and 20
-		fallDistance = (fallDistance < 2) ? 2 : (fallDistance > 20) ? 20 : fallDistance;
+//		fallDistance = (fallDistance < 2) ? 2 : (fallDistance > 20) ? 20 : fallDistance;
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 		
 		config.save();
@@ -191,9 +191,9 @@ public class Parachute {
 		return chuteColor;
 	}
 	
-	public int getFallDistance() {
-		return fallDistance;
-	}
+//	public int getFallDistance() {
+//		return fallDistance;
+//	}
 	
 	public boolean getCanopyType() {
 		return smallCanopy;

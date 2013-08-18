@@ -14,6 +14,9 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
+//
+// Copyright 2013 Michael Sheppard (crackedEgg)
+//
 package parachute.common;
 
 import cpw.mods.fml.relauncher.Side;
@@ -29,11 +32,12 @@ import net.minecraft.world.World;
 
 
 public class ItemAutoActivateDevice extends Item {
-    private Icon[] aadIcon = new Icon[2];
+    private Icon[] aadIcon = new Icon[4];
     
     public boolean active = true; // AAD is active by default
+    public static int responseTime = 2; // 1 = immediate (at deployment), 2 = short delay (5 meters), 3 = long delay (10 meters)
     
-    public ItemAutoActivateDevice(int id){
+    public ItemAutoActivateDevice(int id) {
         super(id);
 		maxStackSize = 1;
 		setCreativeTab(CreativeTabs.tabTools); // place in the tools tab in creative mode
@@ -43,10 +47,14 @@ public class ItemAutoActivateDevice extends Item {
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(entityPlayer);
         if (!world.isRemote && pi != null) {
-            active = !active;
+            responseTime++;
+            if (responseTime > 3) {
+                responseTime = 0;
+            }
+            active = (responseTime > 0);
             pi.setAAD(active);
-            // this changes the item icon based on the damage.
-            itemStack.setItemDamage(active == true ? 1 : 0);
+            // change the item icon based on the damage.
+            itemStack.setItemDamage(responseTime);
         }
         
         return itemStack;
@@ -56,9 +64,11 @@ public class ItemAutoActivateDevice extends Item {
 	@Override
 	public void registerIcons(IconRegister iconReg) {
         super.registerIcons(iconReg);
-        aadIcon[0] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOff");
-        aadIcon[1] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOn");
-        itemIcon = aadIcon[active == true ? 1 : 0];
+        aadIcon[0] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOff"); // AAD off
+        aadIcon[1] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOn1"); // AAD delay = 1 meter
+        aadIcon[2] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOn2"); // AAD delay = 5 meters
+        aadIcon[3] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOn3"); // AAD delay = 15 meters
+        itemIcon = getIconFromDamage(active == true ? responseTime : 0);
 	}
     
     // search inventory for an auto activation device
@@ -76,7 +86,28 @@ public class ItemAutoActivateDevice extends Item {
     // this allows us to change the item icon for on and off
     @Override
     public Icon getIconFromDamage(int damage) {
-        return aadIcon[damage];
+        // clamp damage at 3
+        return aadIcon[(damage > 3) ? 3 : damage];
+    }
+    
+    public int getResponseTime() {
+        return responseTime;
+    }
+    
+    public static int getDelay() {
+        int delay = 0;
+        switch (responseTime) {
+            case 1:
+                delay = 1;
+                break;
+            case 2:
+                delay = 5;
+                break;
+            case 3:
+                delay = 15;
+                break;
+        }
+        return delay;
     }
     
 }

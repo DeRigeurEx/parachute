@@ -43,7 +43,7 @@ public class ItemParachute extends ItemArmor {
 	public void deployParachute(World world, EntityPlayer entityplayer) {
 		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
 		if (entityplayer != null && isFalling(entityplayer) && entityplayer.ridingEntity == null) {
-            world.playSoundAtEntity(entityplayer, "step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
+//            world.playSoundAtEntity(entityplayer, "step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
             double x = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX);
             double y = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) + 1.62D) - (double) entityplayer.yOffset;
@@ -56,6 +56,7 @@ public class ItemParachute extends ItemArmor {
     			offset = 3.5F;  // large canopy
     		}
             EntityParachute chute = new EntityParachute(world, (float) x, (float) y - offset, (float) z);
+            chute.playSound("step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
             chute.rotationYaw = (float)(((MathHelper.floor_double((double)(entityplayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3) - 1) * 90);
             if (!world.isRemote) {
                 world.spawnEntityInWorld(chute);
