@@ -32,6 +32,7 @@ public class ItemRipCord extends Item {
     public ItemRipCord(int id){
         super(id);
 		maxStackSize = 1;
+        setMaxDamage(30);
 		setCreativeTab(CreativeTabs.tabTools); // place in the tools tab in creative mode
     }
 
@@ -40,6 +41,9 @@ public class ItemRipCord extends Item {
         if (Parachute.playerIsWearingParachute(entityPlayer) && !entityPlayer.onGround && !entityPlayer.isOnLadder()) {
             ItemStack itemstack = entityPlayer.getCurrentArmor(Parachute.armorSlot);
             ((ItemParachute)itemstack.getItem()).deployParachute(world, entityPlayer);
+            if (!entityPlayer.capabilities.isCreativeMode) {
+                itemStack.damageItem(1, entityPlayer);
+            }
         }
         return itemStack;
     }

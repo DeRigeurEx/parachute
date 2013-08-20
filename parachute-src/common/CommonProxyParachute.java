@@ -18,6 +18,7 @@
 
 package parachute.common;
 
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
@@ -34,5 +35,9 @@ public class CommonProxyParachute {
 	}
     
     public void registerPlayerTickHandler() {}
+    
+    public void registerConnectionHandler() {
+        NetworkRegistry.instance().registerConnectionHandler(new ParachutePacketHandler());
+    }
 	
 }

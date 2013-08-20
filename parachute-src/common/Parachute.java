@@ -29,7 +29,6 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.common.SidedProxy;
@@ -66,11 +65,12 @@ public class Parachute {
 	private int heightLimit;
 	private int chuteColor;
 	private boolean thermals;
-//	private int fallDistance;
+	private static int AADelay;
 	private boolean smallCanopy;
 	private static int parachuteID;
     private static int ripcordID;
     private static int aadID;
+    private static boolean AADActive;
 	private int entityID = EntityRegistry.findGlobalUniqueEntityId();
     private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs. 3 = boots
     public static final int armorSlot = 2;  // armor slot: 0 = ??, 1 = ??, 2 = chestplate, 3 = ??
@@ -84,13 +84,14 @@ public class Parachute {
 	public static ItemParachute parachuteItem;
     public static ItemRipCord ripcordItem;
     public static ItemAutoActivateDevice aadItem;
+    public Configuration config;
 	
 	@Instance
 	public static Parachute instance;
 
-	public Parachute() {
-
-	}
+//	public Parachute() {
+//
+//	}
 	
 	@EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -100,7 +101,8 @@ public class Parachute {
         String aadComment = "auto activation device ID - customize the AAD Item ID (2502)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (225)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
-//		String fallComment = "fallDistance - maximum falling distance before auto deploy (2 - 20) (5)";
+		String aaDelayComment = "AADelay - delay (in meters) before auto deploy (1, 5, 15) (5)";
+        String aaDActiveComment = "AADActive - whether the AAD is active or not. default is inactive. (false)";
 		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\n"
 							+ "larger 4 panel canopy (false)";
 		String colorComment = "Color index numbers:\n"
@@ -115,21 +117,20 @@ public class Parachute {
 							+ "blue/white   - 16\nred/white    - 17\n"
 							+ "yellow/green - 18";
 		
-		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		
 		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 225, heightComment).getInt();
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", 18, colorComment).getInt();
 		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
-//		fallDistance = config.get(Configuration.CATEGORY_GENERAL, "fallDistance", 5, fallComment).getInt();
+		AADelay = config.get(Configuration.CATEGORY_GENERAL, "AADelay", 5, aaDelayComment).getInt();
+        AADActive = config.get(Configuration.CATEGORY_GENERAL, "AADActive", false, aaDActiveComment).getBoolean(false);
 		parachuteID = config.get(Configuration.CATEGORY_GENERAL, "itemID", 2500, itemComment).getInt();
         ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
         ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
         aadID = config.get(Configuration.CATEGORY_GENERAL, "aadID", 2502, aadComment).getInt();
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", false, typeComment).getBoolean(false);
 		
-		// fix fallDistance must be between 2 and 20
-//		fallDistance = (fallDistance < 2) ? 2 : (fallDistance > 20) ? 20 : fallDistance;
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 		
 		config.save();
@@ -137,14 +138,15 @@ public class Parachute {
 		proxy.registerRenderer();
 		proxy.registerServerTickHandler(); // for auto deployment feature
         proxy.registerPlayerTickHandler();
-		
+        proxy.registerConnectionHandler();
     }
 
 	@EventHandler
 	public void Init(FMLInitializationEvent event) {
         int chuteID = proxy.addArmor("parachute");
 		EntityRegistry.registerModEntity(EntityParachute.class, entityName, entityID, this, 64, 10, true);
-        parachuteItem = (ItemParachute)(new ItemParachute(parachuteID, NYLON, chuteID, armorType)).func_111206_d("parachutemod:Parachute");
+        parachuteItem = (ItemParachute)(new ItemParachute(parachuteID, NYLON, chuteID, armorType));
+        parachuteItem.func_111206_d(Parachute.modid.toLowerCase() + ":Parachute");
         
         // used to repair the parachute
         NYLON.customCraftingMaterial = Item.silk;
@@ -170,11 +172,9 @@ public class Parachute {
         LanguageRegistry.addName(ripcordItem, ripcordName);
         LanguageRegistry.addName(aadItem, aadName);
         
-		NetworkRegistry.instance().registerConnectionHandler(new ParachutePacketHandler());
-		
 		instance = this;
 	}
-	
+    
 	public String getVersion() {
 		return Parachute.mcversion;
 	}
@@ -191,9 +191,17 @@ public class Parachute {
 		return chuteColor;
 	}
 	
-//	public int getFallDistance() {
-//		return fallDistance;
-//	}
+	public static int getAADelay() {
+		return AADelay;
+	}
+    
+    public static boolean getAADActive() {
+        return AADActive;
+    }
+    
+    public void setAADActive(boolean active) {
+        AADActive = active;
+    }
 	
 	public boolean getCanopyType() {
 		return smallCanopy;
