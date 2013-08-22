@@ -67,9 +67,9 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 
                         if (keyCode == Keyboard.KEY_SPACE) {
                             if (keyDown) {
-                                pi.setLiftMode(1); // ascend
+                                pi.mode = 1; // ascend
                             } else {
-                                pi.setLiftMode(0); // drift
+                                pi.mode = 0; // drift
                             }
                         }
                     }

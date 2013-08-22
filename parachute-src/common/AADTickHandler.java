@@ -36,19 +36,21 @@ public class AADTickHandler implements ITickHandler {
 	}
 	
     // Handles the Automatic Activation Device
-	// use a fallDistance greater than maxFallDistance to offset the unmount falling distance
-	// and call ItemParachute.deployParachute if the player is falling
+	// deploy the parachute if the player is at an altitude of Parachute.getAADAltitude()
+    // and deactivate the AAD, consider it a one shot, you must re-activate it.
 	private void onPlayerTick(EntityPlayer player) {
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
         if (pi != null) {
             boolean auto = (pi.aad && !player.capabilities.isCreativeMode);
-            int maxFallDistance = ItemAutoActivateDevice.getDelay();//Parachute.instance.getFallDistance();
-            if (auto && player.fallDistance > maxFallDistance && !player.onGround && !player.isOnLadder()) {
+            boolean autoAltitudeReached = ItemAutoActivateDevice.getAutoActivateAltitude(player);
+            if (auto && autoAltitudeReached && !player.onGround && !player.isOnLadder()) {
                 ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
                 if (aad != null) {
                     if (Parachute.playerIsWearingParachute(player)) {
                         ItemStack parachute = player.getCurrentArmor(Parachute.armorSlot);
                         ((ItemParachute)parachute.getItem()).deployParachute(player.worldObj, player);
+//                        pi.aad = false; // deactivate the AAD
+//                        aad.setItemDamage(0); // set 'off' icon
                     }
                 } // else fall to death!
             }
@@ -69,5 +71,5 @@ public class AADTickHandler implements ITickHandler {
 	public String getLabel() {
 		return "Parachute AAD";
 	}
-
+    
 }

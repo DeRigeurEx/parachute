@@ -43,8 +43,6 @@ public class ItemParachute extends ItemArmor {
 	public void deployParachute(World world, EntityPlayer entityplayer) {
 		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
 		if (entityplayer != null && isFalling(entityplayer) && entityplayer.ridingEntity == null) {
-//            world.playSoundAtEntity(entityplayer, "step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
-
             double x = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX);
             double y = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) + 1.62D) - (double) entityplayer.yOffset;
             double z = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ);

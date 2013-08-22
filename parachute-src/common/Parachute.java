@@ -65,12 +65,14 @@ public class Parachute {
 	private int heightLimit;
 	private int chuteColor;
 	private boolean thermals;
-	private static int AADelay;
+//	private static int AADelay;
+    private static double AADAltitude;
 	private boolean smallCanopy;
 	private static int parachuteID;
     private static int ripcordID;
     private static int aadID;
     private static boolean AADActive;
+    private static double fallThreshold;
 	private int entityID = EntityRegistry.findGlobalUniqueEntityId();
     private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs. 3 = boots
     public static final int armorSlot = 2;  // armor slot: 0 = ??, 1 = ??, 2 = chestplate, 3 = ??
@@ -89,19 +91,16 @@ public class Parachute {
 	@Instance
 	public static Parachute instance;
 
-//	public Parachute() {
-//
-//	}
-	
 	@EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)";
 		String itemComment = "itemID - customize the Item ID (2500)";
         String cordComment = "ripcordID - customize the Ripcord Item ID (2501)";
         String aadComment = "auto activation device ID - customize the AAD Item ID (2502)";
-		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (225)";
+		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (256)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
-		String aaDelayComment = "AADelay - delay (in meters) before auto deploy (1, 5, 15) (5)";
+		String aadAltitudeComment = "AADAltitude - altitude (in meters) at which auto deploy occurs (10)";
+        String fallThresholdComment = "fallThreshold - player must have fallen this far to activate AAD (5.0)";
         String aaDActiveComment = "AADActive - whether the AAD is active or not. default is inactive. (false)";
 		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\n"
 							+ "larger 4 panel canopy (false)";
@@ -120,10 +119,11 @@ public class Parachute {
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		
-		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 225, heightComment).getInt();
+		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 256, heightComment).getInt();
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", 18, colorComment).getInt();
 		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
-		AADelay = config.get(Configuration.CATEGORY_GENERAL, "AADelay", 5, aaDelayComment).getInt();
+        fallThreshold = config.get(Configuration.CATEGORY_GENERAL, "fallThreshold", 5.0, fallThresholdComment).getDouble(5.0);
+		AADAltitude = config.get(Configuration.CATEGORY_GENERAL, "AADAltitude", 10.0, aadAltitudeComment).getDouble(10.0);
         AADActive = config.get(Configuration.CATEGORY_GENERAL, "AADActive", false, aaDActiveComment).getBoolean(false);
 		parachuteID = config.get(Configuration.CATEGORY_GENERAL, "itemID", 2500, itemComment).getInt();
         ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
@@ -191,12 +191,20 @@ public class Parachute {
 		return chuteColor;
 	}
 	
-	public static int getAADelay() {
-		return AADelay;
+//	public static int getAADelay() {
+//		return AADelay;
+//	}
+    
+    public static double getAADAltitude() {
+		return AADAltitude;
 	}
     
     public static boolean getAADActive() {
         return AADActive;
+    }
+    
+    public static double getFallThreshold() {
+        return fallThreshold;
     }
     
     public void setAADActive(boolean active) {
