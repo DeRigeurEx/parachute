@@ -26,36 +26,12 @@ public class PlayerInfo
 	public int mode; // 0 = drift, 1 = ascend
     public boolean aad;  // true = AAD is activated, false = deactivated
     public INetworkManager networkManager;
-//    private int colorIdx = Parachute.instance.getChuteColor();
     
     public PlayerInfo(String name, INetworkManager nm) {
         Name = name;
         networkManager = nm;
-        aad = false; // start disabled
+        aad = Parachute.getAADActive();
         mode = 0;
     }
-    
-//    public void setLiftMode(int m) {
-//    	mode = m;
-//    }
-    
-//    public int changeColor() {
-//    	++colorIdx;
-//    	if (colorIdx > 18) {
-//    		colorIdx = 0;
-//    	}
-//    	return colorIdx;
-//    }
-    
-//    public int getCurrentColor() {
-//    	return colorIdx;
-//    }
-    
-//    public void setAAD(boolean active) {
-//        aad = active;
-//    }
-//    public boolean getAAD() {
-//        return aad;
-//    }
     
 }

@@ -41,16 +41,18 @@ public class AADTickHandler implements ITickHandler {
 	private void onPlayerTick(EntityPlayer player) {
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
         if (pi != null) {
-            boolean auto = (pi.aad && !player.capabilities.isCreativeMode);
-            boolean autoAltitudeReached = ItemAutoActivateDevice.getAutoActivateAltitude(player);
-            if (auto && autoAltitudeReached && !player.onGround && !player.isOnLadder()) {
+            if (Parachute.playerIsWearingParachute(player)) {
+                ItemStack parachute = player.getCurrentArmor(Parachute.armorSlot);
                 ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
                 if (aad != null) {
-                    if (Parachute.playerIsWearingParachute(player)) {
-                        ItemStack parachute = player.getCurrentArmor(Parachute.armorSlot);
+                    boolean auto = (pi.aad && !player.capabilities.isCreativeMode);
+                    boolean autoAltitudeReached = ItemAutoActivateDevice.getAutoActivateAltitude(player);
+                    if (auto && autoAltitudeReached && !player.onGround && !player.isOnLadder()) {
+//                ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
+//                if (aad != null) {
+//                    if (Parachute.playerIsWearingParachute(player)) {
+//                        ItemStack parachute = player.getCurrentArmor(Parachute.armorSlot);
                         ((ItemParachute)parachute.getItem()).deployParachute(player.worldObj, player);
-//                        pi.aad = false; // deactivate the AAD
-//                        aad.setItemDamage(0); // set 'off' icon
                     }
                 } // else fall to death!
             }

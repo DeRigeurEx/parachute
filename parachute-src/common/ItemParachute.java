@@ -55,7 +55,8 @@ public class ItemParachute extends ItemArmor {
     		}
             EntityParachute chute = new EntityParachute(world, (float) x, (float) y - offset, (float) z);
             chute.playSound("step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
-            chute.rotationYaw = (float)(((MathHelper.floor_double((double)(entityplayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3) - 1) * 90);
+//            chute.rotationYaw = (float)(((MathHelper.floor_double((double)(entityplayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3) - 1) * 90);
+            chute.rotationYaw = (float)(((MathHelper.floor_double((double)(entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
             if (!world.isRemote) {
                 world.spawnEntityInWorld(chute);
             }

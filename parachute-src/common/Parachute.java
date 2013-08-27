@@ -52,7 +52,7 @@ import net.minecraft.item.EnumArmorMaterial;
 
 public class Parachute {
 	
-    static EnumArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 5, new int[]{1, 1, 1, 1}, 15);
+    static EnumArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 15, new int[]{2, 5, 4, 1}, 12); // same as CHAIN
 	
 	public static final String modid = "ParachuteMod";
 	public static final String mcversion = "1.6.2";
@@ -65,7 +65,6 @@ public class Parachute {
 	private int heightLimit;
 	private int chuteColor;
 	private boolean thermals;
-//	private static int AADelay;
     private static double AADAltitude;
 	private boolean smallCanopy;
 	private static int parachuteID;
@@ -86,7 +85,6 @@ public class Parachute {
 	public static ItemParachute parachuteItem;
     public static ItemRipCord ripcordItem;
     public static ItemAutoActivateDevice aadItem;
-    public Configuration config;
 	
 	@Instance
 	public static Parachute instance;
@@ -103,7 +101,7 @@ public class Parachute {
         String fallThresholdComment = "fallThreshold - player must have fallen this far to activate AAD (5.0)";
         String aaDActiveComment = "AADActive - whether the AAD is active or not. default is inactive. (false)";
 		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\n"
-							+ "larger 4 panel canopy (false)";
+							+ "larger 4 panel canopy (true)";
 		String colorComment = "Color index numbers:\n"
 							+ "black        -  0\nblue         -  1\n"
 							+ "brown        -  2\ncyan         -  3\n"
@@ -116,25 +114,28 @@ public class Parachute {
 							+ "blue/white   - 16\nred/white    - 17\n"
 							+ "yellow/green - 18";
 		
-		config = new Configuration(event.getSuggestedConfigurationFile());
+		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		
 		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 256, heightComment).getInt();
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", 18, colorComment).getInt();
 		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
         fallThreshold = config.get(Configuration.CATEGORY_GENERAL, "fallThreshold", 5.0, fallThresholdComment).getDouble(5.0);
-		AADAltitude = config.get(Configuration.CATEGORY_GENERAL, "AADAltitude", 10.0, aadAltitudeComment).getDouble(10.0);
+		AADAltitude = config.get(Configuration.CATEGORY_GENERAL, "AADAltitude", 15.0, aadAltitudeComment).getDouble(15.0);
         AADActive = config.get(Configuration.CATEGORY_GENERAL, "AADActive", false, aaDActiveComment).getBoolean(false);
 		parachuteID = config.get(Configuration.CATEGORY_GENERAL, "itemID", 2500, itemComment).getInt();
         ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
         ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
         aadID = config.get(Configuration.CATEGORY_GENERAL, "aadID", 2502, aadComment).getInt();
-		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", false, typeComment).getBoolean(false);
+		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", true, typeComment).getBoolean(true);
 		
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 		
 		config.save();
-		
+        
+        // clamp the fallThreshold to a minimum of 2
+        fallThreshold = fallThreshold < 2 ? 2 : fallThreshold;
+        
 		proxy.registerRenderer();
 		proxy.registerServerTickHandler(); // for auto deployment feature
         proxy.registerPlayerTickHandler();
@@ -191,10 +192,6 @@ public class Parachute {
 		return chuteColor;
 	}
 	
-//	public static int getAADelay() {
-//		return AADelay;
-//	}
-    
     public static double getAADAltitude() {
 		return AADAltitude;
 	}

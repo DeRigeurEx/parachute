@@ -137,7 +137,7 @@ public class EntityParachute extends Entity {
 
     @Override
 	public boolean canBePushed() {
-		return false;
+		return true;
 	}
 
     @Override
@@ -266,7 +266,7 @@ public class EntityParachute extends Entity {
 		// forward velocity
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
-		if (worldObj.isRemote && isTurning) { // external (remote) server
+		if (worldObj.isRemote && isTurning) {
 			if (newRotationInc > 0) {
 				double x = posX + (newPosX - posX) / (double) newRotationInc;
 				double y = posY + (newPosY - posY) / (double) newRotationInc;
@@ -292,7 +292,7 @@ public class EntityParachute extends Entity {
 				motionY *= 0.95D;
 				motionZ *= 0.99D;
 			}
-		} else { // single player world - integrated server
+		} else {
             // moveForward happens when the 'W' key is pressed. Value is about 0.0 | 0.98
 			double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward;// * (smallCanopy ? 1.0 : 0.85);
 			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
@@ -302,6 +302,9 @@ public class EntityParachute extends Entity {
                     motionX += x * motionFactor * 0.05;
                     motionZ += z * motionFactor * 0.05;
                 }
+                // while on the parachute reduce damage to player when colliding
+                riddenByEntity.fallDistance = 0.0F; 
+                riddenByEntity.isCollided = false;
             }
 
 			// forward velocity
@@ -357,7 +360,7 @@ public class EntityParachute extends Entity {
 
 			if (!worldObj.isRemote) {
 				List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.2D, 0.0D, 0.2D));
-				if (list != null && list.size() > 0) {
+				if (list != null && list.isEmpty()) {
 					for (int k = 0; k < list.size(); k++) {
 						Entity entity = (Entity) list.get(k);
 						if (entity != riddenByEntity && entity.canBePushed() && (entity instanceof EntityParachute)) {
@@ -365,6 +368,22 @@ public class EntityParachute extends Entity {
 						}
 					}
 				}
+                
+                for (int l = 0; l < 4; ++l) { // slow down in leaves|trees
+                    int chuteX = MathHelper.floor_double(posX + ((double)(l % 2) - 0.5D) * 0.8D);
+                    int chuteZ = MathHelper.floor_double(posZ + ((double)(l / 2) - 0.5D) * 0.8D);
+
+                    for (int k1 = 0; k1 < 2; ++k1) {
+                        int chuteY = MathHelper.floor_double(posY) + k1;
+                        int blockID = worldObj.getBlockId(chuteX, chuteY, chuteZ);
+
+                        if (blockID == Block.leaves.blockID) {
+                            motionX *= 0.15D;
+                            motionY *= 0.05D;
+                            motionZ *= 0.15D;
+                        }
+                    }
+                }
 
 				// something bad happened, somehow the skydiver was killed.
 				if (riddenByEntity != null && riddenByEntity.isDead) {
