@@ -147,7 +147,7 @@ public class Parachute {
         int chuteID = proxy.addArmor("parachute");
 		EntityRegistry.registerModEntity(EntityParachute.class, entityName, entityID, this, 64, 10, true);
         parachuteItem = (ItemParachute)(new ItemParachute(parachuteID, NYLON, chuteID, armorType));
-        parachuteItem.func_111206_d(Parachute.modid.toLowerCase() + ":Parachute");
+        parachuteItem.setTextureName(Parachute.modid.toLowerCase() + ":Parachute");
         
         // used to repair the parachute
         NYLON.customCraftingMaterial = Item.silk;
@@ -167,7 +167,7 @@ public class Parachute {
         GameRegistry.addRecipe(new ItemStack(aadItem, 1), new Object[] {
 			" * ", " % ", " # ", '*', Item.comparator, '%', Item.redstone, '#', ripcordItem,
 		});
-		
+        
         // add the names of the items
 		LanguageRegistry.addName(parachuteItem, entityName);
         LanguageRegistry.addName(ripcordItem, ripcordName);

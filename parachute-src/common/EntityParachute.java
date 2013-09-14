@@ -109,6 +109,11 @@ public class EntityParachute extends Entity {
 //		}
 //		return false;
 //	}
+//    
+//    @Override
+//    public boolean isRiding() {
+//        return riddenByEntity != null;
+//    }
 
     @Override
 	protected boolean canTriggerWalking() {
@@ -163,7 +168,7 @@ public class EntityParachute extends Entity {
 					riddenByEntity.mountEntity(this);
 				}
 				// drop a parachute item
-				dropRemains();
+//				dropRemains();
 				destroyParachute(); // aaaaiiiiieeeeee!!! ... thud!
 			}
 		}
@@ -172,7 +177,7 @@ public class EntityParachute extends Entity {
 
 	// use shears to cut the parachute coords...
     @Override
-	public boolean func_130002_c(EntityPlayer entityplayer) { // old interact(EntityPlayer entityplayer)
+	public boolean interactFirst(EntityPlayer entityplayer) { // old interact(EntityPlayer entityplayer)
 		ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 		if (itemstack != null && itemstack.itemID == Item.shears.itemID && riddenByEntity != null) {
 			if (!worldObj.isRemote) {
@@ -243,7 +248,7 @@ public class EntityParachute extends Entity {
 		// cut away the chute with shears.
 		if (riddenByEntity == null) {
 			if (!worldObj.isRemote) {
-				dropRemains();
+//				dropRemains();
 				destroyParachute();
 			}
 			return;
@@ -389,7 +394,7 @@ public class EntityParachute extends Entity {
 				if (riddenByEntity != null && riddenByEntity.isDead) {
 					riddenByEntity = null;
 					if (!worldObj.isRemote) {
-						dropRemains();
+//						dropRemains();
 						destroyParachute();
 					}
 				}
@@ -487,7 +492,7 @@ public class EntityParachute extends Entity {
 
 	// when parachute is destroyed drop the 'remains'
 	protected void dropRemains() {
-		dropItem(Block.cloth.blockID, 2);
+		dropItem(Block.cloth.blockID, 1);
 		dropItem(Item.silk.itemID, 1);
 	}
 
@@ -508,7 +513,7 @@ public class EntityParachute extends Entity {
 	}
 
 	public float getDamageTaken() {
-		return dataWatcher.func_111145_d(19);
+		return dataWatcher.getWatchableObjectFloat(19);//.getWatchableObjectInt(19);
 	}
 
 	public void setTimeSinceHit(int time) {

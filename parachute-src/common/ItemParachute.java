@@ -95,5 +95,10 @@ public class ItemParachute extends ItemArmor {
 	public boolean isFalling(EntityPlayer entity) {
 		return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
 	}
-	
+    
+//    @Override
+//    public boolean hasColor(ItemStack itemStack) {
+//        return false;
+//    }
+    
 }

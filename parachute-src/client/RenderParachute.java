@@ -60,7 +60,7 @@ public class RenderParachute extends Render {
 			GL11.glRotatef(MathHelper.sin(time) * time * damage / 20.0F	* (float) entityparachute.getForwardDirection(), 0.0F,	0.0F, 1.0F);
 		}
 
-		func_110777_b(entityparachute); // bind the parachute canopy texture
+        bindEntityTexture(entityparachute);
 		modelParachute.render(entityparachute, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 
 		if (entityparachute.riddenByEntity != null) {
@@ -219,9 +219,9 @@ public class RenderParachute extends Render {
 	}
 
 	@Override
-	protected ResourceLocation func_110775_a(Entity entity) {
+	protected ResourceLocation getEntityTexture(Entity entity) {
 		parachuteTexture = getParachuteColor(curIndex);
 		return parachuteTexture;
 	}
-	
+
 }
