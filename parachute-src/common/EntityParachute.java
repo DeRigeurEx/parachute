@@ -63,6 +63,7 @@ public class EntityParachute extends Entity {
     
     final static int modeAscend = 1;
     final static int modeDrift = 0;
+    final static double forwardSpeed = 0.75;
 	
 	private static double descentRate = drift;
 
@@ -299,9 +300,13 @@ public class EntityParachute extends Entity {
 			}
 		} else {
             // moveForward happens when the 'W' key is pressed. Value is about 0.0 | 0.98
-			double forwardMovement = allowThermals ? (double)((EntityLivingBase)riddenByEntity).moveForward : 0.75;// * (smallCanopy ? 1.0 : 0.85);
+            // when allowThermals is false forwardMovement is set to constant forwardSpeed
+			double forwardMovement = allowThermals ? (double)((EntityLivingBase)riddenByEntity).moveForward : forwardSpeed;
 			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
                 if (forwardMovement > 0.0) {
+                    if (allowThermals) {
+                        playSound("step.cloth", 1.0F, 1.0F / (rand.nextFloat() * 0.4F + 0.8F));
+                    }
                     double x = -Math.sin((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
                     double z = Math.cos((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
                     motionX += (x * motionFactor * 0.05) * forwardMovement;
