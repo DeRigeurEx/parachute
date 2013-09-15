@@ -299,13 +299,13 @@ public class EntityParachute extends Entity {
 			}
 		} else {
             // moveForward happens when the 'W' key is pressed. Value is about 0.0 | 0.98
-			double forwardMovement = (double)((EntityLivingBase)riddenByEntity).moveForward;// * (smallCanopy ? 1.0 : 0.85);
+			double forwardMovement = allowThermals ? (double)((EntityLivingBase)riddenByEntity).moveForward : 0.75;// * (smallCanopy ? 1.0 : 0.85);
 			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
                 if (forwardMovement > 0.0) {
                     double x = -Math.sin((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
                     double z = Math.cos((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
-                    motionX += x * motionFactor * 0.05;
-                    motionZ += z * motionFactor * 0.05;
+                    motionX += (x * motionFactor * 0.05) * forwardMovement;
+                    motionZ += (z * motionFactor * 0.05) * forwardMovement;
                 }
                 // while on the parachute reduce damage to player when colliding
                 riddenByEntity.fallDistance = 0.0F; 
@@ -459,7 +459,7 @@ public class EntityParachute extends Entity {
 		int y = MathHelper.floor_double(posy - distance);
 		int z = MathHelper.floor_double(posz);
 
-		if (worldObj.getBlockId(x, y, z) > 0) {
+		if (!worldObj.isAirBlock(x, y, z)) {
 			nearGround = true;
 		}
 		return nearGround;

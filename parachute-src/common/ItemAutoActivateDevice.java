@@ -97,7 +97,7 @@ public class ItemAutoActivateDevice extends Item {
 		int y = MathHelper.floor_double(player.posY - altitude);
 		int z = MathHelper.floor_double(player.posZ);
 
-		if ((player.worldObj.getBlockId(x, y, z) > 0) && (player.fallDistance > fallThreshold)) {
+		if (!player.worldObj.isAirBlock(x, y, z) && player.fallDistance > fallThreshold) {
 			altitudeReached = true;
 		}
 		return altitudeReached;
