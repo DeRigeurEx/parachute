@@ -27,7 +27,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
@@ -57,12 +56,13 @@ public class EntityParachute extends Entity {
 	private final int hitTime = 10;
 	private final float maxDamage = 40.0F;
 
-	final static double ascend = -0.040;
-	final static double drift = 0.004;
-	final static double descend = 0.040;
+    final static double drift = 0.004;
+	final static double ascend = drift * -10.0; // -0.040
+//	final static double descend = 0.040;
     
-    final static int modeAscend = 1;
     final static int modeDrift = 0;
+    final static int modeAscend = 1;
+    
     final static double forwardSpeed = 0.75;
 	
 	private static double descentRate = drift;
@@ -176,23 +176,24 @@ public class EntityParachute extends Entity {
 		return true;
 	}
 
+    // It's not neccessary to use shears anymore with the LSHIFT dismount feature...
 	// use shears to cut the parachute coords...
-    @Override
-	public boolean interactFirst(EntityPlayer entityplayer) { // old interact(EntityPlayer entityplayer)
-		ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-		if (itemstack != null && itemstack.itemID == Item.shears.itemID && riddenByEntity != null) {
-			if (!worldObj.isRemote) {
-				// instead of killing the parachute, remove riding entity
-				// parachute death is handled in onUpdate()
-				riddenByEntity = null; // ...rider plummets to death.
-			}
-			if (!entityplayer.capabilities.isCreativeMode) {
-				itemstack.damageItem(1, entityplayer); // one use worth of damage
-			}
-			return true;
-		}
-		return false;
-	}
+//    @Override
+//	public boolean interactFirst(EntityPlayer entityplayer) { // old interact(EntityPlayer entityplayer)
+//		ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+//		if (itemstack != null && itemstack.itemID == Item.shears.itemID && riddenByEntity != null) {
+//			if (!worldObj.isRemote) {
+//				// instead of killing the parachute, remove riding entity
+//				// parachute death is handled in onUpdate()
+//				riddenByEntity = null; // ...rider plummets to death.
+//			}
+//			if (!entityplayer.capabilities.isCreativeMode) {
+//				itemstack.damageItem(1, entityplayer); // one use worth of damage
+//			}
+//			return true;
+//		}
+//		return false;
+//	}
 
     @Override
 	public boolean canBeCollidedWith() {
@@ -244,9 +245,7 @@ public class EntityParachute extends Entity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		// the player has probably been killed or mounted another entity,
-		// perhaps a boat, minecart or pig? This also happens when the player has
-		// cut away the chute with shears.
+		// the player has probably been killed or pressed LSHIFT
 		if (riddenByEntity == null) {
 			if (!worldObj.isRemote) {
 //				dropRemains();
@@ -265,12 +264,39 @@ public class EntityParachute extends Entity {
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
+        
+        // forward velocity
+		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
+//        double cosYaw;
+//        double sinYaw;
+//        
+//        if (velocity > 0.2625) {
+//            cosYaw = Math.cos((double)rotationYaw * Math.PI / 180.0D);
+//            sinYaw = Math.sin((double)rotationYaw * Math.PI / 180.0D);
+//
+//            for (int j = 0; (double)j < 1.0D + velocity * 60.0D; ++j) {
+//                double left = (double)(rand.nextFloat() * 8.0F - 1.0F);
+//                double right = (double)(rand.nextInt(2) * 8 - 1) * 0.7D;
+//                double x;
+//                double z;
+//
+//                if (this.rand.nextBoolean()) {
+//                    x = posX - cosYaw * left * 0.8D + sinYaw * right;
+//                    z = posZ - sinYaw * left * 0.8D - cosYaw * right;
+//                    worldObj.spawnParticle("smoke", x, posY - 0.125D, z, motionX, motionY, motionZ);
+//                } else {
+//                    x = posX + cosYaw + sinYaw * left * 0.7D;
+//                    z = posZ + sinYaw - cosYaw * left * 0.7D;
+//                    worldObj.spawnParticle("smoke", x, posY - 0.125D, z, motionX, motionY, motionZ);
+//                }
+//            }
+//        }
 		
 		// drop the chute when close to ground
 		checkShouldDropChute(posX, posY, posZ, smallCanopy ? 3.5 : 4.5); // 3.0D : 4.0D original 
 
-		// forward velocity
-		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
+//		// forward velocity
+//		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
 		if (worldObj.isRemote && isTurning) {
 			if (newRotationInc > 0) {
@@ -299,14 +325,15 @@ public class EntityParachute extends Entity {
 				motionZ *= 0.99D;
 			}
 		} else {
-            // moveForward happens when the 'W' key is pressed. Value is about 0.0 | 0.98
-            // when allowThermals is false forwardMovement is set to constant forwardSpeed
+            // moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
+            // when allowThermals is false forwardMovement is set to the constant 'forwardSpeed'
+            // and appied to motionX and motionZ
 			double forwardMovement = allowThermals ? (double)((EntityLivingBase)riddenByEntity).moveForward : forwardSpeed;
 			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
                 if (forwardMovement > 0.0) {
-                    if (allowThermals) {
-                        playSound("step.cloth", 1.0F, 1.0F / (rand.nextFloat() * 0.4F + 0.8F));
-                    }
+//                    if (motorAttached) { // play engine sound
+//                        playSound("step.cloth", 1.0F, 1.0F / (rand.nextFloat() * 0.4F + 0.8F));
+//                    }
                     double x = -Math.sin((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
                     double z = Math.cos((double)(riddenByEntity.rotationYaw * 0.0174532925199433));
                     motionX += (x * motionFactor * 0.05) * forwardMovement;
@@ -419,13 +446,13 @@ public class EntityParachute extends Entity {
             PlayerInfo pInfo = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
             if (pInfo != null) {
                 switch(pInfo.mode) {
-                    case modeDrift:
-                        descentRate = drift;
-                        break;
+                case modeDrift:
+                    descentRate = drift;
+                    break;
 
-                    case modeAscend:
-                        descentRate = ascend;
-                        break;
+                case modeAscend:
+                    descentRate = ascend;
+                    break;
                 }
             }
         }

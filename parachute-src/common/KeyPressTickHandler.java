@@ -23,6 +23,7 @@ import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import java.util.EnumSet;
 import net.minecraft.entity.player.EntityPlayer;
+//import net.minecraft.util.Vec3;
 import org.lwjgl.input.Keyboard;
 
 // used to intercept the space bar to make the parachute go up
@@ -41,6 +42,9 @@ public class KeyPressTickHandler implements ITickHandler {
         EntityPlayer player = (EntityPlayer)p;
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
         if (pi != null) {
+//            Vec3 vec = player.getLookVec();
+//            System.out.println("Look Vector: " + vec.toString());
+//            ParachutePacketHandler.sendLookVec(vec.yCoord);
             if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { // grab space bar key while riding parachute
                 ParachutePacketHandler.sendKeyPress(Keyboard.KEY_SPACE, true);
             } else {

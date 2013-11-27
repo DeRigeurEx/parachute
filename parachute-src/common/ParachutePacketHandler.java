@@ -46,6 +46,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ParachutePacketHandler implements IPacketHandler, IConnectionHandler {
 	
 	public static final byte KeyPress = 0;
+//    public static final byte Vector = 1;
 	
 	@Override
 	// server handles key press custom packets from the player
@@ -54,6 +55,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 		byte keyCode;
 		boolean keyDown;
 		byte type;
+//        double yCoord;
 		
 		try {
 			EntityPlayer player = (EntityPlayer)p;
@@ -66,14 +68,20 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
                         keyDown = dis.readBoolean();
 
                         if (keyCode == Keyboard.KEY_SPACE) {
-                            if (keyDown) {
-                                pi.mode = 1; // ascend
-                            } else {
-                                pi.mode = 0; // drift
-                            }
+//                            if (keyDown) {
+                                pi.mode = keyDown ? 1 : 0; // ascend|descend
+//                            } else {
+//                                pi.mode = 0; // drift
+//                            }
                         }
                     }
-                }
+                } //else if (type == Vector) {
+//                    PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
+//                    if (pi != null) {
+//                        pi.coord = dis.readDouble();
+////                        pi.mode = (yCoord > -0.9) ? 1 : 0;
+//                    }
+//                }
             }
 		} catch (IOException e) {
             throw new RuntimeException(e);
@@ -107,6 +115,32 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
             }
         }
 	}
+    
+//    @SideOnly(Side.CLIENT)
+//    public static void sendLookVec(double yCoord) {
+//        Minecraft client = FMLClientHandler.instance().getClient();
+//		WorldClient world = client.theWorld;
+//		if (world != null && world.isRemote) {
+//            try	{
+//                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//                DataOutputStream dos = new DataOutputStream(bos);
+//                Packet250CustomPayload packet = new Packet250CustomPayload();
+//
+//                dos.writeByte(Vector);    // vector coord type packet
+//                dos.writeDouble(yCoord);  // the y coord
+//                dos.close();
+//
+//                packet.channel = Parachute.channel;
+//                packet.data = bos.toByteArray();
+//                packet.length = bos.size();
+//                packet.isChunkDataPacket = false;
+//
+//                PacketDispatcher.sendPacketToServer(packet);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
 
 	@Override
 	public void playerLoggedIn(Player p, NetHandler netHandler, INetworkManager manager) {
