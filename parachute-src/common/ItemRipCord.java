@@ -30,30 +30,31 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class ItemRipCord extends Item {
-    public ItemRipCord(int id){
+
+    public ItemRipCord(int id) {
         super(id);
-		maxStackSize = 1;
+        maxStackSize = 1;
         setMaxDamage(EnumToolMaterial.IRON.getMaxUses());
-		setCreativeTab(CreativeTabs.tabTools); // place in the tools tab in creative mode
+        setCreativeTab(CreativeTabs.tabTools); // place in the tools tab in creative mode
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
         if (Parachute.playerIsWearingParachute(entityPlayer) && !entityPlayer.onGround && !entityPlayer.isOnLadder()) {
             ItemStack itemstack = entityPlayer.getCurrentArmor(Parachute.armorSlot);
-            ((ItemParachute)itemstack.getItem()).deployParachute(world, entityPlayer);
+            ((ItemParachute) itemstack.getItem()).deployParachute(world, entityPlayer);
             if (!entityPlayer.capabilities.isCreativeMode) {
                 itemStack.damageItem(1, entityPlayer);
             }
         }
         return itemStack;
     }
-    
+
     @SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IconRegister iconReg) {
+    @Override
+    public void registerIcons(IconRegister iconReg) {
         super.registerIcons(iconReg);
-		itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":Ripcord");
-	}
-    
+        itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":Ripcord");
+    }
+
 }

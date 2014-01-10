@@ -28,18 +28,17 @@ import org.lwjgl.input.Keyboard;
 
 // used to intercept the space bar to make the parachute go up
 // ridin' the thermals
-
 public class KeyPressTickHandler implements ITickHandler {
 
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData) {
         if (type.equals(EnumSet.of(TickType.PLAYER))) {
-            onPlayerTick((EntityPlayer)tickData[0]);
-		}
+            onPlayerTick((EntityPlayer) tickData[0]);
+        }
     }
-    
+
     private void onPlayerTick(EntityPlayer p) {
-        EntityPlayer player = (EntityPlayer)p;
+        EntityPlayer player = (EntityPlayer) p;
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
         if (pi != null) {
 //            Vec3 vec = player.getLookVec();
@@ -55,7 +54,7 @@ public class KeyPressTickHandler implements ITickHandler {
 
     @Override
     public void tickEnd(EnumSet<TickType> type, Object... tickData) {
-        
+
     }
 
     @Override
@@ -67,5 +66,5 @@ public class KeyPressTickHandler implements ITickHandler {
     public String getLabel() {
         return "ParachuteKeyPress";
     }
-    
+
 }

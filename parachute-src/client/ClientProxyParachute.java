@@ -14,7 +14,6 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
-
 package parachute.client;
 
 import parachute.common.CommonProxyParachute;
@@ -25,20 +24,20 @@ import cpw.mods.fml.relauncher.Side;
 import parachute.common.KeyPressTickHandler;
 
 public class ClientProxyParachute extends CommonProxyParachute {
+
     @Override
     public void registerRenderer() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute());   
-	}
-    
+        RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute());
+    }
+
     @Override
     public void registerPlayerTickHandler() {
         TickRegistry.registerTickHandler(new KeyPressTickHandler(), Side.CLIENT);
     }
-    
-    @Override
-	public int addArmor(String armorName) {
-		return RenderingRegistry.addNewArmourRendererPrefix(armorName);
-	}
-    
-}
 
+    @Override
+    public int addArmor(String armorName) {
+        return RenderingRegistry.addNewArmourRendererPrefix(armorName);
+    }
+
+}

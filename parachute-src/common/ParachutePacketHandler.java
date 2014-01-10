@@ -44,22 +44,22 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ParachutePacketHandler implements IPacketHandler, IConnectionHandler {
-	
-	public static final byte KeyPress = 0;
+
+    public static final byte KeyPress = 0;
 //    public static final byte Vector = 1;
-	
-	@Override
-	// server handles key press custom packets from the player
-	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player p) {
-		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet.data));
-		byte keyCode;
-		boolean keyDown;
-		byte type;
+
+    @Override
+    // server handles key press custom packets from the player
+    public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player p) {
+        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet.data));
+        byte keyCode;
+        boolean keyDown;
+        byte type;
 //        double yCoord;
-		
-		try {
-			EntityPlayer player = (EntityPlayer)p;
-			if (player != null) {
+
+        try {
+            EntityPlayer player = (EntityPlayer) p;
+            if (player != null) {
                 type = dis.readByte();
                 if (type == KeyPress) {
                     PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
@@ -69,7 +69,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 
                         if (keyCode == Keyboard.KEY_SPACE) {
 //                            if (keyDown) {
-                                pi.mode = keyDown ? 1 : 0; // ascend|descend
+                            pi.mode = keyDown ? 1 : 0; // ascend|descend
 //                            } else {
 //                                pi.mode = 0; // drift
 //                            }
@@ -83,18 +83,18 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 //                    }
 //                }
             }
-		} catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
-		}
-	}
-	
-	@SideOnly(Side.CLIENT)
-	// send key press events in a custom packet to the server
-	public static void sendKeyPress(int keyCode, boolean keyDown) {
-		Minecraft client = FMLClientHandler.instance().getClient();
-		WorldClient world = client.theWorld;
-		if (world != null && world.isRemote) {
-            try	{
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    // send key press events in a custom packet to the server
+    public static void sendKeyPress(int keyCode, boolean keyDown) {
+        Minecraft client = FMLClientHandler.instance().getClient();
+        WorldClient world = client.theWorld;
+        if (world != null && world.isRemote) {
+            try {
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 DataOutputStream dos = new DataOutputStream(bos);
                 Packet250CustomPayload packet = new Packet250CustomPayload();
@@ -114,8 +114,8 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
                 throw new RuntimeException(e);
             }
         }
-	}
-    
+    }
+
 //    @SideOnly(Side.CLIENT)
 //    public static void sendLookVec(double yCoord) {
 //        Minecraft client = FMLClientHandler.instance().getClient();
@@ -141,39 +141,38 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
 //            }
 //        }
 //    }
+    @Override
+    public void playerLoggedIn(Player p, NetHandler netHandler, INetworkManager manager) {
+        PlayerManagerParachute.getInstance().Players.add(new PlayerInfo(((EntityPlayer) p).username, manager));
+    }
 
-	@Override
-	public void playerLoggedIn(Player p, NetHandler netHandler, INetworkManager manager) {
-		PlayerManagerParachute.getInstance().Players.add(new PlayerInfo(((EntityPlayer)p).username, manager));
-	}
+    @Override
+    public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager) {
+        return null;
+    }
 
-	@Override
-	public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager) {
-		return null;
-	}
+    @Override
+    public void connectionOpened(NetHandler netClientHandler, String server, int port, INetworkManager manager) {
 
-	@Override
-	public void connectionOpened(NetHandler netClientHandler, String server, int port, INetworkManager manager) {
-		
-	}
+    }
 
-	@Override
-	public void connectionOpened(NetHandler netClientHandler, MinecraftServer server, INetworkManager manager) {
-		
-	}
+    @Override
+    public void connectionOpened(NetHandler netClientHandler, MinecraftServer server, INetworkManager manager) {
 
-	@Override
-	public void connectionClosed(INetworkManager manager) {
-		for(int i = 0; i < PlayerManagerParachute.getInstance().Players.size(); i++) {
-			if(PlayerManagerParachute.getInstance().Players.get(i).networkManager == manager) {
-				PlayerManagerParachute.getInstance().Players.remove(i);
-			}  
-		}
-	}
+    }
 
-	@Override
-	public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login) {
-		PlayerManagerParachute.getInstance().Players.add(new PlayerInfo(clientHandler.getPlayer().username, manager));
-	}
-    
+    @Override
+    public void connectionClosed(INetworkManager manager) {
+        for (int i = 0; i < PlayerManagerParachute.getInstance().Players.size(); i++) {
+            if (PlayerManagerParachute.getInstance().Players.get(i).networkManager == manager) {
+                PlayerManagerParachute.getInstance().Players.remove(i);
+            }
+        }
+    }
+
+    @Override
+    public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login) {
+        PlayerManagerParachute.getInstance().Players.add(new PlayerInfo(clientHandler.getPlayer().username, manager));
+    }
+
 }
