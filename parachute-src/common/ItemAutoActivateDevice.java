@@ -31,23 +31,24 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-
 public class ItemAutoActivateDevice extends Item {
-    private Icon[] aadIcon = new Icon[2];
+
+    private final Icon[] aadIcon;
     private final int maxIconIdx = 1;
-    
+
     // initial value is false (inactive) from config file
     public static boolean active = Parachute.getAADActive();
-    private static double fallThreshold = Parachute.getFallThreshold();
-    private static double altitude = Parachute.getAADAltitude();
-    
+    private static final double fallThreshold = Parachute.getFallThreshold();
+    private static final double altitude = Parachute.getAADAltitude();
+
     public ItemAutoActivateDevice(int id) {
         super(id);
-		maxStackSize = 1;
+        this.aadIcon = new Icon[2];
+        maxStackSize = 1;
         setMaxDamage(maxIconIdx + 1);
-		setCreativeTab(CreativeTabs.tabTools); // place in the tools tab in creative mode
+        setCreativeTab(CreativeTabs.tabTools); // place in the tools tab in creative mode
     }
-    
+
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(entityPlayer);
@@ -61,46 +62,46 @@ public class ItemAutoActivateDevice extends Item {
         }
         return itemStack;
     }
-    
+
     @SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IconRegister iconReg) {
+    @Override
+    public void registerIcons(IconRegister iconReg) {
         super.registerIcons(iconReg);
         aadIcon[0] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOff");
         aadIcon[1] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOn");
         itemIcon = getIconFromDamage(active ? 1 : 0);
-	}
-    
+    }
+
     // search inventory for an auto activation device
-	public static ItemStack inventoryContainsAAD(InventoryPlayer inventory) {
-		ItemStack itemstack = null;
-		for (ItemStack s : inventory.mainInventory) {
-			if (s != null && s.getItem() instanceof ItemAutoActivateDevice) {
-				itemstack = s;
-				break;
-			}
-		}
-		return itemstack;
-	}
-    
+    public static ItemStack inventoryContainsAAD(InventoryPlayer inventory) {
+        ItemStack itemstack = null;
+        for (ItemStack s : inventory.mainInventory) {
+            if (s != null && s.getItem() instanceof ItemAutoActivateDevice) {
+                itemstack = s;
+                break;
+            }
+        }
+        return itemstack;
+    }
+
     // this allows us to change the item icon for on and off
     @Override
     public Icon getIconFromDamage(int damage) {
         // clamp damage at maxIconIdx
         return aadIcon[(damage > maxIconIdx) ? maxIconIdx : damage];
     }
-    
+
     public static boolean getAutoActivateAltitude(EntityPlayer player) {
-		boolean altitudeReached = false;
+        boolean altitudeReached = false;
 
-		int x = MathHelper.floor_double(player.posX);
-		int y = MathHelper.floor_double(player.posY - altitude);
-		int z = MathHelper.floor_double(player.posZ);
+        int x = MathHelper.floor_double(player.posX);
+        int y = MathHelper.floor_double(player.posY - altitude);
+        int z = MathHelper.floor_double(player.posZ);
 
-		if (!player.worldObj.isAirBlock(x, y, z) && player.fallDistance > fallThreshold) {
-			altitudeReached = true;
-		}
-		return altitudeReached;
-	}
-    
+        if (!player.worldObj.isAirBlock(x, y, z) && player.fallDistance > fallThreshold) {
+            altitudeReached = true;
+        }
+        return altitudeReached;
+    }
+
 }

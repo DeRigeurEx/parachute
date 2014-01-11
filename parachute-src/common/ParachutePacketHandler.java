@@ -100,7 +100,7 @@ public class ParachutePacketHandler implements IPacketHandler, IConnectionHandle
                 Packet250CustomPayload packet = new Packet250CustomPayload();
 
                 dos.writeByte(KeyPress);    // key press type packet
-                dos.writeByte(keyCode);		// the keycode
+                dos.writeByte(keyCode);     // the keycode
                 dos.writeBoolean(keyDown);  // true if key is pressed
                 dos.close();
 

@@ -14,25 +14,23 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
-
 package parachute.common;
 
 import net.minecraft.network.INetworkManager;
 
+public class PlayerInfo {
 
-public class PlayerInfo
-{
-	public String Name;
-	public int mode; // 0 = drift, 1 = ascend
+    public String Name;
+    public int mode; // 0 = drift, 1 = ascend
     public double coord; // player look vector y coord
     public boolean aad;  // true = AAD is activated, false = deactivated
     public INetworkManager networkManager;
-    
+
     public PlayerInfo(String name, INetworkManager nm) {
         Name = name;
         networkManager = nm;
         aad = Parachute.getAADActive();
         mode = 0;
     }
-    
+
 }

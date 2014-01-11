@@ -28,17 +28,18 @@ import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
 public class AADTickHandler implements ITickHandler {
-	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData) {
-		if (type.equals(EnumSet.of(TickType.PLAYER))) {
-            onPlayerTick((EntityPlayer)tickData[0]);
-		}
-	}
-	
+
+    @Override
+    public void tickStart(EnumSet<TickType> type, Object... tickData) {
+        if (type.equals(EnumSet.of(TickType.PLAYER))) {
+            onPlayerTick((EntityPlayer) tickData[0]);
+        }
+    }
+
     // Handles the Automatic Activation Device
-	// deploy the parachute if the player is at an altitude of Parachute.getAADAltitude()
+    // deploy the parachute if the player is at an altitude of Parachute.getAADAltitude()
     // and deactivate the AAD, consider it a one shot, you must re-activate it.
-	private void onPlayerTick(EntityPlayer player) {
+    private void onPlayerTick(EntityPlayer player) {
         PlayerInfo pi = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
         if (pi != null) {
             if (Parachute.playerIsWearingParachute(player)) {
@@ -52,26 +53,26 @@ public class AADTickHandler implements ITickHandler {
 //                if (aad != null) {
 //                    if (Parachute.playerIsWearingParachute(player)) {
 //                        ItemStack parachute = player.getCurrentArmor(Parachute.armorSlot);
-                        ((ItemParachute)parachute.getItem()).deployParachute(player.worldObj, player);
+                        ((ItemParachute) parachute.getItem()).deployParachute(player.worldObj, player);
                     }
                 } // else fall to death!
             }
         }
     }
-	
-	@Override
-	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
 
-	}
+    @Override
+    public void tickEnd(EnumSet<TickType> type, Object... tickData) {
 
-	@Override
-	public EnumSet<TickType> ticks() {
-		return EnumSet.of(TickType.PLAYER, TickType.SERVER);
-	}
+    }
 
-	@Override
-	public String getLabel() {
-		return "Parachute AAD";
-	}
-    
+    @Override
+    public EnumSet<TickType> ticks() {
+        return EnumSet.of(TickType.PLAYER, TickType.SERVER);
+    }
+
+    @Override
+    public String getLabel() {
+        return "Parachute AAD";
+    }
+
 }

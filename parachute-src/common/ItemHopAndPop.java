@@ -35,7 +35,7 @@ public class ItemHopAndPop extends Item {
     public ItemHopAndPop(int id, EnumToolMaterial enumtoolmaterial) {
         super(id);
         setMaxDamage(enumtoolmaterial.getMaxUses());
-        maxStackSize = 1;
+        maxStackSize = 4;
         setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
     }
 
@@ -58,6 +58,7 @@ public class ItemHopAndPop extends Item {
                 offset = 3.5F;  // large canopy
             }
             EntityParachute chute = new EntityParachute(world, (float) x, (float) y - offset, (float) z);
+            Parachute.instance.setType(Parachute.hopnpopName);
             chute.playSound("step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
             chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
             if (!world.isRemote) {
@@ -84,5 +85,10 @@ public class ItemHopAndPop extends Item {
     public boolean isFalling(EntityPlayer entity) {
         return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
     }
+	
+	@Override
+	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {
+		return  Parachute.RIPSTOP.getToolCraftingMaterial() == itemstack2.itemID ? true : super.getIsRepairable(itemstack1, itemstack2);//Parachute.hopnpopItem.itemID
+	}
 
 }
