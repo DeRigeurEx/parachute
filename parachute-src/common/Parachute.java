@@ -66,6 +66,7 @@ public class Parachute {
 	public static final String hopnpopName = "HopAndPop";
 
 	private String type;
+	private boolean singleUse; // applies to the hop and pop chute only
 
 	private int heightLimit;
 	private int chuteColor;
@@ -103,6 +104,7 @@ public class Parachute {
 		String cordComment = "ripcordID - customize the Ripcord Item ID (2501)";
 		String aadComment = "auto activation device ID - customize the AAD Item ID (2502)";
 		String popComment = "popID - customize the hop-n-pop Item ID (2503)";
+		String usageComment = "singleUse - set to true for hop n pop single use (false)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (256)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
 		String aadAltitudeComment = "AADAltitude - altitude (in meters) at which auto deploy occurs (10)";
@@ -125,17 +127,18 @@ public class Parachute {
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 
-		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 256, heightComment).getInt();
-		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", 18, colorComment).getInt();
-		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
-		fallThreshold = config.get(Configuration.CATEGORY_GENERAL, "fallThreshold", 5.0, fallThresholdComment).getDouble(5.0);
-		AADAltitude = config.get(Configuration.CATEGORY_GENERAL, "AADAltitude", 15.0, aadAltitudeComment).getDouble(15.0);
-		AADActive = config.get(Configuration.CATEGORY_GENERAL, "AADActive", false, aaDActiveComment).getBoolean(false);
 		parachuteID = config.get(Configuration.CATEGORY_GENERAL, "parachuteID", 2500, itemComment).getInt();
 		ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
 		aadID = config.get(Configuration.CATEGORY_GENERAL, "aadID", 2502, aadComment).getInt();
 		popID = config.get(Configuration.CATEGORY_GENERAL, "popID", 2503, popComment).getInt();
+		singleUse = config.get(Configuration.CATEGORY_GENERAL, "singleUse", false, usageComment).getBoolean(false);
+		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 256, heightComment).getInt();
+		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
+		fallThreshold = config.get(Configuration.CATEGORY_GENERAL, "fallThreshold", 5.0, fallThresholdComment).getDouble(5.0);
+		AADAltitude = config.get(Configuration.CATEGORY_GENERAL, "AADAltitude", 15.0, aadAltitudeComment).getDouble(15.0);
+		AADActive = config.get(Configuration.CATEGORY_GENERAL, "AADActive", false, aaDActiveComment).getBoolean(false);
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", true, typeComment).getBoolean(true);
+		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", 18, colorComment).getInt();
 
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 
@@ -223,7 +226,7 @@ public class Parachute {
 		AADActive = active;
 	}
 
-	public boolean getCanopyType() {
+	public boolean isSmallCanopy() {
 		return smallCanopy;
 	}
 
@@ -241,6 +244,13 @@ public class Parachute {
 
 	public String getType() {
 		return this.type;
+	}
+	
+	public int getHopAndPopDamageAmount() {
+		if (singleUse) {
+			return hopnpopItem.getMaxDamage() + 1;
+		}
+		return 1;
 	}
 
 	public static boolean playerIsWearingParachute(EntityPlayer player) {

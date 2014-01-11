@@ -38,6 +38,7 @@ public class ItemParachute extends ItemArmor {
 		setMaxDamage(enumArmorMaterial.getDurability(armorType));
 		maxStackSize = 1;
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
+		Parachute.instance.setType(Parachute.entityName);
 	}
 
 	public void deployParachute(World world, EntityPlayer entityplayer) {
@@ -48,13 +49,12 @@ public class ItemParachute extends ItemArmor {
 			double z = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ);
 
 			float offset;
-			if (Parachute.instance.getCanopyType()) {
+			if (Parachute.instance.isSmallCanopy()) {
 				offset = 2.5F;  // small canopy
 			} else {
 				offset = 3.5F;  // large canopy
 			}
 			EntityParachute chute = new EntityParachute(world, (float) x, (float) y - offset, (float) z);
-			Parachute.instance.setType(Parachute.entityName);
 			chute.playSound("step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
 			chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
 			if (!world.isRemote) {

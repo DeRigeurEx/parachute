@@ -69,7 +69,7 @@ public class EntityParachute extends Entity {
     public EntityParachute(World world) {
         super(world);
 
-        smallCanopy = Parachute.instance.getCanopyType();
+        smallCanopy = Parachute.instance.isSmallCanopy();
 
         preventEntitySpawning = true;
         setSize(2.0F, 1.0F);

@@ -63,7 +63,7 @@ public class RenderParachute extends Render {
 
         if (entityparachute.riddenByEntity != null) {
             EntityPlayer rider = (EntityPlayer) entityparachute.riddenByEntity;
-            if (Parachute.instance.getCanopyType()) {
+            if (Parachute.instance.isSmallCanopy()) {
                 renderSmallParachuteCords(rider, center);
             } else {
                 renderLargeParachuteCords(rider, center);
