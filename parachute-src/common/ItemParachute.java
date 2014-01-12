@@ -38,12 +38,12 @@ public class ItemParachute extends ItemArmor {
 		setMaxDamage(enumArmorMaterial.getDurability(armorType));
 		maxStackSize = 1;
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
-		Parachute.instance.setType(Parachute.entityName);
+		Parachute.instance.setType(Parachute.parachuteName);
 	}
 
 	public void deployParachute(World world, EntityPlayer entityplayer) {
 		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
-		if (entityplayer != null && isFalling(entityplayer) && entityplayer.ridingEntity == null) {
+		if (entityplayer != null && Parachute.isFalling(entityplayer) && entityplayer.ridingEntity == null) {
 			double x = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX);
 			double y = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) + 1.62D) - (double) entityplayer.yOffset;
 			double z = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ);
@@ -86,9 +86,9 @@ public class ItemParachute extends ItemArmor {
 		return Parachute.modid.toLowerCase() + ":textures/models/armor/parachute-pack.png";
 	}
 
-	public boolean isFalling(EntityPlayer entity) {
-		return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
-	}
+//	public boolean isFalling(EntityPlayer entity) {
+//		return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
+//	}
 
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {

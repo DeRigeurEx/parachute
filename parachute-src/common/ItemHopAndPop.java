@@ -47,7 +47,7 @@ public class ItemHopAndPop extends Item {
 
     public ItemStack deployParachute(ItemStack itemstack, World world, EntityPlayer entityplayer) {
         // only deploy if entityplayer exists and if player is falling and not already on a parachute.
-        if (entityplayer != null && isFalling(entityplayer) && entityplayer.ridingEntity == null) {
+        if (entityplayer != null && Parachute.isFalling(entityplayer) && entityplayer.ridingEntity == null) {
             double x = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX);
             double y = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) + 1.62D) - (double) entityplayer.yOffset;
             double z = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ);
@@ -55,7 +55,7 @@ public class ItemHopAndPop extends Item {
             float offset = 2.5F;
             if (Parachute.instance.isSmallCanopy() == false) {
 				// This parachute shouldn't be using the large canopy
-				System.out.println("deployParachute: hopnpop parachute is trying to use the large canopy!");
+				System.out.println("deployParachute: hop-n-pop parachute is trying to use the large canopy!");
             }
              
             EntityParachute chute = new EntityParachute(world, (float) x, (float) y - offset, (float) z);
@@ -82,9 +82,9 @@ public class ItemHopAndPop extends Item {
         itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":HopAndPop");
     }
 
-    public boolean isFalling(EntityPlayer entity) {
-        return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
-    }
+//    public boolean isFalling(EntityPlayer entity) {
+//        return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
+//    }
 	
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {

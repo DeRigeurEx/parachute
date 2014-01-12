@@ -96,7 +96,7 @@ public class EntityParachute extends Entity {
         prevPosZ = z;
     }
 
-	// FIXME: This fucks up movement in 1.6.2, movement packets are not sent to server if
+	// FIXME: This messes up movement in 1.6.x, movement packets are not sent to server if
     // shouldRiderSit returns false. 
     // need for shouldRiderSit to return true in order to receive packets. need for it to return
     // false for player to not be in the sitting position on the parachute.
@@ -109,11 +109,7 @@ public class EntityParachute extends Entity {
 //		}
 //		return false;
 //	}
-//    
-//    @Override
-//    public boolean isRiding() {
-//        return riddenByEntity != null;
-//    }
+	
     @Override
     protected boolean canTriggerWalking() {
         return false;
@@ -241,7 +237,7 @@ public class EntityParachute extends Entity {
     @Override
     public void onUpdate() {
         super.onUpdate();
-
+		
         // the player has probably been killed or pressed LSHIFT
         if (riddenByEntity == null) {
             if (!worldObj.isRemote) {

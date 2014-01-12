@@ -60,12 +60,12 @@ public class Parachute {
 	public static final String mcversion = "1.6.4";
 	public static final String channel = modid;
 	public static final String name = "Parachute Mod";
-	public static final String entityName = "Parachute";
+	public static final String parachuteName = "Parachute";
 	public static final String ripcordName = "Ripcord";
 	public static final String aadName = "AutoActivationDevice";
 	public static final String hopnpopName = "HopAndPop";
 
-	private String type;
+	private String type = parachuteName; // defaults to the normal parachute
 	private boolean singleUse; // applies to the hop and pop chute only
 
 	private int heightLimit;
@@ -156,10 +156,10 @@ public class Parachute {
 	@EventHandler
 	public void Init(FMLInitializationEvent event) {
 		int chuteID = proxy.addArmor("parachute");
-		EntityRegistry.registerModEntity(EntityParachute.class, entityName, entityID, this, 64, 10, true);
+		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, this, 64, 10, true);
 		parachuteItem = (ItemParachute) (new ItemParachute(parachuteID, NYLON, chuteID, armorType));
 		parachuteItem.setTextureName(Parachute.modid.toLowerCase() + ":Parachute");
-		parachuteItem.setUnlocalizedName(entityName);
+		parachuteItem.setUnlocalizedName(parachuteName);
 
 		// used to repair the parachutes
 		NYLON.customCraftingMaterial = Item.silk;
@@ -186,7 +186,7 @@ public class Parachute {
 			" * ", " % ", " # ", '*', Item.comparator, '%', Item.redstone, '#', ripcordItem,});
 
 		// add the names of the items
-		LanguageRegistry.addName(parachuteItem, entityName);
+		LanguageRegistry.addName(parachuteItem, parachuteName);
 		LanguageRegistry.addName(ripcordItem, ripcordName);
 		LanguageRegistry.addName(aadItem, aadName);
 		LanguageRegistry.addName(hopnpopItem, hopnpopName);
@@ -263,4 +263,8 @@ public class Parachute {
 		}
 		return false;
 	}
+	
+	public static boolean isFalling(EntityPlayer entity) {
+        return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
+    }
 }
