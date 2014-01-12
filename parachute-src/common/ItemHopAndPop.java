@@ -82,10 +82,6 @@ public class ItemHopAndPop extends Item {
         itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":HopAndPop");
     }
 
-//    public boolean isFalling(EntityPlayer entity) {
-//        return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
-//    }
-	
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {
 		return  Parachute.RIPSTOP.getToolCraftingMaterial() == itemstack2.itemID ? true : super.getIsRepairable(itemstack1, itemstack2);//Parachute.hopnpopItem.itemID

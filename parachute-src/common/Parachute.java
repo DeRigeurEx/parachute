@@ -165,6 +165,7 @@ public class Parachute {
 		NYLON.customCraftingMaterial = Item.silk;
 		RIPSTOP.customCraftingMaterial = Item.silk;
 
+		// create new items and set unlocalized names
 		ripcordItem = (ItemRipCord) (new ItemRipCord(ripcordID)).setUnlocalizedName(ripcordName);
 		aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice(aadID)).setUnlocalizedName(aadName);
 		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(popID, RIPSTOP)).setUnlocalizedName(hopnpopName);

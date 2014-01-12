@@ -32,6 +32,8 @@ import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemArmor;
 
 public class ItemParachute extends ItemArmor {
+	
+	private final int damageAmount = 1;
 
 	public ItemParachute(int id, EnumArmorMaterial enumArmorMaterial, int renderIndex, int armorType) {
 		super(id, enumArmorMaterial, renderIndex, armorType);
@@ -65,7 +67,7 @@ public class ItemParachute extends ItemArmor {
 			if (!entityplayer.capabilities.isCreativeMode) {
 				ItemStack parachute = entityplayer.inventory.armorItemInSlot(Parachute.armorSlot);
 				if (parachute != null) {
-					parachute.damageItem(1, entityplayer);
+					parachute.damageItem(damageAmount, entityplayer);
 				}
 			}
 		}
@@ -85,10 +87,6 @@ public class ItemParachute extends ItemArmor {
 		}
 		return Parachute.modid.toLowerCase() + ":textures/models/armor/parachute-pack.png";
 	}
-
-//	public boolean isFalling(EntityPlayer entity) {
-//		return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
-//	}
 
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {

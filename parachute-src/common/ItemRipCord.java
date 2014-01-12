@@ -56,5 +56,10 @@ public class ItemRipCord extends Item {
         super.registerIcons(iconReg);
         itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":Ripcord");
     }
+	
+	@Override
+	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {
+		return  Item.silk.itemID == itemstack2.itemID ? true : super.getIsRepairable(itemstack1, itemstack2);//Parachute.hopnpopItem.itemID
+	}
 
 }

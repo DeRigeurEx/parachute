@@ -103,5 +103,9 @@ public class ItemAutoActivateDevice extends Item {
         }
         return altitudeReached;
     }
-
+	
+	@Override
+	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {
+		return  Item.redstone.itemID == itemstack2.itemID ? true : super.getIsRepairable(itemstack1, itemstack2);//Parachute.hopnpopItem.itemID
+	}
 }
