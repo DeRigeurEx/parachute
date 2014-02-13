@@ -170,24 +170,6 @@ public class EntityParachute extends Entity {
         return true;
     }
 
-    // It's not neccessary to use shears anymore with the LSHIFT dismount feature...
-    // use shears to cut the parachute coords...
-//    @Override
-//	public boolean interactFirst(EntityPlayer entityplayer) { // old interact(EntityPlayer entityplayer)
-//		ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-//		if (itemstack != null && itemstack.itemID == Item.shears.itemID && riddenByEntity != null) {
-//			if (!worldObj.isRemote) {
-//				// instead of killing the parachute, remove riding entity
-//				// parachute death is handled in onUpdate()
-//				riddenByEntity = null; // ...rider plummets to death.
-//			}
-//			if (!entityplayer.capabilities.isCreativeMode) {
-//				itemstack.damageItem(1, entityplayer); // one use worth of damage
-//			}
-//			return true;
-//		}
-//		return false;
-//	}
     @Override
     public boolean canBeCollidedWith() {
         return !isDead;
