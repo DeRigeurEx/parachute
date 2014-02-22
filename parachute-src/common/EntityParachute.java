@@ -16,15 +16,16 @@
 //
 // Copyright 2013 Michael Sheppard (crackedEgg)
 //
-package parachute.common;
+package com.parachute.common;
 
 import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -56,8 +57,7 @@ public class EntityParachute extends Entity {
     private final float maxDamage = 40.0F;
 
     final static double drift = 0.004;
-    final static double ascend = drift * -10.0; // -0.040
-//	final static double descend = 0.040;
+    final static double ascend = drift * -10.0;
 
     final static int modeDrift = 0;
     final static int modeAscend = 1;
@@ -65,6 +65,7 @@ public class EntityParachute extends Entity {
     final static double forwardSpeed = 0.75;
 
     private static double descentRate = drift;
+	private static int liftMode;
 
     public EntityParachute(World world) {
         super(world);
@@ -96,19 +97,9 @@ public class EntityParachute extends Entity {
         prevPosZ = z;
     }
 
-	// FIXME: This messes up movement in 1.6.x, movement packets are not sent to server if
-    // shouldRiderSit returns false. 
-    // need for shouldRiderSit to return true in order to receive packets. need for it to return
-    // false for player to not be in the sitting position on the parachute.
-    // skydiver should 'hang' when on the parachute and then
-    // 'pick up legs' when landing
-//    @Override
-//	public boolean shouldRiderSit() {
-//		if (isNearGround(posX, posY, posZ, smallCanopy ? 3.0 : 4.0)) {
-//			return true;
-//		}
-//		return false;
-//	}
+	static public void setLiftMode(int mode) {
+		liftMode = mode;
+	}
 	
     @Override
     protected boolean canTriggerWalking() {
@@ -242,36 +233,11 @@ public class EntityParachute extends Entity {
 
         // forward velocity
         double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
-//        double cosYaw;
-//        double sinYaw;
-//        
-//        if (velocity > 0.2625) {
-//            cosYaw = Math.cos((double)rotationYaw * Math.PI / 180.0D);
-//            sinYaw = Math.sin((double)rotationYaw * Math.PI / 180.0D);
-//
-//            for (int j = 0; (double)j < 1.0D + velocity * 60.0D; ++j) {
-//                double left = (double)(rand.nextFloat() * 8.0F - 1.0F);
-//                double right = (double)(rand.nextInt(2) * 8 - 1) * 0.7D;
-//                double x;
-//                double z;
-//
-//                if (this.rand.nextBoolean()) {
-//                    x = posX - cosYaw * left * 0.8D + sinYaw * right;
-//                    z = posZ - sinYaw * left * 0.8D - cosYaw * right;
-//                    worldObj.spawnParticle("smoke", x, posY - 0.125D, z, motionX, motionY, motionZ);
-//                } else {
-//                    x = posX + cosYaw + sinYaw * left * 0.7D;
-//                    z = posZ + sinYaw - cosYaw * left * 0.7D;
-//                    worldObj.spawnParticle("smoke", x, posY - 0.125D, z, motionX, motionY, motionZ);
-//                }
-//            }
-//        }
 
         // drop the chute when close to ground
         checkShouldDropChute(posX, posY, posZ, smallCanopy ? 3.5 : 4.5); // 3.0D : 4.0D original 
 
-//		// forward velocity
-//		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
+		// forward velocity
         if (worldObj.isRemote && isTurning) {
             if (newRotationInc > 0) {
                 double x = posX + (newPosX - posX) / (double) newRotationInc;
@@ -305,9 +271,6 @@ public class EntityParachute extends Entity {
             double forwardMovement = allowThermals ? (double) ((EntityLivingBase) riddenByEntity).moveForward : forwardSpeed;
             if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
                 if (forwardMovement > 0.0) {
-//                    if (motorAttached) { // play engine sound
-//                        playSound("step.cloth", 1.0F, 1.0F / (rand.nextFloat() * 0.4F + 0.8F));
-//                    }
                     double x = -Math.sin((double) (riddenByEntity.rotationYaw * 0.0174532925199433));
                     double z = Math.cos((double) (riddenByEntity.rotationYaw * 0.0174532925199433));
                     motionX += (x * motionFactor * 0.05) * forwardMovement;
@@ -380,27 +343,10 @@ public class EntityParachute extends Entity {
                     }
                 }
 
-                for (int l = 0; l < 4; ++l) { // slow down in leaves|trees
-                    int chuteX = MathHelper.floor_double(posX + ((double) (l % 2) - 0.5D) * 0.8D);
-                    int chuteZ = MathHelper.floor_double(posZ + ((double) (l / 2) - 0.5D) * 0.8D);
-
-                    for (int k1 = 0; k1 < 2; ++k1) {
-                        int chuteY = MathHelper.floor_double(posY) + k1;
-                        int blockID = worldObj.getBlockId(chuteX, chuteY, chuteZ);
-
-                        if (blockID == Block.leaves.blockID) {
-                            motionX *= 0.15D;
-                            motionY *= 0.05D;
-                            motionZ *= 0.15D;
-                        }
-                    }
-                }
-
                 // something bad happened, somehow the skydiver was killed.
                 if (riddenByEntity != null && riddenByEntity.isDead) {
                     riddenByEntity = null;
                     if (!worldObj.isRemote) {
-//						dropRemains();
                         destroyParachute();
                     }
                 }
@@ -417,18 +363,15 @@ public class EntityParachute extends Entity {
 
         EntityPlayer player = (EntityPlayer) riddenByEntity;
         if (player != null) {
-            PlayerInfo pInfo = PlayerManagerParachute.getInstance().getPlayerInfoFromPlayer(player);
-            if (pInfo != null) {
-                switch (pInfo.mode) {
-                    case modeDrift:
-                        descentRate = drift;
-                        break;
+			switch (liftMode) {
+				case modeDrift:
+					descentRate = drift;
+					break;
 
-                    case modeAscend:
-                        descentRate = ascend;
-                        break;
-                }
-            }
+				case modeAscend:
+					descentRate = ascend;
+					break;
+			}
         }
 
         if (maxAltitude > 0.0D) { // altitude limiting
@@ -498,8 +441,8 @@ public class EntityParachute extends Entity {
 
     // when parachute is destroyed drop the 'remains'
     protected void dropRemains() {
-        dropItem(Block.cloth.blockID, 1);
-        dropItem(Item.silk.itemID, 1);
+        dropItem(Item.getItemFromBlock(Blocks.wool), 1);
+        dropItem(Items.string, 1);
     }
 
     @Override

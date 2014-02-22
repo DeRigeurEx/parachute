@@ -14,11 +14,11 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
-package parachute.client;
+package com.parachute.client;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.entity.Entity;
-import parachute.common.Parachute;
+import com.parachute.common.Parachute;
 
 public class ModelParachute extends ModelBase {
 

@@ -17,9 +17,9 @@
 //
 // Copyright 2013 Michael Sheppard (crackedEgg)
 //
-package parachute.common;
+package com.parachute.common;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -28,15 +28,14 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemArmor;
 
 public class ItemParachute extends ItemArmor {
 	
 	private final int damageAmount = 1;
 
-	public ItemParachute(int id, EnumArmorMaterial enumArmorMaterial, int renderIndex, int armorType) {
-		super(id, enumArmorMaterial, renderIndex, armorType);
+	public ItemParachute(int id, ArmorMaterial enumArmorMaterial, int renderIndex, int armorType) {
+		super(enumArmorMaterial, renderIndex, armorType);
 		setMaxDamage(enumArmorMaterial.getDurability(armorType));
 		maxStackSize = 1;
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
@@ -73,16 +72,16 @@ public class ItemParachute extends ItemArmor {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IconRegister iconReg) {
-		super.registerIcons(iconReg);
-		itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":Parachute");
-	}
+//	@SideOnly(Side.CLIENT)
+//	@Override
+//	public void registerIcons(IIconRegister iconReg) {
+//		super.registerIcons(iconReg);
+//		itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + getUnlocalizedName());
+//	}
 
 	@Override
-	public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, int layer) {
-		if (itemstack.itemID == Parachute.parachuteItem.itemID) {
+	public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, String type) {
+		if (itemstack.getItem() == Parachute.parachuteItem) {
 			return Parachute.modid.toLowerCase() + ":textures/models/armor/parachute-pack.png";
 		}
 		return Parachute.modid.toLowerCase() + ":textures/models/armor/parachute-pack.png";
@@ -90,7 +89,7 @@ public class ItemParachute extends ItemArmor {
 
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {
-		return Parachute.NYLON.getArmorCraftingMaterial() == itemstack2.itemID ? true : super.getIsRepairable(itemstack1, itemstack2);
+		return Parachute.NYLON.customCraftingMaterial == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
 	}
 
 	// TODO create a custom parachute pack model

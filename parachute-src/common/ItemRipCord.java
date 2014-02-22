@@ -17,14 +17,13 @@
 //
 // Copyright 2013 Michael Sheppard (crackedEgg)
 //
-package parachute.common;
+package com.parachute.common;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -32,9 +31,9 @@ import net.minecraft.world.World;
 public class ItemRipCord extends Item {
 
     public ItemRipCord(int id) {
-        super(id);
+        super();
         maxStackSize = 1;
-        setMaxDamage(EnumToolMaterial.IRON.getMaxUses());
+        setMaxDamage(ToolMaterial.IRON.getMaxUses());
         setCreativeTab(CreativeTabs.tabTools); // place in the tools tab in creative mode
     }
 
@@ -52,14 +51,14 @@ public class ItemRipCord extends Item {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister iconReg) {
+    public void registerIcons(IIconRegister iconReg) {
         super.registerIcons(iconReg);
         itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":Ripcord");
     }
 	
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {
-		return  Item.silk.itemID == itemstack2.itemID ? true : super.getIsRepairable(itemstack1, itemstack2);//Parachute.hopnpopItem.itemID
+		return  Item.getItemById(0) == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
 	}
 
 }

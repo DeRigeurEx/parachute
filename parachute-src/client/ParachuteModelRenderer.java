@@ -14,7 +14,7 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
-package parachute.client;
+package com.parachute.client;
 
 import java.util.ArrayList;
 import java.util.List;

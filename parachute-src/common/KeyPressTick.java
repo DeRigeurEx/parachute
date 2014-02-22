@@ -14,23 +14,31 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
-package parachute.common;
+//
+// Copyright 2013 Michael Sheppard (crackedEgg)
+//
+package com.parachute.common;
 
-import net.minecraft.network.INetworkManager;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.entity.player.EntityPlayer;
+import org.lwjgl.input.Keyboard;
 
-public class PlayerInfo {
+// used to intercept the space bar to make the parachute go up
+// ridin' the thermals
+public class KeyPressTick {
+	
+	@SubscribeEvent
+	public void onTick(TickEvent.PlayerTickEvent event){
+		onPlayerTick(event.player);
+	}
 
-    public String Name;
-    public int mode; // 0 = drift, 1 = ascend
-    public double coord; // player look vector y coord
-    public boolean aad;  // true = AAD is activated, false = deactivated
-    public INetworkManager networkManager;
-
-    public PlayerInfo(String name, INetworkManager nm) {
-        Name = name;
-        networkManager = nm;
-        aad = Parachute.getAADActive();
-        mode = 0;
+    private void onPlayerTick(EntityPlayer p) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { // grab space bar key while riding parachute
+			Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, true));
+		} else {
+			Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, false));
+		}
     }
 
 }

@@ -17,23 +17,20 @@
 //
 // Copyright 2013 Michael Sheppard (crackedEgg)
 //
-package parachute.common;
+package com.parachute.common;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+//import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 
 public class ItemHopAndPop extends Item {
-
-    public ItemHopAndPop(int id, EnumToolMaterial enumtoolmaterial) {
-        super(id);
+	
+    public ItemHopAndPop(int id, ToolMaterial enumtoolmaterial) {
+        super();
         setMaxDamage(enumtoolmaterial.getMaxUses());
         maxStackSize = 4;
         setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
@@ -52,11 +49,7 @@ public class ItemHopAndPop extends Item {
             double y = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) + 1.62D) - (double) entityplayer.yOffset;
             double z = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ);
 
-            float offset = 2.5F;
-            if (Parachute.instance.isSmallCanopy() == false) {
-				// This parachute shouldn't be using the large canopy
-				System.out.println("deployParachute: hop-n-pop parachute is trying to use the large canopy!");
-            }
+            float offset = 2.5F; // small parachute only
              
             EntityParachute chute = new EntityParachute(world, (float) x, (float) y - offset, (float) z);
             chute.playSound("step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
@@ -75,16 +68,9 @@ public class ItemHopAndPop extends Item {
         return itemstack;
     }
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IconRegister iconReg) {
-        super.registerIcons(iconReg);
-        itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":HopAndPop");
-    }
-
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {
-		return  Parachute.RIPSTOP.getToolCraftingMaterial() == itemstack2.itemID ? true : super.getIsRepairable(itemstack1, itemstack2);//Parachute.hopnpopItem.itemID
+		return  Parachute.RIPSTOP.customCraftingMaterial == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);//Parachute.hopnpopItem.itemID
 	}
 
 }

@@ -14,25 +14,17 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
-package parachute.client;
+package com.parachute.client;
 
-import parachute.common.CommonProxyParachute;
-import parachute.common.EntityParachute;
+import com.parachute.common.CommonProxyParachute;
+import com.parachute.common.EntityParachute;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
-import parachute.common.KeyPressTickHandler;
 
 public class ClientProxyParachute extends CommonProxyParachute {
 
     @Override
     public void registerRenderer() {
         RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute());
-    }
-
-    @Override
-    public void registerPlayerTickHandler() {
-        TickRegistry.registerTickHandler(new KeyPressTickHandler(), Side.CLIENT);
     }
 
     @Override

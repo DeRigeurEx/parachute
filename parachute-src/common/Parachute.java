@@ -17,47 +17,41 @@
 //
 // Copyright 2013 Michael Sheppard (crackedEgg)
 //
-package parachute.common;
+package com.parachute.common;
 
-import net.minecraft.block.Block;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.EnumHelper;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumArmorMaterial;
-import net.minecraft.item.EnumToolMaterial;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.util.EnumHelper;
 
 @Mod(
-		modid = Parachute.modid,
-		name = Parachute.name,
-		version = Parachute.mcversion
-)
-
-@NetworkMod(
-		versionBounds = "[" + Parachute.mcversion + "]",
-		clientSideRequired = true,
-		serverSideRequired = false,
-		packetHandler = ParachutePacketHandler.class,
-		connectionHandler = ParachutePacketHandler.class,
-		channels = {Parachute.channel}
+	modid = Parachute.modid,
+	name = Parachute.name,
+	version = Parachute.mcversion
 )
 
 public class Parachute {
 
-	static EnumArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 15, new int[]{2, 5, 4, 1}, 12); // same as CHAIN
-	static EnumToolMaterial RIPSTOP = EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
+	static ArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 15, new int[]{2, 5, 4, 1}, 12); // same as CHAIN
+	static ToolMaterial RIPSTOP = EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
+	public static final PacketPipeline packetPipeline = new PacketPipeline();
 
-	public static final String modid = "ParachuteMod";
-	public static final String mcversion = "1.6.4";
+	public static final String modid = "parachutemod";
+	public static final String mcversion = "1.7.2";
 	public static final String channel = modid;
 	public static final String name = "Parachute Mod";
 	public static final String parachuteName = "Parachute";
@@ -84,8 +78,8 @@ public class Parachute {
 	public static final int armorSlot = 2;  // armor slot: 0 = ??, 1 = ??, 2 = chestplate, 3 = ??
 
 	@SidedProxy(
-			clientSide = "parachute.client.ClientProxyParachute",
-			serverSide = "parachute.common.CommonProxyParachute"
+			clientSide = "com.parachute.client.ClientProxyParachute",
+			serverSide = "com.parachute.common.CommonProxyParachute"
 	)
 	public static CommonProxyParachute proxy;
 
@@ -146,53 +140,63 @@ public class Parachute {
 
 		// clamp the fallThreshold to a minimum of 2
 		fallThreshold = fallThreshold < 2 ? 2 : fallThreshold;
+		
+		int chuteID = proxy.addArmor(parachuteName.toLowerCase());
+		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, this, 64, 10, true);
+		parachuteItem = (ItemParachute) (new ItemParachute(parachuteID, NYLON, chuteID, armorType)).setUnlocalizedName(parachuteName);
+		parachuteItem.setTextureName(Parachute.modid + ":" + parachuteName);
+		GameRegistry.registerItem(parachuteItem, parachuteName);
+
+		// create new items and set unlocalized names
+		ripcordItem = (ItemRipCord) (new ItemRipCord(ripcordID)).setUnlocalizedName(ripcordName);
+		ripcordItem.setTextureName(Parachute.modid + ":" + ripcordName);
+		GameRegistry.registerItem(ripcordItem, ripcordName);
+		
+		aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice(aadID)).setUnlocalizedName(aadName);
+		aadItem.setTextureName(Parachute.modid + ":" + aadName);
+		GameRegistry.registerItem(aadItem, aadName);
+		
+		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(popID, RIPSTOP)).setUnlocalizedName(hopnpopName);
+		hopnpopItem.setTextureName(Parachute.modid + ":" + hopnpopName);
+		GameRegistry.registerItem(hopnpopItem, hopnpopName);
 
 		proxy.registerRenderer();
-		proxy.registerServerTickHandler(); // for auto deployment feature
-		proxy.registerPlayerTickHandler();
-		proxy.registerConnectionHandler();
 	}
 
 	@EventHandler
 	public void Init(FMLInitializationEvent event) {
-		int chuteID = proxy.addArmor("parachute");
-		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, this, 64, 10, true);
-		parachuteItem = (ItemParachute) (new ItemParachute(parachuteID, NYLON, chuteID, armorType));
-		parachuteItem.setTextureName(Parachute.modid.toLowerCase() + ":Parachute");
-		parachuteItem.setUnlocalizedName(parachuteName);
-
-		// used to repair the parachutes
-		NYLON.customCraftingMaterial = Item.silk;
-		RIPSTOP.customCraftingMaterial = Item.silk;
-
-		// create new items and set unlocalized names
-		ripcordItem = (ItemRipCord) (new ItemRipCord(ripcordID)).setUnlocalizedName(ripcordName);
-		aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice(aadID)).setUnlocalizedName(aadName);
-		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(popID, RIPSTOP)).setUnlocalizedName(hopnpopName);
-
 		// recipes to craft the parachutes, ripcord and AAD
 		GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
-			"###", "X X", " L ", '#', Block.cloth, 'X', Item.silk, 'L', Item.leather
+			"###", "X X", " L ", '#', Blocks.wool, 'X', Items.string, 'L', Items.leather // string, string, leather
 		} );
 
 		GameRegistry.addRecipe(new ItemStack(hopnpopItem, 1), new Object[] {
-			"###", "X X", " X ", '#', Block.cloth, 'X', Item.silk
+			"###", "X X", " X ", '#', Blocks.wool, 'X', Items.string // wool, string
 		} );
 
 		GameRegistry.addRecipe(new ItemStack(ripcordItem, 1), new Object[] {
-			"#  ", " # ", "  *", '#', Item.silk, '*', Item.ingotIron
+			"#  ", " # ", "  *", '#', Items.string, '*', Items.iron_ingot // string, iron_ingot
 		} );
 
 		GameRegistry.addRecipe(new ItemStack(aadItem, 1), new Object[]{
-			" * ", " % ", " # ", '*', Item.comparator, '%', Item.redstone, '#', ripcordItem,});
+			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', ripcordItem,}); // comparator, restone, ripcordItem
+		
+		// used to repair the parachutes
+		NYLON.customCraftingMaterial = Items.string;
+		RIPSTOP.customCraftingMaterial = Items.string;
 
-		// add the names of the items
-		LanguageRegistry.addName(parachuteItem, parachuteName);
-		LanguageRegistry.addName(ripcordItem, ripcordName);
-		LanguageRegistry.addName(aadItem, aadName);
-		LanguageRegistry.addName(hopnpopItem, hopnpopName);
+		FMLCommonHandler.instance().bus().register(new AADTick());
+		FMLCommonHandler.instance().bus().register(new KeyPressTick());
+		
+		packetPipeline.initialise();
+		packetPipeline.registerPacket(ParachutePacket.class);
 
 		instance = this;
+	}
+	
+	@EventHandler
+	public void Init(FMLPostInitializationEvent event) {
+		packetPipeline.postInitialise();
 	}
 
 	public String getVersion() {
@@ -208,7 +212,7 @@ public class Parachute {
 	}
 
 	public int getChuteColor() {
-		return chuteColor;
+		return ((chuteColor >= 0 && chuteColor <= 18) ? chuteColor : 18);
 	}
 
 	public static double getAADAltitude() {
