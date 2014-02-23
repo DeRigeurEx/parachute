@@ -29,7 +29,7 @@ import net.minecraft.item.Item;
 
 public class ItemHopAndPop extends Item {
 	
-    public ItemHopAndPop(/*int id, */ToolMaterial toolmaterial) {
+    public ItemHopAndPop(ToolMaterial toolmaterial) {
         super();
         setMaxDamage(toolmaterial.getMaxUses());
         maxStackSize = 4;

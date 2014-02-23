@@ -43,7 +43,7 @@ public class ItemAutoActivateDevice extends Item {
     private static final double fallThreshold = Parachute.getFallThreshold();
     private static final double altitude = Parachute.getAADAltitude();
 
-    public ItemAutoActivateDevice(/*int id*/) {
+    public ItemAutoActivateDevice() {
         super();
         this.aadIcon = new IIcon[2];
         maxStackSize = 1;

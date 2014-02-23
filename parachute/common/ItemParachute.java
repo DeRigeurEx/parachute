@@ -31,7 +31,7 @@ public class ItemParachute extends ItemArmor {
 	
 	private final int damageAmount = 1;
 
-	public ItemParachute(/*int id, */ArmorMaterial armorMaterial, int renderIndex, int armorType) {
+	public ItemParachute(ArmorMaterial armorMaterial, int renderIndex, int armorType) {
 		super(armorMaterial, renderIndex, armorType);
 		setMaxDamage(armorMaterial.getDurability(armorType));
 		maxStackSize = 1;

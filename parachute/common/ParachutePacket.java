@@ -34,7 +34,7 @@ public class ParachutePacket extends AbstractPacket {
 	
 	ParachutePacket(int _keyCode, boolean _keyDown) {
 		keyCode = _keyCode;
-	   keyDown = _keyDown;
+		keyDown = _keyDown;
 	}
 
 	@Override
