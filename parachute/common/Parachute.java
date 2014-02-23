@@ -15,7 +15,7 @@
 //  =====================================================================
 //
 //
-// Copyright 2013 Michael Sheppard (crackedEgg)
+// Copyright 2011-2014 Michael Sheppard (crackedEgg)
 //
 package com.parachute.common;
 
@@ -96,8 +96,7 @@ public class Parachute {
 		String aadAltitudeComment = "AADAltitude - altitude (in meters) at which auto deploy occurs (10)";
 		String fallThresholdComment = "fallThreshold - player must have fallen this far to activate AAD (5.0)";
 		String aaDActiveComment = "AADActive - whether the AAD is active or not. default is inactive. (false)";
-		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\n"
-				+ "larger 4 panel canopy (true)";
+		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy (true)";
 		String colorComment = "Color index numbers:\n"
 				+ "black        -  0\nblue         -  1\n"
 				+ "brown        -  2\ncyan         -  3\n"
@@ -109,7 +108,7 @@ public class Parachute {
 				+ "white        - 14\nyellow       - 15\n"
 				+ "blue/white   - 16\nred/white    - 17\n"
 				+ "yellow/green - 18";
-
+		
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 

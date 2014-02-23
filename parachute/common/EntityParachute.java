@@ -14,7 +14,7 @@
 //  =====================================================================
 //
 //
-// Copyright 2013 Michael Sheppard (crackedEgg)
+// Copyright 2011-2014 Michael Sheppard (crackedEgg)
 //
 package com.parachute.common;
 

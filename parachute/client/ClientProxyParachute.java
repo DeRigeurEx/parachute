@@ -14,6 +14,9 @@
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 //  =====================================================================
 //
+//
+// Copyright 2011-2014 Michael Sheppard (crackedEgg)
+//
 package com.parachute.client;
 
 import com.parachute.common.CommonProxyParachute;
