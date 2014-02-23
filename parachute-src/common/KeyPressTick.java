@@ -29,15 +29,18 @@ import org.lwjgl.input.Keyboard;
 public class KeyPressTick {
 	
 	@SubscribeEvent
-	public void onTick(TickEvent.PlayerTickEvent event){
+	public void onTick(TickEvent.PlayerTickEvent event) {
 		onPlayerTick(event.player);
 	}
 
     private void onPlayerTick(EntityPlayer p) {
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { // grab space bar key while riding parachute
-			Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, true));
-		} else {
-			Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, false));
+		PlayerInfo pi = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(p);
+        if (pi != null) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { // grab space bar key while riding parachute
+				Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, true));
+			} else {
+				Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, false));
+			}
 		}
     }
 

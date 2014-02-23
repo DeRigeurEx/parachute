@@ -28,6 +28,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -42,7 +43,7 @@ public class ItemAutoActivateDevice extends Item {
     private static final double fallThreshold = Parachute.getFallThreshold();
     private static final double altitude = Parachute.getAADAltitude();
 
-    public ItemAutoActivateDevice(int id) {
+    public ItemAutoActivateDevice(/*int id*/) {
         super();
         this.aadIcon = new IIcon[2];
         maxStackSize = 1;
@@ -56,6 +57,7 @@ public class ItemAutoActivateDevice extends Item {
             active = !active;
             // change the item icon based on the damage.
             itemStack.setItemDamage(active ? 1 : 0);
+			entityPlayer.addChatMessage(new ChatComponentText("AAD: " + (active ? "On" : "Off")));
             // TODO: figure out how to make the device have a finite life
             //       since I'm using the damage for icons.
         }
@@ -105,6 +107,7 @@ public class ItemAutoActivateDevice extends Item {
 	
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {
-		return  Items.redstone == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);//Parachute.hopnpopItem.itemID
+		return  Items.redstone == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
 	}
+	
 }

@@ -63,6 +63,7 @@ public class EntityParachute extends Entity {
     final static int modeAscend = 1;
 
     final static double forwardSpeed = 0.75;
+	final double dropDistance = 3.0;
 
     private static double descentRate = drift;
 	private static int liftMode;
@@ -235,7 +236,7 @@ public class EntityParachute extends Entity {
         double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
         // drop the chute when close to ground
-        checkShouldDropChute(posX, posY, posZ, smallCanopy ? 3.5 : 4.5); // 3.0D : 4.0D original 
+        checkShouldDropChute(posX, posY, posZ, smallCanopy ? dropDistance : dropDistance + 1.0);
 
 		// forward velocity
         if (worldObj.isRemote && isTurning) {

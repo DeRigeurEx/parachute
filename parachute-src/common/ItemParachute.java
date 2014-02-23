@@ -19,14 +19,11 @@
 //
 package com.parachute.common;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemArmor;
 
@@ -34,9 +31,9 @@ public class ItemParachute extends ItemArmor {
 	
 	private final int damageAmount = 1;
 
-	public ItemParachute(int id, ArmorMaterial enumArmorMaterial, int renderIndex, int armorType) {
-		super(enumArmorMaterial, renderIndex, armorType);
-		setMaxDamage(enumArmorMaterial.getDurability(armorType));
+	public ItemParachute(/*int id, */ArmorMaterial armorMaterial, int renderIndex, int armorType) {
+		super(armorMaterial, renderIndex, armorType);
+		setMaxDamage(armorMaterial.getDurability(armorType));
 		maxStackSize = 1;
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 		Parachute.instance.setType(Parachute.parachuteName);
@@ -71,13 +68,6 @@ public class ItemParachute extends ItemArmor {
 			}
 		}
 	}
-
-//	@SideOnly(Side.CLIENT)
-//	@Override
-//	public void registerIcons(IIconRegister iconReg) {
-//		super.registerIcons(iconReg);
-//		itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + getUnlocalizedName());
-//	}
 
 	@Override
 	public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, String type) {

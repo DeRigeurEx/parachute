@@ -30,7 +30,7 @@ import net.minecraft.world.World;
 
 public class ItemRipCord extends Item {
 
-    public ItemRipCord(int id) {
+    public ItemRipCord(/*int id*/) {
         super();
         maxStackSize = 1;
         setMaxDamage(ToolMaterial.IRON.getMaxUses());

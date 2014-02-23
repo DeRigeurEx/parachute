@@ -29,9 +29,9 @@ import net.minecraft.item.Item;
 
 public class ItemHopAndPop extends Item {
 	
-    public ItemHopAndPop(int id, ToolMaterial enumtoolmaterial) {
+    public ItemHopAndPop(/*int id, */ToolMaterial toolmaterial) {
         super();
-        setMaxDamage(enumtoolmaterial.getMaxUses());
+        setMaxDamage(toolmaterial.getMaxUses());
         maxStackSize = 4;
         setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 		Parachute.instance.setType(Parachute.hopnpopName);

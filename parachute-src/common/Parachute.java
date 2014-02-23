@@ -67,10 +67,10 @@ public class Parachute {
 	private boolean thermals;
 	private static double AADAltitude;
 	private boolean smallCanopy;
-	private static int parachuteID;
-	private static int ripcordID;
-	private static int aadID;
-	private static int popID;
+//	private static int parachuteID;
+//	private static int ripcordID;
+//	private static int aadID;
+//	private static int popID;
 	private static boolean AADActive;
 	private static double fallThreshold;
 	private final int entityID = EntityRegistry.findGlobalUniqueEntityId();
@@ -94,10 +94,10 @@ public class Parachute {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)";
-		String itemComment = "parachuteID - customize the Parachute Item ID (2500)";
-		String cordComment = "ripcordID - customize the Ripcord Item ID (2501)";
-		String aadComment = "auto activation device ID - customize the AAD Item ID (2502)";
-		String popComment = "popID - customize the hop-n-pop Item ID (2503)";
+//		String itemComment = "parachuteID - customize the Parachute Item ID (2500)";
+//		String cordComment = "ripcordID - customize the Ripcord Item ID (2501)";
+//		String aadComment = "auto activation device ID - customize the AAD Item ID (2502)";
+//		String popComment = "popID - customize the hop-n-pop Item ID (2503)";
 		String usageComment = "singleUse - set to true for hop n pop single use (false)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (256)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
@@ -121,10 +121,10 @@ public class Parachute {
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 
-		parachuteID = config.get(Configuration.CATEGORY_GENERAL, "parachuteID", 2500, itemComment).getInt();
-		ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
-		aadID = config.get(Configuration.CATEGORY_GENERAL, "aadID", 2502, aadComment).getInt();
-		popID = config.get(Configuration.CATEGORY_GENERAL, "popID", 2503, popComment).getInt();
+//		parachuteID = config.get(Configuration.CATEGORY_GENERAL, "parachuteID", 2500, itemComment).getInt();
+//		ripcordID = config.get(Configuration.CATEGORY_GENERAL, "ripcordID", 2501, cordComment).getInt();
+//		aadID = config.get(Configuration.CATEGORY_GENERAL, "aadID", 2502, aadComment).getInt();
+//		popID = config.get(Configuration.CATEGORY_GENERAL, "popID", 2503, popComment).getInt();
 		singleUse = config.get(Configuration.CATEGORY_GENERAL, "singleUse", false, usageComment).getBoolean(false);
 		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 256, heightComment).getInt();
 		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
@@ -143,20 +143,20 @@ public class Parachute {
 		
 		int chuteID = proxy.addArmor(parachuteName.toLowerCase());
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, this, 64, 10, true);
-		parachuteItem = (ItemParachute) (new ItemParachute(parachuteID, NYLON, chuteID, armorType)).setUnlocalizedName(parachuteName);
+		parachuteItem = (ItemParachute) (new ItemParachute(/*parachuteID, */NYLON, chuteID, armorType)).setUnlocalizedName(parachuteName);
 		parachuteItem.setTextureName(Parachute.modid + ":" + parachuteName);
 		GameRegistry.registerItem(parachuteItem, parachuteName);
 
 		// create new items and set unlocalized names
-		ripcordItem = (ItemRipCord) (new ItemRipCord(ripcordID)).setUnlocalizedName(ripcordName);
+		ripcordItem = (ItemRipCord) (new ItemRipCord(/*ripcordID*/)).setUnlocalizedName(ripcordName);
 		ripcordItem.setTextureName(Parachute.modid + ":" + ripcordName);
 		GameRegistry.registerItem(ripcordItem, ripcordName);
 		
-		aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice(aadID)).setUnlocalizedName(aadName);
+		aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice(/*aadID*/)).setUnlocalizedName(aadName);
 		aadItem.setTextureName(Parachute.modid + ":" + aadName);
 		GameRegistry.registerItem(aadItem, aadName);
 		
-		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(popID, RIPSTOP)).setUnlocalizedName(hopnpopName);
+		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(/*popID,*/ RIPSTOP)).setUnlocalizedName(hopnpopName);
 		hopnpopItem.setTextureName(Parachute.modid + ":" + hopnpopName);
 		GameRegistry.registerItem(hopnpopItem, hopnpopName);
 
@@ -187,6 +187,7 @@ public class Parachute {
 
 		FMLCommonHandler.instance().bus().register(new AADTick());
 		FMLCommonHandler.instance().bus().register(new KeyPressTick());
+		FMLCommonHandler.instance().bus().register(new ParachutePlayerTracker());
 		
 		packetPipeline.initialise();
 		packetPipeline.registerPacket(ParachutePacket.class);
@@ -235,9 +236,9 @@ public class Parachute {
 		return smallCanopy;
 	}
 
-	public static int getItemID() {
-		return parachuteID;
-	}
+//	public static int getItemID() {
+//		return parachuteID;
+//	}
 
 	public void setType(String type) {
 		this.type = type;
