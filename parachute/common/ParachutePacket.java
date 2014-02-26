@@ -26,40 +26,49 @@ import org.lwjgl.input.Keyboard;
 
 public class ParachutePacket extends AbstractPacket {
 
-    public static final byte KeyPress = 0;
+	public static final byte KeyPress = 0;
 	private static int keyCode;
 	private static boolean keyDown;
+
+	ParachutePacket()
+	{
+	}
+
+	;
 	
-	ParachutePacket() {};
-	
-	ParachutePacket(int _keyCode, boolean _keyDown) {
+	ParachutePacket(int _keyCode, boolean _keyDown)
+	{
 		keyCode = _keyCode;
 		keyDown = _keyDown;
 	}
 
 	@Override
-	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+	{
 		buffer.writeByte(KeyPress);    // key press type packet
-        buffer.writeByte(keyCode);     // the keycode
-        buffer.writeBoolean(keyDown);  // true if key is pressed
+		buffer.writeByte(keyCode);     // the keycode
+		buffer.writeBoolean(keyDown);  // true if key is pressed
 	}
 
 	@Override
-	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+	{
 		byte type = buffer.readByte();
-		if (type == KeyPress){
+		if (type == KeyPress) {
 			keyCode = buffer.readByte();
 			keyDown = buffer.readBoolean();
 		}
 	}
 
 	@Override
-	public void handleClientSide(EntityPlayer player) {
-		
+	public void handleClientSide(EntityPlayer player)
+	{
+
 	}
 
 	@Override
-	public void handleServerSide(EntityPlayer player) {
+	public void handleServerSide(EntityPlayer player)
+	{
 		PlayerInfo pi = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
 		if (pi != null) {
 			if (keyCode == Keyboard.KEY_SPACE) {

@@ -17,7 +17,6 @@
 //
 // Copyright 2011-2014 Michael Sheppard (crackedEgg)
 //
-
 package com.parachute.common;
 
 import java.util.ArrayList;
@@ -25,38 +24,43 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ParachutePlayerManager {
-	
+
 	private final List<PlayerInfo> Players;
 
-    private static final ParachutePlayerManager instance = new ParachutePlayerManager();
-	
-    public ParachutePlayerManager() {
-        Players = new ArrayList<PlayerInfo>();
-    }
-	
-	public static ParachutePlayerManager instance() {
+	private static final ParachutePlayerManager instance = new ParachutePlayerManager();
+
+	public ParachutePlayerManager()
+	{
+		Players = new ArrayList<PlayerInfo>();
+	}
+
+	public static ParachutePlayerManager instance()
+	{
 		return instance;
 	}
-	
-	public void addPlayer(PlayerInfo pi) {
+
+	public void addPlayer(PlayerInfo pi)
+	{
 		ParachutePlayerManager.instance.Players.add(pi);
 	}
-	
-	public void removePlayer(String playerName) {
+
+	public void removePlayer(String playerName)
+	{
 		for (int i = 0; i < ParachutePlayerManager.instance().Players.size(); i++) {
 			if (ParachutePlayerManager.instance().Players.get(i).Name.equals(playerName)) {
 				ParachutePlayerManager.instance().Players.remove(i);
 			}
 		}
 	}
-	
-    // must test for null EntityPlayer before calling this method
-    public PlayerInfo getPlayerInfoFromPlayer(EntityPlayer player) {
+
+	// must test for null EntityPlayer before calling this method
+	public PlayerInfo getPlayerInfoFromPlayer(EntityPlayer player)
+	{
 		for (PlayerInfo pi : ParachutePlayerManager.instance.Players) {
 			if (pi.Name.equals(player.getDisplayName())) {
 				return pi;
 			}
 		}
-        return null;
-    }
+		return null;
+	}
 }

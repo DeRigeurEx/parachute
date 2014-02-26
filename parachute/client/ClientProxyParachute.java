@@ -25,14 +25,16 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class ClientProxyParachute extends CommonProxyParachute {
 
-    @Override
-    public void registerRenderer() {
-        RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute());
-    }
+	@Override
+	public void registerRenderer()
+	{
+		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute());
+	}
 
-    @Override
-    public int addArmor(String armorName) {
-        return RenderingRegistry.addNewArmourRendererPrefix(armorName);
-    }
+	@Override
+	public int addArmor(String armorName)
+	{
+		return RenderingRegistry.addNewArmourRendererPrefix(armorName);
+	}
 
 }

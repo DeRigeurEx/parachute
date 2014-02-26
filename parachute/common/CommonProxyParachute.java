@@ -19,14 +19,15 @@
 //
 package com.parachute.common;
 
-
 public class CommonProxyParachute {
 
-    public void registerRenderer() {
-    }
+	public void registerRenderer()
+	{
+	}
 
-    public int addArmor(String armorName) {
-        return 0;
-    }
+	public int addArmor(String armorName)
+	{
+		return 0;
+	}
 
 }

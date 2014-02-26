@@ -27,21 +27,23 @@ import org.lwjgl.input.Keyboard;
 // used to intercept the space bar to make the parachute go up
 // ridin' the thermals
 public class KeyPressTick {
-	
+
 	@SubscribeEvent
-	public void onTick(TickEvent.PlayerTickEvent event) {
+	public void onTick(TickEvent.PlayerTickEvent event)
+	{
 		onPlayerTick(event.player);
 	}
 
-    private void onPlayerTick(EntityPlayer p) {
+	private void onPlayerTick(EntityPlayer p)
+	{
 		PlayerInfo pi = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(p);
-        if (pi != null) {
+		if (pi != null) {
 			if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { // grab space bar key while riding parachute
 				Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, true));
 			} else {
 				Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, false));
 			}
 		}
-    }
+	}
 
 }

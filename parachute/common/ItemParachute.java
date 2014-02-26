@@ -28,10 +28,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemArmor;
 
 public class ItemParachute extends ItemArmor {
-	
+
 	private final int damageAmount = 1;
 
-	public ItemParachute(ArmorMaterial armorMaterial, int renderIndex, int armorType) {
+	public ItemParachute(ArmorMaterial armorMaterial, int renderIndex, int armorType)
+	{
 		super(armorMaterial, renderIndex, armorType);
 		setMaxDamage(armorMaterial.getDurability(armorType));
 		maxStackSize = 1;
@@ -39,7 +40,8 @@ public class ItemParachute extends ItemArmor {
 		Parachute.instance.setType(Parachute.parachuteName);
 	}
 
-	public void deployParachute(World world, EntityPlayer entityplayer) {
+	public void deployParachute(World world, EntityPlayer entityplayer)
+	{
 		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
 		if (entityplayer != null && Parachute.isFalling(entityplayer) && entityplayer.ridingEntity == null) {
 			double x = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX);
@@ -70,7 +72,8 @@ public class ItemParachute extends ItemArmor {
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, String type) {
+	public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, String type)
+	{
 		if (itemstack.getItem() == Parachute.parachuteItem) {
 			return Parachute.modid.toLowerCase() + ":textures/models/armor/parachute-pack.png";
 		}
@@ -78,7 +81,8 @@ public class ItemParachute extends ItemArmor {
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2) {
+	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2)
+	{
 		return Parachute.NYLON.customCraftingMaterial == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
 	}
 

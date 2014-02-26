@@ -39,14 +39,14 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 
 @Mod(
-	modid = Parachute.modid,
-	name = Parachute.name,
-	version = Parachute.mcversion
+		modid = Parachute.modid,
+		name = Parachute.name,
+		version = Parachute.mcversion
 )
 
 public class Parachute {
 
-	static ArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 15, new int[]{2, 5, 4, 1}, 12); // same as CHAIN
+	static ArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 15, new int[] {2, 5, 4, 1}, 12); // same as CHAIN
 	static ToolMaterial RIPSTOP = EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
 	public static final PacketPipeline packetPipeline = new PacketPipeline();
 
@@ -88,8 +88,10 @@ public class Parachute {
 	public static Parachute instance;
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)";
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
+				+ " For Minecraft Version 1.7.2\n";
 		String usageComment = "singleUse - set to true for hop n pop single use (false)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (256)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
@@ -108,7 +110,7 @@ public class Parachute {
 				+ "white        - 14\nyellow       - 15\n"
 				+ "blue/white   - 16\nred/white    - 17\n"
 				+ "yellow/green - 18";
-		
+
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 
@@ -127,22 +129,23 @@ public class Parachute {
 
 		// clamp the fallThreshold to a minimum of 2
 		fallThreshold = fallThreshold < 2 ? 2 : fallThreshold;
-		
+
 		int chuteID = proxy.addArmor(parachuteName.toLowerCase());
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, this, 64, 10, true);
+
+		// create new items, set unlocalized names and register
 		parachuteItem = (ItemParachute) (new ItemParachute(NYLON, chuteID, armorType)).setUnlocalizedName(parachuteName);
 		parachuteItem.setTextureName(Parachute.modid + ":" + parachuteName);
 		GameRegistry.registerItem(parachuteItem, parachuteName);
 
-		// create new items and set unlocalized names
 		ripcordItem = (ItemRipCord) (new ItemRipCord()).setUnlocalizedName(ripcordName);
 		ripcordItem.setTextureName(Parachute.modid + ":" + ripcordName);
 		GameRegistry.registerItem(ripcordItem, ripcordName);
-		
+
 		aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice()).setUnlocalizedName(aadName);
 		aadItem.setTextureName(Parachute.modid + ":" + aadName);
 		GameRegistry.registerItem(aadItem, aadName);
-		
+
 		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
 		hopnpopItem.setTextureName(Parachute.modid + ":" + hopnpopName);
 		GameRegistry.registerItem(hopnpopItem, hopnpopName);
@@ -151,23 +154,24 @@ public class Parachute {
 	}
 
 	@EventHandler
-	public void Init(FMLInitializationEvent event) {
+	public void Init(FMLInitializationEvent event)
+	{
 		// recipes to craft the parachutes, ripcord and AAD
 		GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
 			"###", "X X", " L ", '#', Blocks.wool, 'X', Items.string, 'L', Items.leather // string, string, leather
-		} );
+		});
 
 		GameRegistry.addRecipe(new ItemStack(hopnpopItem, 1), new Object[] {
 			"###", "X X", " X ", '#', Blocks.wool, 'X', Items.string // wool, string
-		} );
+		});
 
 		GameRegistry.addRecipe(new ItemStack(ripcordItem, 1), new Object[] {
 			"#  ", " # ", "  *", '#', Items.string, '*', Items.iron_ingot // string, iron_ingot
-		} );
+		});
 
-		GameRegistry.addRecipe(new ItemStack(aadItem, 1), new Object[]{
+		GameRegistry.addRecipe(new ItemStack(aadItem, 1), new Object[] {
 			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', ripcordItem,}); // comparator, restone, ripcordItem
-		
+
 		// used to repair the parachutes
 		NYLON.customCraftingMaterial = Items.string;
 		RIPSTOP.customCraftingMaterial = Items.string;
@@ -175,55 +179,66 @@ public class Parachute {
 		FMLCommonHandler.instance().bus().register(new AADTick());
 		FMLCommonHandler.instance().bus().register(new KeyPressTick());
 		FMLCommonHandler.instance().bus().register(new ParachutePlayerTracker());
-		
+
 		packetPipeline.initialise();
 		packetPipeline.registerPacket(ParachutePacket.class);
 
 		instance = this;
 	}
-	
+
 	@EventHandler
-	public void Init(FMLPostInitializationEvent event) {
+	public void Init(FMLPostInitializationEvent event)
+	{
 		packetPipeline.postInitialise();
 	}
 
-	public String getVersion() {
+	public String getVersion()
+	{
 		return Parachute.mcversion;
 	}
 
-	public double getMaxAltitude() {
+	public double getMaxAltitude()
+	{
 		return heightLimit;
 	}
 
-	public boolean getAllowThermals() {
+	public boolean getAllowThermals()
+	{
 		return thermals;
 	}
 
-	public int getChuteColor() {
+	public int getChuteColor()
+	{
 		return ((chuteColor >= 0 && chuteColor <= 18) ? chuteColor : 18);
 	}
 
-	public static double getAADAltitude() {
+	public static double getAADAltitude()
+	{
 		return AADAltitude;
 	}
 
-	public static boolean getAADActive() {
+	public static boolean getAADActive()
+	{
 		return AADActive;
 	}
 
-	public static double getFallThreshold() {
+	public static double getFallThreshold()
+	{
 		return fallThreshold;
 	}
 
-	public void setAADActive(boolean active) {
+	public void setAADActive(boolean active)
+	{
 		AADActive = active;
 	}
 
-	public boolean isSmallCanopy() {
+	public boolean isSmallCanopy()
+	{
 		return smallCanopy;
 	}
 
-	public void setType(String type) {
+	public void setType(String type)
+	{
 		this.type = type;
 		// force a small canopy for the hop-n-pop chute
 		if (this.type.equals(hopnpopName)) {
@@ -231,18 +246,21 @@ public class Parachute {
 		}
 	}
 
-	public String getType() {
+	public String getType()
+	{
 		return this.type;
 	}
-	
-	public int getHopAndPopDamageAmount() {
+
+	public int getHopAndPopDamageAmount()
+	{
 		if (singleUse) {
 			return hopnpopItem.getMaxDamage() + 1;
 		}
 		return 1;
 	}
 
-	public static boolean playerIsWearingParachute(EntityPlayer player) {
+	public static boolean playerIsWearingParachute(EntityPlayer player)
+	{
 		ItemStack stack = player == null ? null : player.getCurrentArmor(armorSlot);
 		if (stack != null) {
 			Item item = stack.getItem();
@@ -252,8 +270,9 @@ public class Parachute {
 		}
 		return false;
 	}
-	
-	public static boolean isFalling(EntityPlayer entity) {
-        return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
-    }
+
+	public static boolean isFalling(EntityPlayer entity)
+	{
+		return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
+	}
 }

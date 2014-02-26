@@ -23,13 +23,16 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 
 public class ParachutePlayerTracker {
+
 	@SubscribeEvent
-	public void PlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
+	public void PlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event)
+	{
 		ParachutePlayerManager.instance().addPlayer(new PlayerInfo((event.player).getDisplayName()));
-    }
-	
-    @SubscribeEvent
-    public void PlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
+	}
+
+	@SubscribeEvent
+	public void PlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event)
+	{
 		ParachutePlayerManager.instance().removePlayer(event.player.getDisplayName());
-    }
+	}
 }
