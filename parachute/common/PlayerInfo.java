@@ -23,7 +23,6 @@ public class PlayerInfo {
 
 	public String Name;
 	public int mode; // 0 = drift, 1 = ascend
-	public double coord; // player look vector y coord
 	public boolean aad;  // true = AAD is activated, false = deactivated
 
 	public PlayerInfo(String name)

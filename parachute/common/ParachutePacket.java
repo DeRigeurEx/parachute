@@ -26,16 +26,13 @@ import org.lwjgl.input.Keyboard;
 
 public class ParachutePacket extends AbstractPacket {
 
-	public static final byte KeyPress = 0;
-	private static int keyCode;
-	private static boolean keyDown;
+	private int keyCode;
+	private boolean keyDown;
 
 	ParachutePacket()
 	{
 	}
 
-	;
-	
 	ParachutePacket(int _keyCode, boolean _keyDown)
 	{
 		keyCode = _keyCode;
@@ -45,19 +42,15 @@ public class ParachutePacket extends AbstractPacket {
 	@Override
 	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
 	{
-		buffer.writeByte(KeyPress);    // key press type packet
-		buffer.writeByte(keyCode);     // the keycode
+		buffer.writeInt(keyCode);      // the keycode
 		buffer.writeBoolean(keyDown);  // true if key is pressed
 	}
 
 	@Override
 	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
 	{
-		byte type = buffer.readByte();
-		if (type == KeyPress) {
-			keyCode = buffer.readByte();
-			keyDown = buffer.readBoolean();
-		}
+		keyCode = buffer.readInt();
+		keyDown = buffer.readBoolean();
 	}
 
 	@Override

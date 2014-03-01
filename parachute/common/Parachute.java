@@ -91,7 +91,7 @@ public class Parachute {
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
-				+ " For Minecraft Version 1.7.2\n";
+				+ " For Minecraft Version " + Parachute.mcversion + "\n";
 		String usageComment = "singleUse - set to true for hop n pop single use (false)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (256)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
