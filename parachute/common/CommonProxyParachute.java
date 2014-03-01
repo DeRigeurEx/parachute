@@ -19,8 +19,13 @@
 //
 package com.parachute.common;
 
-public class CommonProxyParachute {
+import cpw.mods.fml.common.FMLLog;
+import org.apache.logging.log4j.Logger;
 
+public class CommonProxyParachute {
+	
+	private static final Logger logger = FMLLog.getLogger();
+	
 	public void registerRenderer()
 	{
 	}
@@ -28,6 +33,11 @@ public class CommonProxyParachute {
 	public int addArmor(String armorName)
 	{
 		return 0;
+	}
+	
+	public void print(String s)
+	{
+		logger.info(s);
 	}
 
 }
