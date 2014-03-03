@@ -31,12 +31,14 @@ import org.lwjgl.opengl.GL11;
 
 import com.parachute.common.EntityParachute;
 import com.parachute.common.Parachute;
+import java.util.Random;
 
 public class RenderParachute extends Render {
 
-	private static int curIndex = Parachute.instance.getChuteColor();
+	private static String curColor = Parachute.instance.getChuteColor();
 	protected static ModelBase modelParachute;
 	private static ResourceLocation parachuteTexture = null;
+	private static final Random rand = new Random(System.currentTimeMillis());
 
 	public RenderParachute()
 	{
@@ -212,24 +214,57 @@ public class RenderParachute extends Render {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
-	public static void setParachuteColor(int index)
+	public static void setParachuteColor(String color)
 	{
-		parachuteTexture = getParachuteColor(index);
+		if (color.equalsIgnoreCase("random")) {
+			parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + getRandomColor() + ".png");
+		} else {
+			parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + color + ".png");
+		}
+		curColor = color;
 	}
 
-	protected static ResourceLocation getParachuteColor(int idx)
+	protected static ResourceLocation getParachuteColor(String color)
 	{
-		if (parachuteTexture == null || idx != curIndex) {
-			parachuteTexture = new ResourceLocation(Parachute.modid.toLowerCase(), "textures/blocks/parachute_canopy" + idx + ".png");
-			curIndex = idx;
+		if (parachuteTexture == null) {
+			if (color.equalsIgnoreCase("random")) {
+				parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + getRandomColor() + ".png");
+			} else {
+				parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + color + ".png");
+			}
+			curColor = color;
 		}
 		return parachuteTexture;
+	}
+	
+	protected static String getRandomColor()
+	{
+		String [] colors = {
+			"black",
+			"blue",
+			"brown",
+			"cyan",
+			"gray",
+			"green",
+			"light_blue",
+			"lime",
+			"magneta",
+			"orange",
+			"pink",
+			"purple",
+			"red",
+			"silver",
+			"white",
+			"yellow"
+		};
+		
+		return colors[rand.nextInt(16)];
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity)
 	{
-		parachuteTexture = getParachuteColor(curIndex);
+		parachuteTexture = getParachuteColor(curColor);
 		return parachuteTexture;
 	}
 

@@ -63,7 +63,7 @@ public class Parachute {
 	private boolean singleUse; // applies to the hop and pop chute only
 
 	private int heightLimit;
-	private int chuteColor;
+	private String chuteColor;
 	private boolean thermals;
 	private static double AADAltitude;
 	private boolean smallCanopy;
@@ -99,17 +99,16 @@ public class Parachute {
 		String fallThresholdComment = "fallThreshold - player must have fallen this far to activate AAD (5.0)";
 		String aaDActiveComment = "AADActive - whether the AAD is active or not. default is inactive. (false)";
 		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy (true)";
-		String colorComment = "Color index numbers:\n"
-				+ "black        -  0\nblue         -  1\n"
-				+ "brown        -  2\ncyan         -  3\n"
-				+ "gray         -  4\ngreen        -  5\n"
-				+ "light blue   -  6\nlime         -  7\n"
-				+ "magneta      -  8\norange       -  9\n"
-				+ "pink         - 10\npurple       - 11\n"
-				+ "red          - 12\nsilver       - 13\n"
-				+ "white        - 14\nyellow       - 15\n"
-				+ "blue/white   - 16\nred/white    - 17\n"
-				+ "yellow/green - 18";
+		String colorComment = "Parachute Colors Allowed:\n"
+				+ "black\nblue\n"
+				+ "brown\ncyan\n"
+				+ "gray\ngreen\n"
+				+ "light_blue\nlime\n"
+				+ "magneta\norange\n"
+				+ "pink\npurple\n"
+				+ "red\nsilver\n"
+				+ "white\nyellow\n"
+				+ "random - allows randomly chosen color each time chute is opened\n";
 
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
@@ -121,7 +120,7 @@ public class Parachute {
 		AADAltitude = config.get(Configuration.CATEGORY_GENERAL, "AADAltitude", 15.0, aadAltitudeComment).getDouble(15.0);
 		AADActive = config.get(Configuration.CATEGORY_GENERAL, "AADActive", false, aaDActiveComment).getBoolean(false);
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", true, typeComment).getBoolean(true);
-		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", 18, colorComment).getInt();
+		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", "random", colorComment).getString();
 
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 
@@ -158,19 +157,19 @@ public class Parachute {
 	{
 		// recipes to craft the parachutes, ripcord and AAD
 		GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
-			"###", "X X", " L ", '#', Blocks.wool, 'X', Items.string, 'L', Items.leather // string, string, leather
+			"###", "X X", " L ", '#', Blocks.wool, 'X', Items.string, 'L', Items.leather
 		});
 
 		GameRegistry.addRecipe(new ItemStack(hopnpopItem, 1), new Object[] {
-			"###", "X X", " X ", '#', Blocks.wool, 'X', Items.string // wool, string
+			"###", "X X", " X ", '#', Blocks.wool, 'X', Items.string
 		});
 
 		GameRegistry.addRecipe(new ItemStack(ripcordItem, 1), new Object[] {
-			"#  ", " # ", "  *", '#', Items.string, '*', Items.iron_ingot // string, iron_ingot
+			"#  ", " # ", "  *", '#', Items.string, '*', Items.iron_ingot
 		});
 
 		GameRegistry.addRecipe(new ItemStack(aadItem, 1), new Object[] {
-			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', ripcordItem,}); // comparator, restone, ripcordItem
+			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', ripcordItem,});
 
 		// used to repair the parachutes
 		NYLON.customCraftingMaterial = Items.string;
@@ -207,9 +206,9 @@ public class Parachute {
 		return thermals;
 	}
 
-	public int getChuteColor()
+	public String getChuteColor()
 	{
-		return ((chuteColor >= 0 && chuteColor <= 18) ? chuteColor : 18);
+		return chuteColor;
 	}
 
 	public static double getAADAltitude()
