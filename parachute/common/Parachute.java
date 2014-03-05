@@ -19,6 +19,7 @@
 //
 package com.parachute.common;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
@@ -31,12 +32,16 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
+//import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
+
+//import java.util.List;
 
 @Mod(
 		modid = Parachute.modid,
@@ -90,6 +95,7 @@ public class Parachute {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		System.err.println("Got FMLPreInitializationEvent");
 		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
 				+ " For Minecraft Version " + Parachute.mcversion + "\n";
 		String usageComment = "singleUse - set to true for hop n pop single use (false)";
@@ -155,6 +161,7 @@ public class Parachute {
 	@EventHandler
 	public void Init(FMLInitializationEvent event)
 	{
+		System.err.println("Got FMLInitializationEvent");
 		// recipes to craft the parachutes, ripcord and AAD
 		GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
 			"###", "X X", " L ", '#', Blocks.wool, 'X', Items.string, 'L', Items.leather
@@ -181,15 +188,35 @@ public class Parachute {
 
 		packetPipeline.initialise();
 		packetPipeline.registerPacket(ParachutePacket.class);
+		
+		// allow this mod to load if there are missing mappings
+		FMLClientHandler.instance().setDefaultMissingAction(FMLMissingMappingsEvent.Action.IGNORE);
 
 		instance = this;
 	}
-
+	
 	@EventHandler
-	public void Init(FMLPostInitializationEvent event)
+	public void postInit(FMLPostInitializationEvent event)
 	{
 		packetPipeline.postInitialise();
 	}
+	
+//	@EventHandler
+//	public void missingMappingsHandler(FMLMissingMappingsEvent event) 
+//	{
+//		System.err.println("Got FMLMissingMappingsEvent");
+//		List<FMLMissingMappingsEvent.MissingMapping> list = event.get();
+//		
+//		for (FMLMissingMappingsEvent.MissingMapping mapping : list) {
+//			System.err.println("Missing Mapping: " + mapping.name);
+//			if (mapping.type.equals(GameRegistry.Type.ITEM)) {
+//				mapping.setAction(FMLMissingMappingsEvent.Action.WARN);
+//			}
+//			if (mapping.type.equals(GameRegistry.Type.BLOCK)) {
+//				mapping.setAction(FMLMissingMappingsEvent.Action.IGNORE);
+//			}
+//		}
+//	}
 
 	public String getVersion()
 	{

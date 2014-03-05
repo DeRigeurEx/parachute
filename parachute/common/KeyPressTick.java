@@ -31,7 +31,9 @@ public class KeyPressTick {
 	@SubscribeEvent
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
-		onPlayerTick(event.player);
+		if (event.phase.equals(TickEvent.Phase.END)) {
+			onPlayerTick(event.player);
+		}
 	}
 
 	private void onPlayerTick(EntityPlayer p)

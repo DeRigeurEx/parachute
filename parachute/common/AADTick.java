@@ -30,7 +30,9 @@ public class AADTick {
 	@SubscribeEvent
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
-		onPlayerTick(event.player);
+		if (event.phase.equals(TickEvent.Phase.END)) {
+			onPlayerTick(event.player);
+		}
 	}
 
     // Handles the Automatic Activation Device
