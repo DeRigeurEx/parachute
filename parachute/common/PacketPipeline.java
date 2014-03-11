@@ -63,17 +63,17 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
 	public boolean registerPacket(Class<? extends AbstractPacket> clazz)
 	{
 		if (this.packets.size() > 256) {
-			// You should log here!!
+			Parachute.proxy.print("PacketPipeline LinkedList size > 256");
 			return false;
 		}
 
 		if (this.packets.contains(clazz)) {
-			// You should log here!!
+			Parachute.proxy.print("PacketPipeline already contains ParachutePacket class");
 			return false;
 		}
 
 		if (this.isPostInitialised) {
-			// You should log here!!
+			Parachute.proxy.print("PacketPipeline is already PostInitialised");
 			return false;
 		}
 

@@ -20,6 +20,7 @@
 package com.parachute.common;
 
 import com.parachute.client.RenderParachute;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -60,7 +61,9 @@ public class ItemParachute extends ItemArmor {
 			chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
 			if (!world.isRemote) {
 				world.spawnEntityInWorld(chute);
-				RenderParachute.setParachuteColor(Parachute.instance.getChuteColor());
+				if (FMLCommonHandler.instance().getSide().isClient()) {
+					RenderParachute.setParachuteColor(Parachute.instance.getChuteColor());
+				}
 			}
 			entityplayer.mountEntity(chute);
 

@@ -62,11 +62,15 @@ public class ParachutePacket extends AbstractPacket {
 	@Override
 	public void handleServerSide(EntityPlayer player)
 	{
-		PlayerInfo pi = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
-		if (pi != null) {
-			if (keyCode == Keyboard.KEY_SPACE) {
-				EntityParachute.setLiftMode(keyDown ? 1 : 0); // ascend|descend
-			}
+		if (player != null) {
+//			PlayerInfo pi = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
+//			Parachute.proxy.print("handleServerSide: PlayerInfo is " + (pi == null ? "NULL" : "GOOD"));
+//			if (pi != null) {
+				if (keyCode == Keyboard.KEY_SPACE) {
+					EntityParachute.setLiftMode(keyDown ? 1 : 0); // ascend|descend
+//					pi.mode = keyDown ? 1 : 0;
+				}
+//			}
 		}
 	}
 

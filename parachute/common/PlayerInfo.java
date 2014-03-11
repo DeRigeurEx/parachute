@@ -19,7 +19,8 @@
 //
 package com.parachute.common;
 
-public class PlayerInfo {
+public class PlayerInfo
+{
 
 	public String Name;
 	public int mode; // 0 = drift, 1 = ascend

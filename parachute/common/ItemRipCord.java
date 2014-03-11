@@ -24,6 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -62,7 +63,7 @@ public class ItemRipCord extends Item {
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2)
 	{
-		return Item.getItemById(0) == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
+		return Items.iron_ingot == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
 	}
 
 }

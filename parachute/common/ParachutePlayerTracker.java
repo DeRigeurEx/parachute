@@ -27,12 +27,16 @@ public class ParachutePlayerTracker {
 	@SubscribeEvent
 	public void PlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event)
 	{
-		ParachutePlayerManager.instance().addPlayer(new PlayerInfo((event.player).getDisplayName()));
+		String name = event.player.getDisplayName();
+		Parachute.proxy.print("PlayerLoggedInEvent adding player " + name);
+		ParachutePlayerManager.instance().addPlayer(new PlayerInfo(name));
 	}
 
 	@SubscribeEvent
 	public void PlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event)
 	{
-		ParachutePlayerManager.instance().removePlayer(event.player.getDisplayName());
+		String name = event.player.getDisplayName();
+		Parachute.proxy.print("PlayerLoggedOutEvent removing player " + name);
+		ParachutePlayerManager.instance().removePlayer(name);
 	}
 }

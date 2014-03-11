@@ -25,7 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class ParachutePlayerManager {
 
-	private final List<PlayerInfo> Players;
+	public final List<PlayerInfo> Players;
 
 	private static final ParachutePlayerManager instance = new ParachutePlayerManager();
 
@@ -41,14 +41,14 @@ public class ParachutePlayerManager {
 
 	public void addPlayer(PlayerInfo pi)
 	{
-		ParachutePlayerManager.instance.Players.add(pi);
+		Players.add(pi);
 	}
 
 	public void removePlayer(String playerName)
 	{
-		for (int i = 0; i < ParachutePlayerManager.instance().Players.size(); i++) {
-			if (ParachutePlayerManager.instance().Players.get(i).Name.equals(playerName)) {
-				ParachutePlayerManager.instance().Players.remove(i);
+		for (int i = 0; i < Players.size(); i++) {
+			if (Players.get(i).Name.equals(playerName)) {
+				Players.remove(i);
 			}
 		}
 	}
@@ -56,11 +56,15 @@ public class ParachutePlayerManager {
 	// must test for null EntityPlayer before calling this method
 	public PlayerInfo getPlayerInfoFromPlayer(EntityPlayer player)
 	{
-		for (PlayerInfo pi : ParachutePlayerManager.instance.Players) {
-			if (pi.Name.equals(player.getDisplayName())) {
-				return pi;
+		if (player != null) {
+			String name = player.getDisplayName();
+			for (PlayerInfo pi : Players) {
+				if (pi.Name.equals(name)) {
+					return pi;
+				}
 			}
 		}
 		return null;
 	}
+	
 }

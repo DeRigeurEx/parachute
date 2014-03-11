@@ -26,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.item.Item;
+import cpw.mods.fml.common.FMLCommonHandler;
 
 public class ItemHopAndPop extends Item {
 
@@ -59,7 +60,9 @@ public class ItemHopAndPop extends Item {
 			chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
 			if (!world.isRemote) {
 				world.spawnEntityInWorld(chute);
-				RenderParachute.setParachuteColor(Parachute.instance.getChuteColor());
+				if (FMLCommonHandler.instance().getSide().isClient()) {
+					RenderParachute.setParachuteColor(Parachute.instance.getChuteColor());
+				}
 			}
 			entityplayer.mountEntity(chute);
 
@@ -75,7 +78,7 @@ public class ItemHopAndPop extends Item {
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2)
 	{
-		return Parachute.RIPSTOP.customCraftingMaterial == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);//Parachute.hopnpopItem.itemID
+		return Parachute.RIPSTOP.customCraftingMaterial == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
 	}
 
 }

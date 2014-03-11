@@ -29,6 +29,11 @@ public class CommonProxyParachute {
 	public void registerRenderer()
 	{
 	}
+	
+	public void registerHandlers()
+	{
+		
+	}
 
 	public int addArmor(String armorName)
 	{

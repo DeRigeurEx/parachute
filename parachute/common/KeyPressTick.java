@@ -21,30 +21,37 @@ package com.parachute.common;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 
-// used to intercept the space bar to make the parachute go up
-// ridin' the thermals
+// intercept the space bar to make the parachute go up
+
+@SideOnly(Side.CLIENT)
 public class KeyPressTick {
 
 	@SubscribeEvent
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
-		if (event.phase.equals(TickEvent.Phase.END)) {
+		if (event.phase.equals(TickEvent.Phase.START)) {
 			onPlayerTick(event.player);
 		}
 	}
 
-	private void onPlayerTick(EntityPlayer p)
+	private void onPlayerTick(EntityPlayer player)
 	{
-		PlayerInfo pi = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(p);
-		if (pi != null) {
-			if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { // grab space bar key while riding parachute
-				Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, true));
-			} else {
-				Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, false));
-			}
+		if (player != null) {
+//			Parachute.proxy.print("onPlayerTick: Calling getPlayerInfoFromPlayer");
+//			PlayerInfo pi = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
+//			Parachute.proxy.print("onPlayerTick: PlayerInfo is " + (pi == null ? "NULL" : "GOOD"));
+//			if (pi != null) {
+				if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { // grab space bar key while riding parachute
+					Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, true));
+				} else {
+					Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, false));
+				}
+//			}
 		}
 	}
 

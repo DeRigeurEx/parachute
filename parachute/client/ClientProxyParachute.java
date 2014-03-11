@@ -19,9 +19,14 @@
 //
 package com.parachute.client;
 
+import com.parachute.common.AADTick;
 import com.parachute.common.CommonProxyParachute;
 import com.parachute.common.EntityParachute;
+import com.parachute.common.KeyPressTick;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 
 public class ClientProxyParachute extends CommonProxyParachute {
 
@@ -35,6 +40,16 @@ public class ClientProxyParachute extends CommonProxyParachute {
 	public int addArmor(String armorName)
 	{
 		return RenderingRegistry.addNewArmourRendererPrefix(armorName);
+	}
+	
+	@Override
+	public void registerHandlers()
+	{
+		FMLCommonHandler.instance().bus().register(new AADTick());
+		FMLCommonHandler.instance().bus().register(new KeyPressTick());
+		
+		// allow this mod to load if there are missing mappings
+		FMLClientHandler.instance().setDefaultMissingAction(FMLMissingMappingsEvent.Action.IGNORE);
 	}
 
 }

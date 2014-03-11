@@ -59,8 +59,8 @@ public class EntityParachute extends Entity {
 	final static double drift = 0.004;
 	final static double ascend = drift * -10.0;
 
-	final static int modeDrift = 0;
-	final static int modeAscend = 1;
+	final static int modeDrift = 0; // key up
+	final static int modeAscend = 1; // key down
 
 	final static double forwardSpeed = 0.75;
 	final double dropDistance = 3.0;
@@ -383,15 +383,18 @@ public class EntityParachute extends Entity {
 
 		EntityPlayer player = (EntityPlayer) riddenByEntity;
 		if (player != null) {
-			switch (liftMode) {
-				case modeDrift:
-					descentRate = drift;
-					break;
+//			PlayerInfo pInfo = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
+//            if (pInfo != null) {
+				switch (liftMode) {
+					case modeDrift:
+						descentRate = drift;
+						break;
 
-				case modeAscend:
-					descentRate = ascend;
-					break;
-			}
+					case modeAscend:
+						descentRate = ascend;
+						break;
+				}
+//			}
 		}
 
 		if (maxAltitude > 0.0D) { // altitude limiting
