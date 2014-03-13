@@ -34,7 +34,6 @@ public class CommonProxyParachute {
 	public void registerHandlers()
 	{
 		FMLCommonHandler.instance().bus().register(new AADTick());
-		FMLCommonHandler.instance().bus().register(new ParachutePlayerTracker());
 	}
 
 	public int addArmor(String armorName)
