@@ -19,7 +19,7 @@
 //
 package com.parachute.client;
 
-import com.parachute.common.AADTick;
+//import com.parachute.common.AADTick;
 import com.parachute.common.CommonProxyParachute;
 import com.parachute.common.EntityParachute;
 import com.parachute.common.KeyPressTick;
@@ -45,7 +45,7 @@ public class ClientProxyParachute extends CommonProxyParachute {
 	@Override
 	public void registerHandlers()
 	{
-		FMLCommonHandler.instance().bus().register(new AADTick());
+//		FMLCommonHandler.instance().bus().register(new AADTick());
 		FMLCommonHandler.instance().bus().register(new KeyPressTick());
 		
 		// allow this mod to load if there are missing mappings

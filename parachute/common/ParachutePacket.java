@@ -31,6 +31,7 @@ public class ParachutePacket extends AbstractPacket {
 
 	ParachutePacket()
 	{
+		// required empty constructor
 	}
 
 	ParachutePacket(int _keyCode, boolean _keyDown)
@@ -56,21 +57,19 @@ public class ParachutePacket extends AbstractPacket {
 	@Override
 	public void handleClientSide(EntityPlayer player)
 	{
-
+		// empty
 	}
 
 	@Override
 	public void handleServerSide(EntityPlayer player)
 	{
 		if (player != null) {
-//			PlayerInfo pi = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
-//			Parachute.proxy.print("handleServerSide: PlayerInfo is " + (pi == null ? "NULL" : "GOOD"));
-//			if (pi != null) {
+			PlayerInfo pInfo = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
+			if (pInfo != null) {
 				if (keyCode == Keyboard.KEY_SPACE) {
-					EntityParachute.setLiftMode(keyDown ? 1 : 0); // ascend|descend
-//					pi.mode = keyDown ? 1 : 0;
+					pInfo.keyPressed = keyDown;
 				}
-//			}
+			}
 		}
 	}
 

@@ -68,8 +68,6 @@ public class EntityParachute extends Entity {
 	private final double d2r = 0.0174532925199433;
 	private final double r2d = 57.2957795130823;
 
-	private static double descentRate = drift;
-	private static int liftMode;
 
 	public EntityParachute(World world)
 	{
@@ -80,7 +78,6 @@ public class EntityParachute extends Entity {
 		preventEntitySpawning = true;
 		setSize(2.0F, 1.0F);
 		yOffset = height / 2F;
-		descentRate = drift;
 		motionFactor = 0.07D;
 		isTurning = true;
 
@@ -101,11 +98,6 @@ public class EntityParachute extends Entity {
 		prevPosX = x;
 		prevPosY = y;
 		prevPosZ = z;
-	}
-
-	static public void setLiftMode(int mode)
-	{
-		liftMode = mode;
 	}
 
 	@Override
@@ -371,30 +363,24 @@ public class EntityParachute extends Entity {
 				}
 			}
 		}
-		descentRate = drift;
 	}
 
 	public double currentDescentRate()
 	{
-		descentRate = drift; // defaults to drift
+		double descentRate = drift; // defaults to drift
+		
 		if (!allowThermals) {
 			return descentRate;
 		}
 
 		EntityPlayer player = (EntityPlayer) riddenByEntity;
 		if (player != null) {
-//			PlayerInfo pInfo = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
-//            if (pInfo != null) {
-				switch (liftMode) {
-					case modeDrift:
-						descentRate = drift;
-						break;
-
-					case modeAscend:
-						descentRate = ascend;
-						break;
+			PlayerInfo pInfo = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
+            if (pInfo != null) {
+				if (pInfo.keyPressed) {
+					descentRate = ascend;
 				}
-//			}
+			}
 		}
 
 		if (maxAltitude > 0.0D) { // altitude limiting

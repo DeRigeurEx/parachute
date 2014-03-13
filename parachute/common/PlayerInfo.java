@@ -23,14 +23,14 @@ public class PlayerInfo
 {
 
 	public String Name;
-	public int mode; // 0 = drift, 1 = ascend
+	public boolean keyPressed;
 	public boolean aad;  // true = AAD is activated, false = deactivated
 
 	public PlayerInfo(String name)
 	{
 		Name = name;
 		aad = Parachute.getAADActive();
-		mode = 0;
+		keyPressed = false;
 	}
 
 }

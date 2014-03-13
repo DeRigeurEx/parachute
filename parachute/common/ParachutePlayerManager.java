@@ -25,11 +25,11 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class ParachutePlayerManager {
 
-	public final List<PlayerInfo> Players;
+	public List<PlayerInfo> Players;
 
 	private static final ParachutePlayerManager instance = new ParachutePlayerManager();
 
-	public ParachutePlayerManager()
+	private ParachutePlayerManager()
 	{
 		Players = new ArrayList<PlayerInfo>();
 	}
@@ -53,13 +53,11 @@ public class ParachutePlayerManager {
 		}
 	}
 
-	// must test for null EntityPlayer before calling this method
 	public PlayerInfo getPlayerInfoFromPlayer(EntityPlayer player)
 	{
 		if (player != null) {
-			String name = player.getDisplayName();
 			for (PlayerInfo pi : Players) {
-				if (pi.Name.equals(name)) {
+				if (pi.Name.equals(player.getDisplayName())) {
 					return pi;
 				}
 			}

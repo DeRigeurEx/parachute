@@ -177,8 +177,6 @@ public class Parachute {
 		NYLON.customCraftingMaterial = Items.string;
 		RIPSTOP.customCraftingMaterial = Items.string;
 		
-//		FMLCommonHandler.instance().bus().register(new ParachutePlayerTracker());
-		
 		proxy.registerHandlers();
 
 		packetPipeline.initialise();

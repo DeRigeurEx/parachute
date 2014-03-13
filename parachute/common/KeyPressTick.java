@@ -35,23 +35,11 @@ public class KeyPressTick {
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
 		if (event.phase.equals(TickEvent.Phase.START)) {
-			onPlayerTick(event.player);
-		}
-	}
-
-	private void onPlayerTick(EntityPlayer player)
-	{
-		if (player != null) {
-//			Parachute.proxy.print("onPlayerTick: Calling getPlayerInfoFromPlayer");
-//			PlayerInfo pi = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
-//			Parachute.proxy.print("onPlayerTick: PlayerInfo is " + (pi == null ? "NULL" : "GOOD"));
-//			if (pi != null) {
-				if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { // grab space bar key while riding parachute
-					Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, true));
-				} else {
-					Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, false));
-				}
-//			}
+			EntityPlayer player = event.player;
+			if (player != null) {
+				boolean pressed = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
+				Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, pressed));
+			}
 		}
 	}
 
