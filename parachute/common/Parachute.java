@@ -31,7 +31,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -177,7 +176,6 @@ public class Parachute {
 		NYLON.customCraftingMaterial = Items.string;
 		RIPSTOP.customCraftingMaterial = Items.string;
 		
-		FMLCommonHandler.instance().bus().register(new ParachutePlayerTracker());
 		proxy.registerHandlers();
 
 		packetPipeline.initialise();

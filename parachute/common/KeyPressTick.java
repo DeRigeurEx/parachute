@@ -37,10 +37,10 @@ public class KeyPressTick {
 		if (event.phase.equals(TickEvent.Phase.START)) {
 			EntityPlayer player = event.player;
 			if (player != null) {
-				boolean pressed = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-				Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, pressed));
+				boolean keyPressed = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
+				Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, keyPressed, player.getEntityId()));
 			}
 		}
 	}
-
+	
 }

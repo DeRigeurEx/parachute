@@ -68,6 +68,7 @@ public class EntityParachute extends Entity {
 	private final double d2r = 0.0174532925199433;
 	private final double r2d = 57.2957795130823;
 
+	private static boolean ascendMode;
 
 	public EntityParachute(World world)
 	{
@@ -98,6 +99,11 @@ public class EntityParachute extends Entity {
 		prevPosX = x;
 		prevPosY = y;
 		prevPosZ = z;
+	}
+
+	static public void setLiftMode(boolean mode)
+	{
+		ascendMode = mode;
 	}
 
 	@Override
@@ -373,14 +379,8 @@ public class EntityParachute extends Entity {
 			return descentRate;
 		}
 
-		EntityPlayer player = (EntityPlayer) riddenByEntity;
-		if (player != null) {
-			PlayerInfo pInfo = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
-            if (pInfo != null) {
-				if (pInfo.keyPressed) {
-					descentRate = ascend;
-				}
-			}
+		if (ascendMode) {
+			descentRate = ascend;
 		}
 
 		if (maxAltitude > 0.0D) { // altitude limiting

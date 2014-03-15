@@ -28,16 +28,18 @@ public class ParachutePacket extends AbstractPacket {
 
 	private int keyCode;
 	private boolean keyDown;
+	private int playerID;
 
 	ParachutePacket()
 	{
 		// required empty constructor
 	}
 
-	ParachutePacket(int _keyCode, boolean _keyDown)
+	ParachutePacket(int _keyCode, boolean _keyDown, int id)
 	{
 		keyCode = _keyCode;
 		keyDown = _keyDown;
+		playerID = id;
 	}
 
 	@Override
@@ -45,6 +47,7 @@ public class ParachutePacket extends AbstractPacket {
 	{
 		buffer.writeInt(keyCode);      // the keycode
 		buffer.writeBoolean(keyDown);  // true if key is pressed
+		buffer.writeInt(playerID);
 	}
 
 	@Override
@@ -52,6 +55,7 @@ public class ParachutePacket extends AbstractPacket {
 	{
 		keyCode = buffer.readInt();
 		keyDown = buffer.readBoolean();
+		playerID = buffer.readInt();
 	}
 
 	@Override
@@ -63,12 +67,9 @@ public class ParachutePacket extends AbstractPacket {
 	@Override
 	public void handleServerSide(EntityPlayer player)
 	{
-		if (player != null) {
-			PlayerInfo pInfo = ParachutePlayerManager.instance().getPlayerInfoFromPlayer(player);
-			if (pInfo != null) {
-				if (keyCode == Keyboard.KEY_SPACE) {
-					pInfo.keyPressed = keyDown;
-				}
+		if (player != null && player.getEntityId() == playerID) {
+			if (keyCode == Keyboard.KEY_SPACE) {
+				EntityParachute.setLiftMode(keyDown);
 			}
 		}
 	}
