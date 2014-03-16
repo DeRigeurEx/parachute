@@ -35,12 +35,13 @@ public class KeyPressTick {
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
 		if (event.phase.equals(TickEvent.Phase.START)) {
-			EntityPlayer player = event.player;
-			boolean isSpaceKey = Keyboard.getEventKey() == Keyboard.KEY_SPACE;
-			if (player != null && isSpaceKey) {
-				boolean keyPressed = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-				int id = player.getEntityId();
-				Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, keyPressed, id));
+			if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
+				EntityPlayer player = event.player;
+				if (player != null) {
+					boolean keyPressed = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
+					int playerID = player.getEntityId();
+					Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, keyPressed, playerID));
+				}
 			}
 		}
 	}

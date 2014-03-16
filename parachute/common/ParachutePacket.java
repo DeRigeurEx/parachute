@@ -27,7 +27,7 @@ import org.lwjgl.input.Keyboard;
 public class ParachutePacket extends AbstractPacket {
 
 	private int keyCode;
-	private boolean keyDown;
+	private boolean keyPressed;
 	private int playerID;
 
 	ParachutePacket()
@@ -38,7 +38,7 @@ public class ParachutePacket extends AbstractPacket {
 	ParachutePacket(int _keyCode, boolean _keyDown, int id)
 	{
 		keyCode = _keyCode;
-		keyDown = _keyDown;
+		keyPressed = _keyDown;
 		playerID = id;
 	}
 
@@ -46,7 +46,7 @@ public class ParachutePacket extends AbstractPacket {
 	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
 	{
 		buffer.writeInt(keyCode);      // the keycode
-		buffer.writeBoolean(keyDown);  // true if key is pressed
+		buffer.writeBoolean(keyPressed);  // true if key is pressed
 		buffer.writeInt(playerID);
 	}
 
@@ -54,7 +54,7 @@ public class ParachutePacket extends AbstractPacket {
 	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
 	{
 		keyCode = buffer.readInt();
-		keyDown = buffer.readBoolean();
+		keyPressed = buffer.readBoolean();
 		playerID = buffer.readInt();
 	}
 
@@ -69,7 +69,7 @@ public class ParachutePacket extends AbstractPacket {
 	{
 		if (player != null && player.getEntityId() == playerID) {
 			if (keyCode == Keyboard.KEY_SPACE) {
-				EntityParachute.setAscendMode(keyDown);
+				EntityParachute.setAscendMode(keyPressed);
 			}
 		}
 	}

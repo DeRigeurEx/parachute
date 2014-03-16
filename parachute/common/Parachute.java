@@ -170,7 +170,7 @@ public class Parachute {
 		});
 
 		GameRegistry.addRecipe(new ItemStack(aadItem, 1), new Object[] {
-			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', ripcordItem,});
+			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', ripcordItem});
 
 		// used to repair the parachutes
 		NYLON.customCraftingMaterial = Items.string;
