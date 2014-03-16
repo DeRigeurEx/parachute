@@ -69,7 +69,7 @@ public class ParachutePacket extends AbstractPacket {
 	{
 		if (player != null && player.getEntityId() == playerID) {
 			if (keyCode == Keyboard.KEY_SPACE) {
-				EntityParachute.setLiftMode(keyDown);
+				EntityParachute.setAscendMode(keyDown);
 			}
 		}
 	}

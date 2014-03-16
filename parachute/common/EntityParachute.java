@@ -23,10 +23,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
@@ -65,8 +61,8 @@ public class EntityParachute extends Entity {
 	final static double forwardSpeed = 0.75;
 	final double dropDistance = 3.0;
 
-	private final double d2r = 0.0174532925199433;
-	private final double r2d = 57.2957795130823;
+	private final double d2r = 0.0174532925199433; // degrees to radians
+	private final double r2d = 57.2957795130823;   // radians to degrees
 
 	private static boolean ascendMode;
 
@@ -101,7 +97,7 @@ public class EntityParachute extends Entity {
 		prevPosZ = z;
 	}
 
-	static public void setLiftMode(boolean mode)
+	static public void setAscendMode(boolean mode)
 	{
 		ascendMode = mode;
 	}
@@ -166,8 +162,6 @@ public class EntityParachute extends Entity {
 				if (riddenByEntity != null) {
 					riddenByEntity.mountEntity(this);
 				}
-				// drop a parachute item
-//				dropRemains();
 				destroyParachute(); // aaaaiiiiieeeeee!!! ... thud!
 			}
 		}
@@ -231,7 +225,6 @@ public class EntityParachute extends Entity {
 		// the player has probably been killed or pressed LSHIFT
 		if (riddenByEntity == null) {
 			if (!worldObj.isRemote) {
-//				dropRemains();
 				destroyParachute();
 			}
 			return;
@@ -450,13 +443,6 @@ public class EntityParachute extends Entity {
 				this.ridingEntity.updateRiderPosition();
 			}
 		}
-	}
-
-	// when parachute is destroyed drop the 'remains'
-	protected void dropRemains()
-	{
-		dropItem(Item.getItemFromBlock(Blocks.wool), 1);
-		dropItem(Items.string, 1);
 	}
 
 	@Override
