@@ -30,7 +30,7 @@ public class AADTick {
 	@SubscribeEvent
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
-		if (event.phase.equals(TickEvent.Phase.END)) {
+		if (event.phase.equals(TickEvent.Phase.START) && event.side.isServer()) {
 			onPlayerTick(event.player);
 		}
 	}

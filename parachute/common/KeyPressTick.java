@@ -36,7 +36,8 @@ public class KeyPressTick {
 	{
 		if (event.phase.equals(TickEvent.Phase.START)) {
 			EntityPlayer player = event.player;
-			if (player != null) {
+			boolean isSpaceKey = Keyboard.getEventKey() == Keyboard.KEY_SPACE;
+			if (player != null && isSpaceKey) {
 				boolean keyPressed = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
 				int id = player.getEntityId();
 				Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, keyPressed, id));

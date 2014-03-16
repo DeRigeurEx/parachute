@@ -177,6 +177,8 @@ public class Parachute {
 		RIPSTOP.customCraftingMaterial = Items.string;
 		
 		proxy.registerHandlers();
+						
+		FMLCommonHandler.instance().bus().register(new AADTick());
 
 		packetPipeline.initialise();
 		packetPipeline.registerPacket(ParachutePacket.class);
