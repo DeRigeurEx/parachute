@@ -248,7 +248,7 @@ public class RenderParachute extends Render {
 			"green",
 			"light_blue",
 			"lime",
-			"magneta",
+			"magenta",
 			"orange",
 			"pink",
 			"purple",

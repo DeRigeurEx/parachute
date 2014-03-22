@@ -31,7 +31,7 @@ import net.minecraft.world.World;
 
 public class EntityParachute extends Entity {
 
-	private boolean isTurning;
+//	private boolean isEmpty;
 	private int newRotationInc;
 	private double newPosX;
 	private double newPosY;
@@ -76,7 +76,7 @@ public class EntityParachute extends Entity {
 		setSize(2.0F, 1.0F);
 		yOffset = height / 2F;
 		motionFactor = 0.07D;
-		isTurning = true;
+//		isEmpty = true;
 
 		allowThermals = Parachute.instance.getAllowThermals();
 		maxAltitude = Parachute.instance.getMaxAltitude();
@@ -178,9 +178,9 @@ public class EntityParachute extends Entity {
 	@Override
 	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int inc)
 	{
-		if (isTurning) {
-			newRotationInc = inc + 5;
-		} else {
+//		if (isEmpty) {
+//			newRotationInc = inc + 5;
+//		} else {
 			double newX = x - posX;
 			double newY = y - posY;
 			double newZ = z - posZ;
@@ -191,7 +191,7 @@ public class EntityParachute extends Entity {
 			}
 
 			newRotationInc = 3;
-		}
+//		}
 
 		// position
 		newPosX = x;
@@ -248,117 +248,89 @@ public class EntityParachute extends Entity {
 		checkShouldDropChute(posX, posY, posZ, smallCanopy ? dropDistance + 0.5 : dropDistance + 1.5);
 
 		// forward velocity
-		if (worldObj.isRemote && isTurning) {
-			if (newRotationInc > 0) {
-				double x = posX + (newPosX - posX) / (double) newRotationInc;
-				double y = posY + (newPosY - posY) / (double) newRotationInc;
-				double z = posZ + (newPosZ - posZ) / (double) newRotationInc;
+		// moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
+		// when allowThermals is false forwardMovement is set to the constant 'forwardSpeed'
+		// and appied to motionX and motionZ
+		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
+			EntityLivingBase rider = (EntityLivingBase)riddenByEntity;
+			double forwardMovement = allowThermals ? (double) rider.moveForward : forwardSpeed;
+			if (forwardMovement > 0.0) {
+				double f = riddenByEntity.rotationYaw + -rider.moveStrafing * 90.0;
+				motionX += (-Math.sin((double) (f * d2r)) * motionFactor * 0.05) * forwardMovement;
+				motionZ += (Math.cos((double) (f * d2r)) * motionFactor * 0.05) * forwardMovement;
+			}
+			// while on the parachute reduce damage to player when colliding
+			riddenByEntity.fallDistance = 0.0F;
+			riddenByEntity.isCollided = false;
+		}
 
-				double adjYaw = MathHelper.wrapAngleTo180_double(newRotationYaw - (double) rotationYaw);
+		// forward velocity
+		double localvelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
-				rotationYaw += adjYaw / (double) newRotationInc;
-				rotationPitch += (newRotationPitch - (double) rotationPitch) / (double) newRotationInc;
-				--newRotationInc;
+		if (localvelocity > 0.35D) {
+			double motionAdj = 0.35D / localvelocity;
+			motionX *= motionAdj;
+			motionZ *= motionAdj;
+			localvelocity = 0.35D;
+		}
 
-				setPosition(x, y, z);
-				setRotation(rotationYaw, rotationPitch);
-			} else {
-				motionY -= currentDescentRate();
-
-				double x = posX + motionX;
-				double y = posY + motionY;
-				double z = posZ + motionZ;
-				setPosition(x, y, z);
-
-				motionX *= 0.99D;
-				motionY *= 0.95D;
-				motionZ *= 0.99D;
+		if (localvelocity > velocity && motionFactor < 0.35D) {
+			motionFactor += (0.35D - motionFactor) / 35.0D;
+			if (motionFactor > 0.35D) {
+				motionFactor = 0.35D;
 			}
 		} else {
-            // moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
-			// when allowThermals is false forwardMovement is set to the constant 'forwardSpeed'
-			// and appied to motionX and motionZ
-			double forwardMovement = allowThermals ? (double) ((EntityLivingBase) riddenByEntity).moveForward : forwardSpeed;
-			if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
-				if (forwardMovement > 0.0) {
-					double x = -Math.sin((double) (riddenByEntity.rotationYaw * d2r));
-					double z = Math.cos((double) (riddenByEntity.rotationYaw * d2r));
-					motionX += (x * motionFactor * 0.05) * forwardMovement;
-					motionZ += (z * motionFactor * 0.05) * forwardMovement;
-				}
-				// while on the parachute reduce damage to player when colliding
-				riddenByEntity.fallDistance = 0.0F;
-				riddenByEntity.isCollided = false;
+			motionFactor -= (motionFactor - 0.07D) / 35.0D;
+			if (motionFactor < 0.07D) {
+				motionFactor = 0.07D;
 			}
+		}
 
-			// forward velocity
-			double localvelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
+		motionY -= currentDescentRate();
 
-			if (localvelocity > 0.35D) {
-				double motionAdj = 0.35D / localvelocity;
-				motionX *= motionAdj;
-				motionZ *= motionAdj;
-				localvelocity = 0.35D;
-			}
+		moveEntity(motionX, motionY, motionZ);
 
-			if (localvelocity > velocity && motionFactor < 0.35D) {
-				motionFactor += (0.35D - motionFactor) / 35.0D;
-				if (motionFactor > 0.35D) {
-					motionFactor = 0.35D;
-				}
-			} else {
-				motionFactor -= (motionFactor - 0.07D) / 35.0D;
-				if (motionFactor < 0.07D) {
-					motionFactor = 0.07D;
-				}
-			}
+		motionX *= 0.99D;
+		motionY *= 0.95D;
+		motionZ *= 0.99D;
 
-			motionY -= currentDescentRate();
+		rotationPitch = 0.0F;
+		double yaw = rotationYaw;
+		double delta_X = prevPosX - posX;
+		double delta_Z = prevPosZ - posZ;
 
-			moveEntity(motionX, motionY, motionZ);
+		if (delta_X * delta_X + delta_Z * delta_Z > 0.001D) {
+			yaw = (float) ((Math.atan2(delta_Z, delta_X) * r2d));
+		}
 
-			motionX *= 0.99D;
-			motionY *= 0.95D;
-			motionZ *= 0.99D;
+		double adjustedYaw = MathHelper.wrapAngleTo180_double(yaw - (double) rotationYaw);
 
-			rotationPitch = 0.0F;
-			double yaw = rotationYaw;
-			double delta_X = prevPosX - posX;
-			double delta_Z = prevPosZ - posZ;
+		if (adjustedYaw > 20.0D) {
+			adjustedYaw = 20.0D;
+		}
+		if (adjustedYaw < -20.0D) {
+			adjustedYaw = -20.0D;
+		}
 
-			if (delta_X * delta_X + delta_Z * delta_Z > 0.001D) {
-				yaw = (float) ((Math.atan2(delta_Z, delta_X) * r2d));
-			}
+		rotationYaw += adjustedYaw;
+		setRotation(rotationYaw, rotationPitch);
 
-			double adjustedYaw = MathHelper.wrapAngleTo180_double(yaw - (double) rotationYaw);
-
-			if (adjustedYaw > 20.0D) {
-				adjustedYaw = 20.0D;
-			}
-			if (adjustedYaw < -20.0D) {
-				adjustedYaw = -20.0D;
-			}
-
-			rotationYaw += adjustedYaw;
-			setRotation(rotationYaw, rotationPitch);
-
-			if (!worldObj.isRemote) {
-				List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.2D, 0.0D, 0.2D));
-				if (list != null && list.isEmpty()) {
-					for (int k = 0; k < list.size(); k++) {
-						Entity entity = (Entity) list.get(k);
-						if (entity != riddenByEntity && entity.canBePushed() && (entity instanceof EntityParachute)) {
-							entity.applyEntityCollision(this);
-						}
+		if (!worldObj.isRemote) {
+			List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.2D, 0.0D, 0.2D));
+			if (list != null && list.isEmpty()) {
+				for (int k = 0; k < list.size(); k++) {
+					Entity entity = (Entity) list.get(k);
+					if (entity != riddenByEntity && entity.canBePushed() && (entity instanceof EntityParachute)) {
+						entity.applyEntityCollision(this);
 					}
 				}
+			}
 
-				// something bad happened, somehow the skydiver was killed.
-				if (riddenByEntity != null && riddenByEntity.isDead) {
-					riddenByEntity = null;
-					if (!worldObj.isRemote) {
-						destroyParachute();
-					}
+			// something bad happened, somehow the skydiver was killed.
+			if (riddenByEntity != null && riddenByEntity.isDead) {
+				riddenByEntity = null;
+				if (!worldObj.isRemote) {
+					destroyParachute();
 				}
 			}
 		}
@@ -492,10 +464,10 @@ public class EntityParachute extends Entity {
 		return dataWatcher.getWatchableObjectInt(18);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void func_70270_d(boolean turning)
-	{
-		isTurning = turning;
-	}
+//	@SideOnly(Side.CLIENT)
+//	public void func_70270_d(boolean empty)
+//	{
+//		isEmpty = empty;
+//	}
 
 }
