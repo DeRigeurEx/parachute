@@ -18,9 +18,9 @@
 //
 package com.parachute.common;
 
-import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +31,6 @@ import net.minecraft.world.World;
 
 public class EntityParachute extends Entity {
 
-//	private boolean isEmpty;
 	private int newRotationInc;
 	private double newPosX;
 	private double newPosY;
@@ -59,7 +58,6 @@ public class EntityParachute extends Entity {
 	final static int modeAscend = 1; // key down
 
 	final static double forwardSpeed = 0.75;
-	final double dropDistance = 3.0;
 
 	private final double d2r = 0.0174532925199433; // degrees to radians
 	private final double r2d = 57.2957795130823;   // radians to degrees
@@ -76,7 +74,6 @@ public class EntityParachute extends Entity {
 		setSize(2.0F, 1.0F);
 		yOffset = height / 2F;
 		motionFactor = 0.07D;
-//		isEmpty = true;
 
 		allowThermals = Parachute.instance.getAllowThermals();
 		maxAltitude = Parachute.instance.getMaxAltitude();
@@ -111,9 +108,9 @@ public class EntityParachute extends Entity {
 	@Override
 	protected void entityInit()
 	{
-		dataWatcher.addObject(17, new Integer(0)); // time since last hit
-		dataWatcher.addObject(18, new Integer(1)); // forward direction
-		dataWatcher.addObject(19, new Float(0.0F)); // damage taken | current damage
+		dataWatcher.addObject(17, 0); // time since last hit
+		dataWatcher.addObject(18, 1); // forward direction
+		dataWatcher.addObject(19, 0.0F); // damage taken | current damage
 	}
 
 	@Override
@@ -178,20 +175,16 @@ public class EntityParachute extends Entity {
 	@Override
 	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int inc)
 	{
-//		if (isEmpty) {
-//			newRotationInc = inc + 5;
-//		} else {
-			double newX = x - posX;
-			double newY = y - posY;
-			double newZ = z - posZ;
-			double magnitude = newX * newX + newY * newY + newZ * newZ;
+		double newX = x - posX;
+		double newY = y - posY;
+		double newZ = z - posZ;
+		double magnitude = newX * newX + newY * newY + newZ * newZ;
 
-			if (magnitude <= 1.0D) {
-				return;
-			}
+		if (magnitude <= 1.0D) {
+			return;
+		}
 
-			newRotationInc = 3;
-//		}
+		newRotationInc = 3;
 
 		// position
 		newPosX = x;
@@ -245,9 +238,10 @@ public class EntityParachute extends Entity {
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
 		// drop the chute when close to ground
-		checkShouldDropChute(posX, posY, posZ, smallCanopy ? dropDistance + 0.5 : dropDistance + 1.5);
+		double offset = Math.abs(getMountedYOffset());
+		checkShouldDropChute(posX, posY, posZ, offset + 1.0);
 
-		// forward velocity
+		// forward velocity for 'W' keypress
 		// moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
 		// when allowThermals is false forwardMovement is set to the constant 'forwardSpeed'
 		// and appied to motionX and motionZ
@@ -264,7 +258,7 @@ public class EntityParachute extends Entity {
 			riddenByEntity.isCollided = false;
 		}
 
-		// forward velocity
+		// forward velocity when drifting
 		double localvelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
 		if (localvelocity > 0.35D) {
@@ -318,8 +312,8 @@ public class EntityParachute extends Entity {
 		if (!worldObj.isRemote) {
 			List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.2D, 0.0D, 0.2D));
 			if (list != null && list.isEmpty()) {
-				for (int k = 0; k < list.size(); k++) {
-					Entity entity = (Entity) list.get(k);
+				for (Object list1 : list) {
+					Entity entity = (Entity) list1;
 					if (entity != riddenByEntity && entity.canBePushed() && (entity instanceof EntityParachute)) {
 						entity.applyEntityCollision(this);
 					}
@@ -333,6 +327,10 @@ public class EntityParachute extends Entity {
 					destroyParachute();
 				}
 			}
+		}
+		if (riddenByEntity != null) { // protect the skydiver!
+			riddenByEntity.fallDistance = 0.0F;
+			riddenByEntity.isCollided = false;
 		}
 	}
 
@@ -436,7 +434,7 @@ public class EntityParachute extends Entity {
 
 	public void setDamageTaken(float f)
 	{
-		dataWatcher.updateObject(19, Float.valueOf(f));
+		dataWatcher.updateObject(19, f);
 	}
 
 	public float getDamageTaken()
@@ -446,7 +444,7 @@ public class EntityParachute extends Entity {
 
 	public void setTimeSinceHit(int time)
 	{
-		dataWatcher.updateObject(17, Integer.valueOf(time));
+		dataWatcher.updateObject(17, time);
 	}
 
 	public int getTimeSinceHit()
@@ -456,18 +454,12 @@ public class EntityParachute extends Entity {
 
 	public void setForwardDirection(int forward)
 	{
-		dataWatcher.updateObject(18, Integer.valueOf(forward));
+		dataWatcher.updateObject(18, forward);
 	}
 
 	public int getForwardDirection()
 	{
 		return dataWatcher.getWatchableObjectInt(18);
 	}
-
-//	@SideOnly(Side.CLIENT)
-//	public void func_70270_d(boolean empty)
-//	{
-//		isEmpty = empty;
-//	}
 
 }

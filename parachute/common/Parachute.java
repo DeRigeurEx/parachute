@@ -105,7 +105,7 @@ public class Parachute {
 				+ "brown\ncyan\n"
 				+ "gray\ngreen\n"
 				+ "light_blue\nlime\n"
-				+ "magneta\norange\n"
+				+ "magenta\norange\n"
 				+ "pink\npurple\n"
 				+ "red\nsilver\n"
 				+ "white\nyellow\n"
