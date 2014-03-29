@@ -238,8 +238,11 @@ public class EntityParachute extends Entity {
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
 		// drop the chute when close to ground
-		double offset = Math.abs(getMountedYOffset());
-		checkShouldDropChute(posX, posY, posZ, offset + 1.0);
+//		if (riddenByEntity != null) {
+//			double riderPosY = riddenByEntity.posY;
+			double offset = Math.abs(getMountedYOffset());
+			checkShouldDropChute(posX, posY, posZ, offset + 1.0);
+//		}
 
 		// forward velocity for 'W' keypress
 		// moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
@@ -376,16 +379,16 @@ public class EntityParachute extends Entity {
 
 	public boolean isNearGround(double posx, double posy, double posz, double distance)
 	{
-		boolean nearGround = false;
+//		boolean nearGround = false;
 
 		int x = MathHelper.floor_double(posx);
 		int y = MathHelper.floor_double(posy - distance);
 		int z = MathHelper.floor_double(posz);
 
-		if (!worldObj.isAirBlock(x, y, z)) {
-			nearGround = true;
-		}
-		return nearGround;
+//		if (!worldObj.isAirBlock(x, y, z)) {
+//			nearGround = true;
+//		}
+		return (!worldObj.isAirBlock(x, y, z));
 	}
 
 	@Override
