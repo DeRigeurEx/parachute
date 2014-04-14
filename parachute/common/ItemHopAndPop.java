@@ -49,9 +49,9 @@ public class ItemHopAndPop extends Item {
 	{
 		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
 		if (entityplayer != null && Parachute.isFalling(entityplayer) && entityplayer.ridingEntity == null) {
-			double x = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX);
-			double y = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) + 1.62D) - (double) entityplayer.yOffset;
-			double z = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ);
+			double x = entityplayer.posX;//entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX);
+			double y = (entityplayer.posY + 1.62D) - (double) entityplayer.yOffset;//(entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) + 1.62D) - (double) entityplayer.yOffset;
+			double z = entityplayer.posZ;//entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ);
 
 			float offset = 2.5F; // small parachute only
 

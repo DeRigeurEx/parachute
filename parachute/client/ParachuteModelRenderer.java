@@ -114,8 +114,8 @@ public class ParachuteModelRenderer {
 					corners[4], corners[5], corners[6], corners[7]}, left, top, left + r1, top + bottom);
 
 		if (mirror) {
-			for (int l = 0; l < faces.length; l++) {
-				faces[l].flipFace();
+			for (ParachuteTexturedQuad face : faces) {
+				face.flipFace();
 			}
 		}
 	}
@@ -211,8 +211,8 @@ public class ParachuteModelRenderer {
 		GL11.glNewList(displayList, GL11.GL_COMPILE);
 		Tessellator tessellator = Tessellator.instance;
 
-		for (int i = 0; i < faces.length; i++) {
-			faces[i].draw(tessellator, f);
+		for (ParachuteTexturedQuad face : faces) {
+			face.draw(tessellator, f);
 		}
 
 		GL11.glEndList();

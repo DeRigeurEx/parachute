@@ -116,10 +116,11 @@ public class EntityParachute extends Entity {
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entity)
 	{
-		if (entity != riddenByEntity && entity.ridingEntity != this) {
-			return entity.boundingBox;
-		}
-		return null;
+//		if (entity != riddenByEntity && entity.ridingEntity != this) {
+//			return entity.boundingBox;
+//		}
+//		return null;
+		return entity.boundingBox;
 	}
 
 	@Override
@@ -238,18 +239,15 @@ public class EntityParachute extends Entity {
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
 		// drop the chute when close to ground
-//		if (riddenByEntity != null) {
-//			double riderPosY = riddenByEntity.posY;
-			double offset = Math.abs(getMountedYOffset());
-			checkShouldDropChute(posX, posY, posZ, offset + 1.0);
-//		}
+		double offset = Math.abs(getMountedYOffset());
+		checkShouldDropChute(posX, posY, posZ, offset + 1.0);
 
 		// forward velocity for 'W' keypress
 		// moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
 		// when allowThermals is false forwardMovement is set to the constant 'forwardSpeed'
 		// and appied to motionX and motionZ
 		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
-			EntityLivingBase rider = (EntityLivingBase)riddenByEntity;
+			EntityLivingBase rider = (EntityLivingBase) riddenByEntity;
 			double forwardMovement = allowThermals ? (double) rider.moveForward : forwardSpeed;
 			if (forwardMovement > 0.0) {
 				double f = riddenByEntity.rotationYaw + -rider.moveStrafing * 90.0;
@@ -287,6 +285,7 @@ public class EntityParachute extends Entity {
 
 		moveEntity(motionX, motionY, motionZ);
 
+		// apply drag
 		motionX *= 0.99D;
 		motionY *= 0.95D;
 		motionZ *= 0.99D;
@@ -331,16 +330,12 @@ public class EntityParachute extends Entity {
 				}
 			}
 		}
-		if (riddenByEntity != null) { // protect the skydiver!
-			riddenByEntity.fallDistance = 0.0F;
-			riddenByEntity.isCollided = false;
-		}
 	}
 
 	public double currentDescentRate()
 	{
 		double descentRate = drift; // defaults to drift
-		
+
 		if (!allowThermals) {
 			return descentRate;
 		}
@@ -379,15 +374,10 @@ public class EntityParachute extends Entity {
 
 	public boolean isNearGround(double posx, double posy, double posz, double distance)
 	{
-//		boolean nearGround = false;
-
 		int x = MathHelper.floor_double(posx);
 		int y = MathHelper.floor_double(posy - distance);
 		int z = MathHelper.floor_double(posz);
 
-//		if (!worldObj.isAirBlock(x, y, z)) {
-//			nearGround = true;
-//		}
 		return (!worldObj.isAirBlock(x, y, z));
 	}
 
@@ -401,22 +391,23 @@ public class EntityParachute extends Entity {
 		}
 	}
 
-	@Override
-	public void updateRidden()
-	{
-		if (this.ridingEntity.isDead) {
-			this.ridingEntity = null;
-		} else {
-			this.motionX = 0.0D;
-			this.motionY = 0.0D;
-			this.motionZ = 0.0D;
-			this.onUpdate();
-
-			if (this.ridingEntity != null) {
-				this.ridingEntity.updateRiderPosition();
-			}
-		}
-	}
+//	@Override
+//	public void updateRidden()
+//	{
+//		if (ridingEntity.isDead) {
+//			ridingEntity = null;
+//		} else {
+//			motionX = 0.0D;
+//			motionY = 0.0D;
+//			motionZ = 0.0D;
+//			this.onUpdate();
+//
+//			if (ridingEntity != null) {
+//				ridingEntity.updateRiderPosition();
+//				riddenByEntity.fallDistance = 0.0F;
+//			}
+//		}
+//	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt)
@@ -464,5 +455,4 @@ public class EntityParachute extends Entity {
 	{
 		return dataWatcher.getWatchableObjectInt(18);
 	}
-
 }
