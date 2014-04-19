@@ -20,7 +20,7 @@
 package com.parachute.common;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import net.minecraftforge.common.MinecraftForge;
+//import net.minecraftforge.common.MinecraftForge;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
@@ -29,7 +29,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.Mod.Instance;
+//import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -86,7 +86,7 @@ public class Parachute {
 	public static ItemRipCord ripcordItem;
 	public static ItemAutoActivateDevice aadItem;
 
-	@Instance
+	@Mod.Instance(modid)
 	public static Parachute instance;
 
 	@EventHandler

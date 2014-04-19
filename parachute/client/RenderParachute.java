@@ -98,7 +98,8 @@ public class RenderParachute extends Render {
 		float zr = zOffset;
 
 		float b = rider.getBrightness(center);
-
+		
+		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 
@@ -156,6 +157,7 @@ public class RenderParachute extends Render {
 
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glPopMatrix();
 	}
 
 	public void renderSmallParachuteCords(EntityPlayer rider, float center)
@@ -171,6 +173,7 @@ public class RenderParachute extends Render {
 
 		float b = rider.getBrightness(center);
 
+		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 
@@ -212,6 +215,7 @@ public class RenderParachute extends Render {
 
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glPopMatrix();
 	}
 
 	public static void setParachuteColor(String color)

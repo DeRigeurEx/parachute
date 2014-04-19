@@ -150,11 +150,15 @@ public class ParachuteModelRenderer {
 			GL11.glCallList(displayList);
 			GL11.glPopMatrix();
 		} else if (rotationPointX != 0.0F || rotationPointY != 0.0F || rotationPointZ != 0.0F) {
+			GL11.glPushMatrix();
 			GL11.glTranslatef(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
 			GL11.glCallList(displayList);
 			GL11.glTranslatef(-rotationPointX * f, -rotationPointY * f, -rotationPointZ * f);
+			GL11.glPopMatrix();
 		} else {
+			GL11.glPushMatrix();
 			GL11.glCallList(displayList);
+			GL11.glPopMatrix();
 		}
 	}
 
@@ -190,6 +194,7 @@ public class ParachuteModelRenderer {
 			compileDisplayList(f);
 		}
 		if (rotateAngleX != 0.0F || rotateAngleY != 0.0F || rotateAngleZ != 0.0F) {
+			GL11.glPushMatrix();
 			GL11.glTranslatef(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
 			if (rotateAngleZ != 0.0F) {
 				GL11.glRotatef(rotateAngleZ * 57.29578F, 0.0F, 0.0F, 1.0F);
@@ -200,8 +205,11 @@ public class ParachuteModelRenderer {
 			if (rotateAngleX != 0.0F) {
 				GL11.glRotatef(rotateAngleX * 57.29578F, 1.0F, 0.0F, 0.0F);
 			}
+			GL11.glPopMatrix();
 		} else if (rotationPointX != 0.0F || rotationPointY != 0.0F || rotationPointZ != 0.0F) {
+			GL11.glPushMatrix();
 			GL11.glTranslatef(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
+			GL11.glPopMatrix();
 		}
 	}
 
