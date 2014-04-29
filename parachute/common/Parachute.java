@@ -29,7 +29,6 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-//import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -38,6 +37,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
+//import com.parachute.client.ScreenWriter;
 
 
 @Mod(
@@ -180,6 +180,7 @@ public class Parachute {
 		proxy.registerHandlers();
 
 		FMLCommonHandler.instance().bus().register(new AADTick());
+//		MinecraftForge.EVENT_BUS.register(new ScreenWriter());
 
 		packetPipeline.initialise();
 		packetPipeline.registerPacket(ParachutePacket.class);

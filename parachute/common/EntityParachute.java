@@ -25,7 +25,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.DamageSource;
+//import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -74,6 +74,7 @@ public class EntityParachute extends Entity {
 		setSize(2.0F, 1.0F);
 		yOffset = height / 2F;
 		motionFactor = 0.07D;
+		ascendMode = false;
 
 		allowThermals = Parachute.instance.getAllowThermals();
 		maxAltitude = Parachute.instance.getMaxAltitude();
@@ -147,24 +148,24 @@ public class EntityParachute extends Entity {
 	}
 
 	// parachute takes additional damage from being hit
-	@Override
-	public boolean attackEntityFrom(DamageSource damagesource, float damage)
-	{
-		if (!worldObj.isRemote && !isDead) {
-			setForwardDirection(-getForwardDirection());
-			setTimeSinceHit(hitTime);
-			setDamageTaken(getDamageTaken() + damage * 10.0F);
-			setBeenAttacked();
-
-			if (getDamageTaken() > maxDamage) {
-				if (riddenByEntity != null) {
-					riddenByEntity.mountEntity(this);
-				}
-				destroyParachute(); // aaaaiiiiieeeeee!!! ... thud!
-			}
-		}
-		return true;
-	}
+//	@Override
+//	public boolean attackEntityFrom(DamageSource damagesource, float damage)
+//	{
+//		if (!worldObj.isRemote && !isDead) {
+//			setForwardDirection(-getForwardDirection());
+//			setTimeSinceHit(hitTime);
+//			setDamageTaken(getDamageTaken() + damage * 10.0F);
+//			setBeenAttacked();
+//
+//			if (getDamageTaken() > maxDamage) {
+//				if (riddenByEntity != null) {
+//					riddenByEntity.mountEntity(this);
+//				}
+//				destroyParachute(); // aaaaiiiiieeeeee!!! ... thud!
+//			}
+//		}
+//		return true;
+//	}
 
 	@Override
 	public boolean canBeCollidedWith()
@@ -215,9 +216,14 @@ public class EntityParachute extends Entity {
 	public void onUpdate()
 	{
 		super.onUpdate();
+		
+		EntityLivingBase rider = null;
+		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
+			rider = (EntityLivingBase) riddenByEntity;
+		}
 
 		// the player has probably been killed or pressed LSHIFT
-		if (riddenByEntity == null) {
+		if (rider == null) {
 			if (!worldObj.isRemote) {
 				destroyParachute();
 			}
@@ -246,19 +252,19 @@ public class EntityParachute extends Entity {
 		// moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
 		// when allowThermals is false forwardMovement is set to the constant 'forwardSpeed'
 		// and appied to motionX and motionZ
-		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
-			EntityLivingBase rider = (EntityLivingBase) riddenByEntity;
+//		if (rider != null && riddenByEntity instanceof EntityLivingBase) {
+//			EntityLivingBase rider = (EntityLivingBase) riddenByEntity;
 			double forwardMovement = allowThermals ? (double) rider.moveForward : forwardSpeed;
 			if (forwardMovement > 0.0) {
-				double f = riddenByEntity.rotationYaw + -rider.moveStrafing * 90.0;
+				double f = rider.rotationYaw + -rider.moveStrafing * 90.0;
 				motionX += (-Math.sin((double) (f * d2r)) * motionFactor * 0.05) * forwardMovement;
 				motionZ += (Math.cos((double) (f * d2r)) * motionFactor * 0.05) * forwardMovement;
 			}
 			// while on the parachute reduce damage to player when colliding
-			riddenByEntity.fallDistance = 0.0F;
-			riddenByEntity.isCollided = false;
-		}
-
+			rider.fallDistance = 0.0F;
+			rider.isCollided = false;
+//		}
+		
 		// forward velocity when drifting
 		double localvelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
@@ -316,18 +322,17 @@ public class EntityParachute extends Entity {
 			if (list != null && list.isEmpty()) {
 				for (Object list1 : list) {
 					Entity entity = (Entity) list1;
-					if (entity != riddenByEntity && entity.canBePushed() && (entity instanceof EntityParachute)) {
+					if (entity != rider && entity.canBePushed() && (entity instanceof EntityParachute)) {
 						entity.applyEntityCollision(this);
 					}
 				}
 			}
-
-			// something bad happened, somehow the skydiver was killed.
-			if (riddenByEntity != null && riddenByEntity.isDead) {
-				riddenByEntity = null;
-				if (!worldObj.isRemote) {
-					destroyParachute();
-				}
+		}
+		// something bad happened, somehow the skydiver was killed.
+		if (rider.isDead) {
+			riddenByEntity = null;
+			if (!worldObj.isRemote) {
+				destroyParachute();
 			}
 		}
 	}
