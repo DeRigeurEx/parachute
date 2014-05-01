@@ -94,7 +94,7 @@ public class EntityParachute extends Entity {
 		prevPosY = y;
 		prevPosZ = z;
 	}
-
+	
 	static public void setAscendMode(boolean mode)
 	{
 		ascendMode = mode;
@@ -117,11 +117,10 @@ public class EntityParachute extends Entity {
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entity)
 	{
-//		if (entity != riddenByEntity && entity.ridingEntity != this) {
-//			return entity.boundingBox;
-//		}
-//		return null;
-		return entity.boundingBox;
+		if (entity != riddenByEntity && entity.ridingEntity != this) {
+			return entity.boundingBox;
+		}
+		return null;
 	}
 
 	@Override
