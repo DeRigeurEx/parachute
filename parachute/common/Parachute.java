@@ -276,4 +276,5 @@ public class Parachute {
 	{
 		return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
 	}
+	
 }

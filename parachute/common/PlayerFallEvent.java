@@ -21,6 +21,7 @@
 package com.parachute.common;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 
 
@@ -32,12 +33,12 @@ public class PlayerFallEvent {
 	}
 	
 	@SubscribeEvent
-	public void onFallEvent(LivingFallEvent ev)
+	public void onFallEvent(LivingFallEvent event)
 	{
-//		Parachute.proxy.print("in onFallEvent()");
-		if (ev.entity.ridingEntity instanceof EntityParachute) {
-//			Parachute.proxy.print("Cancelling the fall event - player is on a parachute");
-			ev.setCanceled(true);
+		EntityLivingBase player = event.entityLiving;
+		if (player.ridingEntity instanceof EntityParachute) {
+			player.fallDistance = 0.0f;
+			event.setCanceled(true);
 		}
 	}
 }
