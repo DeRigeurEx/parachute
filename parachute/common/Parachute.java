@@ -20,7 +20,7 @@
 package com.parachute.common;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-//import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
@@ -179,7 +179,7 @@ public class Parachute {
 		proxy.registerHandlers();
 
 		FMLCommonHandler.instance().bus().register(new AADTick());
-//		FMLCommonHandler.instance().bus().register(new PlayerFallEvent());
+		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
 
 		packetPipeline.initialise();
 		packetPipeline.registerPacket(ParachutePacket.class);
