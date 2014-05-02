@@ -216,13 +216,13 @@ public class EntityParachute extends Entity {
 	{
 		super.onUpdate();
 		
-		EntityLivingBase rider = null;
-		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
-			rider = (EntityLivingBase) riddenByEntity;
-		}
+//		EntityLivingBase rider = null;
+//		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
+//			rider = (EntityLivingBase) riddenByEntity;
+//		}
 
 		// the player has probably been killed or pressed LSHIFT
-		if (rider == null) {
+		if (riddenByEntity == null) {
 			if (!worldObj.isRemote) {
 				destroyParachute();
 			}
@@ -245,14 +245,16 @@ public class EntityParachute extends Entity {
 
 		// drop the chute when close to ground
 		double offset = Math.abs(getMountedYOffset());
-		checkShouldDropChute(posX, posY, posZ, offset + 1.0);
+		if (checkShouldDropChute(posX, posY, posZ, offset + 1.0)) {
+			return;
+		}
 
 		// forward velocity for 'W' keypress
 		// moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
 		// when allowThermals is false forwardMovement is set to the constant 'forwardSpeed'
 		// and appied to motionX and motionZ
-//		if (rider != null && riddenByEntity instanceof EntityLivingBase) {
-//			EntityLivingBase rider = (EntityLivingBase) riddenByEntity;
+		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
+			EntityLivingBase rider = (EntityLivingBase) riddenByEntity;
 			double forwardMovement = allowThermals ? (double) rider.moveForward : forwardSpeed;
 			if (forwardMovement > 0.0) {
 				double f = rider.rotationYaw + -rider.moveStrafing * 90.0;
@@ -260,9 +262,9 @@ public class EntityParachute extends Entity {
 				motionZ += (Math.cos((double) (f * d2r)) * motionFactor * 0.05) * forwardMovement;
 			}
 			// while on the parachute reduce damage to player when colliding
-			rider.fallDistance = 0.0F;
-			rider.isCollided = false;
-//		}
+//			rider.fallDistance = 0.0F;
+//			rider.isCollided = false;
+		}
 		
 		// forward velocity when drifting
 		double localvelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
@@ -321,14 +323,14 @@ public class EntityParachute extends Entity {
 			if (list != null && list.isEmpty()) {
 				for (Object list1 : list) {
 					Entity entity = (Entity) list1;
-					if (entity != rider && entity.canBePushed() && (entity instanceof EntityParachute)) {
+					if (entity != riddenByEntity && entity.canBePushed() && (entity instanceof EntityParachute)) {
 						entity.applyEntityCollision(this);
 					}
 				}
 			}
 		}
 		// something bad happened, somehow the skydiver was killed.
-		if (rider.isDead) {
+		if (riddenByEntity.isDead) {
 			riddenByEntity = null;
 			if (!worldObj.isRemote) {
 				destroyParachute();
@@ -363,7 +365,8 @@ public class EntityParachute extends Entity {
 
 		if (isNearGround(x, y, z, distance)) {
 			if (riddenByEntity != null) {
-				riddenByEntity.fallDistance = 0.0F;
+//				riddenByEntity.fallDistance = 0.0F;
+//				riddenByEntity.isCollided = false;
 				riddenByEntity.mountEntity(this);
 				if (!worldObj.isRemote) {
 					destroyParachute();

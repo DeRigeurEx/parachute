@@ -35,9 +35,10 @@ public class PlayerFallEvent {
 	@SubscribeEvent
 	public void onFallEvent(LivingFallEvent event)
 	{
-		EntityLivingBase player = event.entityLiving;
-		if (player.ridingEntity instanceof EntityParachute) {
-			player.fallDistance = 0.0f;
+		EntityLivingBase rider = event.entityLiving;
+		if (rider.ridingEntity instanceof EntityParachute) {
+			rider.fallDistance = 0.0f;
+			rider.isCollided = false;
 			event.setCanceled(true);
 		}
 	}
