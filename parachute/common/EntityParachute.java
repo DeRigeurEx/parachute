@@ -146,26 +146,6 @@ public class EntityParachute extends Entity {
 		this.setDead();
 	}
 
-	// parachute takes additional damage from being hit
-//	@Override
-//	public boolean attackEntityFrom(DamageSource damagesource, float damage)
-//	{
-//		if (!worldObj.isRemote && !isDead) {
-//			setForwardDirection(-getForwardDirection());
-//			setTimeSinceHit(hitTime);
-//			setDamageTaken(getDamageTaken() + damage * 10.0F);
-//			setBeenAttacked();
-//
-//			if (getDamageTaken() > maxDamage) {
-//				if (riddenByEntity != null) {
-//					riddenByEntity.mountEntity(this);
-//				}
-//				destroyParachute(); // aaaaiiiiieeeeee!!! ... thud!
-//			}
-//		}
-//		return true;
-//	}
-
 	@Override
 	public boolean canBeCollidedWith()
 	{
