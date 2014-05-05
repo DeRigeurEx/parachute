@@ -84,7 +84,7 @@ public class EntityParachute extends Entity {
 		prevPosY = y;
 		prevPosZ = z;
 	}
-	
+
 	static public void setAscendMode(boolean mode)
 	{
 		ascendMode = mode;
@@ -159,7 +159,6 @@ public class EntityParachute extends Entity {
 //		posX = x;
 //		posY = y;
 //		posZ = z;
-
 		// forward/vertical motion
 		motionX = velocityX;
 		motionY = velocityY;
@@ -179,7 +178,7 @@ public class EntityParachute extends Entity {
 	public void onUpdate()
 	{
 		super.onUpdate();
-		
+
 		// the player has probably been killed or pressed LSHIFT
 		if (riddenByEntity == null) {
 			if (!worldObj.isRemote) {
@@ -221,7 +220,7 @@ public class EntityParachute extends Entity {
 				motionZ += (Math.cos((double) (f * d2r)) * motionFactor * 0.05) * forwardMovement;
 			}
 		}
-		
+
 		// forward velocity when drifting
 		double localvelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
@@ -321,7 +320,7 @@ public class EntityParachute extends Entity {
 
 		if (isNearGround(x, y, z, distance)) {
 			if (riddenByEntity != null) {
-				riddenByEntity.mountEntity(this);
+				dropParachute(this);
 				if (!worldObj.isRemote) {
 					destroyParachute();
 				} else {
@@ -340,6 +339,23 @@ public class EntityParachute extends Entity {
 		int z = MathHelper.floor_double(posz);
 
 		return (!worldObj.isAirBlock(x, y, z));
+	}
+
+	public void dropParachute(Entity parachute)
+	{
+		if (parachute == null) {
+			if (ridingEntity != null) {
+				setLocationAndAngles(ridingEntity.posX, ridingEntity.boundingBox.minY + (double) ridingEntity.height, ridingEntity.posZ, rotationYaw, rotationPitch);
+				ridingEntity.riddenByEntity = null;
+			}
+			ridingEntity = null;
+		} else {
+			if (ridingEntity != null) {
+				ridingEntity.riddenByEntity = null;
+			}
+			ridingEntity = parachute;
+			parachute.riddenByEntity = this;
+		}
 	}
 
 	@Override
