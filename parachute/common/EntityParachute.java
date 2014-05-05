@@ -25,18 +25,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-//import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class EntityParachute extends Entity {
 
-	private int newRotationInc;
-	private double newPosX;
-	private double newPosY;
-	private double newPosZ;
-	private double newRotationYaw;
-	private double newRotationPitch;
 	@SideOnly(Side.CLIENT)
 	private double velocityX;
 	@SideOnly(Side.CLIENT)
@@ -47,9 +40,6 @@ public class EntityParachute extends Entity {
 	private double maxAltitude;
 	private boolean allowThermals;
 	private boolean smallCanopy;
-
-	private final int hitTime = 10;
-	private final float maxDamage = 40.0F;
 
 	final static double drift = 0.004;
 	final static double ascend = drift * -10.0;
@@ -156,25 +146,19 @@ public class EntityParachute extends Entity {
 	@Override
 	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int inc)
 	{
-		double newX = x - posX;
-		double newY = y - posY;
-		double newZ = z - posZ;
-		double magnitude = newX * newX + newY * newY + newZ * newZ;
+		double deltaX = x - posX;
+		double deltaY = y - posY;
+		double deltaZ = z - posZ;
+		double magnitude = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
 
 		if (magnitude <= 1.0D) {
 			return;
 		}
 
-		newRotationInc = 3;
-
 		// position
-		newPosX = x;
-		newPosY = y;
-		newPosZ = z;
-
-		// rotation
-		newRotationYaw = yaw;
-		newRotationPitch = pitch;
+//		posX = x;
+//		posY = y;
+//		posZ = z;
 
 		// forward/vertical motion
 		motionX = velocityX;
@@ -196,11 +180,6 @@ public class EntityParachute extends Entity {
 	{
 		super.onUpdate();
 		
-//		EntityLivingBase rider = null;
-//		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
-//			rider = (EntityLivingBase) riddenByEntity;
-//		}
-
 		// the player has probably been killed or pressed LSHIFT
 		if (riddenByEntity == null) {
 			if (!worldObj.isRemote) {
@@ -241,9 +220,6 @@ public class EntityParachute extends Entity {
 				motionX += (-Math.sin((double) (f * d2r)) * motionFactor * 0.05) * forwardMovement;
 				motionZ += (Math.cos((double) (f * d2r)) * motionFactor * 0.05) * forwardMovement;
 			}
-			// while on the parachute reduce damage to player when colliding
-//			rider.fallDistance = 0.0F;
-//			rider.isCollided = false;
 		}
 		
 		// forward velocity when drifting
@@ -310,7 +286,7 @@ public class EntityParachute extends Entity {
 			}
 		}
 		// something bad happened, somehow the skydiver was killed.
-		if (riddenByEntity.isDead) {
+		if (riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
 			if (!worldObj.isRemote) {
 				destroyParachute();
@@ -345,8 +321,6 @@ public class EntityParachute extends Entity {
 
 		if (isNearGround(x, y, z, distance)) {
 			if (riddenByEntity != null) {
-//				riddenByEntity.fallDistance = 0.0F;
-//				riddenByEntity.isCollided = false;
 				riddenByEntity.mountEntity(this);
 				if (!worldObj.isRemote) {
 					destroyParachute();
@@ -377,24 +351,6 @@ public class EntityParachute extends Entity {
 			riddenByEntity.setPosition(posX + cosYaw, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ + sinYaw);
 		}
 	}
-
-//	@Override
-//	public void updateRidden()
-//	{
-//		if (ridingEntity.isDead) {
-//			ridingEntity = null;
-//		} else {
-//			motionX = 0.0D;
-//			motionY = 0.0D;
-//			motionZ = 0.0D;
-//			this.onUpdate();
-//
-//			if (ridingEntity != null) {
-//				ridingEntity.updateRiderPosition();
-//				riddenByEntity.fallDistance = 0.0F;
-//			}
-//		}
-//	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt)

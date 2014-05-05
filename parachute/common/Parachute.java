@@ -61,15 +61,14 @@ public class Parachute {
 	public static final String hopnpopName = "HopAndPop";
 
 	private String type = parachuteName; // defaults to the normal parachute
-	private boolean singleUse; // applies to the hop and pop chute only
-
-	private int heightLimit;
-	private String chuteColor;
-	private boolean thermals;
-	private static double AADAltitude;
-	private boolean smallCanopy;
-	private static boolean AADActive;
-	private static double fallThreshold;
+	private boolean singleUse = false; // applies to the hop and pop chute only
+	private int heightLimit = 256;
+	private String chuteColor = "random";
+	private boolean thermals = true;
+	private static double AADAltitude = 15.0;
+	private boolean smallCanopy = true;
+	private static boolean AADActive = false;
+	private static double fallThreshold = 5.0;
 	private final int entityID = EntityRegistry.findGlobalUniqueEntityId();
 	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs. 3 = boots
 	public static final int armorSlot = 2;  // armor slot: 0 = ??, 1 = ??, 2 = chestplate, 3 = ??
