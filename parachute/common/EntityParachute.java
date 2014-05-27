@@ -113,6 +113,12 @@ public class EntityParachute extends Entity {
 		return null;
 	}
 
+//	@Override
+//	public boolean shouldRiderSit()
+//	{
+//		return isNearGround(posX, posX, posX, Math.abs(getMountedYOffset() + 1.0));
+//	}
+
 	@Override
 	public AxisAlignedBB getBoundingBox()
 	{
@@ -155,10 +161,6 @@ public class EntityParachute extends Entity {
 			return;
 		}
 
-		// position
-//		posX = x;
-//		posY = y;
-//		posZ = z;
 		// forward/vertical motion
 		motionX = velocityX;
 		motionY = velocityY;
