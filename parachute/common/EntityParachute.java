@@ -21,12 +21,14 @@ package com.parachute.common;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class EntityParachute extends Entity {
 
@@ -204,9 +206,11 @@ public class EntityParachute extends Entity {
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
 		// drop the chute when close to ground
-		double offset = Math.abs(getMountedYOffset());
-		if (checkShouldDropChute(posX, posY, posZ, offset + 1.0)) {
-			return;
+		if (Parachute.instance.isAutoDismount()) {
+			double offset = Math.abs(getMountedYOffset());
+			if (checkShouldDropChute(posX, posY, posZ, offset + 1.0)) {
+				return;
+			}
 		}
 
 		// forward velocity for 'W' keypress
@@ -293,6 +297,7 @@ public class EntityParachute extends Entity {
 				destroyParachute();
 			}
 		}
+//		ascendMode = false;
 	}
 
 	public double currentDescentRate()
@@ -336,11 +341,21 @@ public class EntityParachute extends Entity {
 
 	public boolean isNearGround(double posx, double posy, double posz, double distance)
 	{
+		boolean result = false;
 		int x = MathHelper.floor_double(posx);
 		int y = MathHelper.floor_double(posy - distance);
 		int z = MathHelper.floor_double(posz);
+		
+		boolean isWater = worldObj.getBlock(x, y, z).getMaterial() == Material.water;
+		boolean isNotAir = !worldObj.isAirBlock(x, y, z);
+		boolean isSolid = worldObj.isSideSolid(x, y, z, ForgeDirection.UP);
+		
+		if ((isNotAir && isSolid) || isWater) {
+			System.out.println("Detected " + (isNotAir ? "Non-air block " : isSolid ? "solid block " : isWater ? "water block " : "unknown"));
+			result = true;
+		}
 
-		return (!worldObj.isAirBlock(x, y, z));
+		return result;
 	}
 
 	public void dropParachute(Entity parachute)

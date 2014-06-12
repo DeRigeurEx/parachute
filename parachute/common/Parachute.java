@@ -49,7 +49,7 @@ public class Parachute {
 
 	static ArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 15, new int[] {2, 5, 4, 1}, 12); // same as CHAIN
 	static ToolMaterial RIPSTOP = EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
-	public static final PacketPipeline packetPipeline = new PacketPipeline();
+//	public static final PacketPipeline packetPipeline = new PacketPipeline();
 
 	public static final String modid = "parachutemod";
 	public static final String mcversion = "1.7.2";
@@ -68,6 +68,7 @@ public class Parachute {
 	private static double AADAltitude = 15.0;
 	private boolean smallCanopy = true;
 	private static boolean AADActive = false;
+	private static boolean autoDismount = true;
 	private static double fallThreshold = 5.0;
 	private final int entityID = EntityRegistry.findGlobalUniqueEntityId();
 	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs. 3 = boots
@@ -99,6 +100,7 @@ public class Parachute {
 		String fallThresholdComment = "fallThreshold - player must have fallen this far to activate AAD (5.0)";
 		String aaDActiveComment = "AADActive - whether the AAD is active or not. default is inactive. (false)";
 		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy (true)";
+		String autoComment = "If true the parachute will dismount the player automatically,\nif false the player has to use LSHIFT to dismount the arachute.";
 		String colorComment = "Parachute Colors Allowed:\n"
 				+ "black\nblue\n"
 				+ "brown\ncyan\n"
@@ -120,6 +122,7 @@ public class Parachute {
 		AADAltitude = config.get(Configuration.CATEGORY_GENERAL, "AADAltitude", 15.0, aadAltitudeComment).getDouble(15.0);
 		AADActive = config.get(Configuration.CATEGORY_GENERAL, "AADActive", false, aaDActiveComment).getBoolean(false);
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", true, typeComment).getBoolean(true);
+		autoDismount = config.get(Configuration.CATEGORY_GENERAL, "autoDismount", true, autoComment).getBoolean(true);
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", "random", colorComment).getString();
 
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
@@ -150,6 +153,7 @@ public class Parachute {
 		GameRegistry.registerItem(hopnpopItem, hopnpopName);
 
 		proxy.registerRenderer();
+		PacketHandler.init();
 	}
 
 	@EventHandler
@@ -180,8 +184,8 @@ public class Parachute {
 		FMLCommonHandler.instance().bus().register(new AADTick());
 		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
 
-		packetPipeline.initialise();
-		packetPipeline.registerPacket(ParachutePacket.class);
+//		packetPipeline.initialise();
+//		packetPipeline.registerPacket(ParachutePacket.class);
 
 		instance = this;
 	}
@@ -189,7 +193,7 @@ public class Parachute {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		packetPipeline.postInitialise();
+//		packetPipeline.postInitialise();
 	}
 
 	public String getVersion()
@@ -235,6 +239,11 @@ public class Parachute {
 	public boolean isSmallCanopy()
 	{
 		return smallCanopy;
+	}
+	
+	public boolean isAutoDismount()
+	{
+		return autoDismount;
 	}
 
 	public void setType(String type)
