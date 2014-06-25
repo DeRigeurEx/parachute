@@ -24,6 +24,7 @@ import java.util.List;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
@@ -195,7 +196,7 @@ public class EntityParachute extends Entity {
 			setTimeSinceHit(getTimeSinceHit() - 1);
 		}
 		if (getDamageTaken() > 0.0F) {
-			setDamageTaken(getDamageTaken() - 1.0F);
+			setDamageTaken(0.0F);
 		}
 
 		prevPosX = posX;
@@ -346,15 +347,9 @@ public class EntityParachute extends Entity {
 		int y = MathHelper.floor_double(posy - distance);
 		int z = MathHelper.floor_double(posz);
 		
-		boolean isWater = worldObj.getBlock(x, y, z).getMaterial() == Material.water;
-		boolean isNotAir = !worldObj.isAirBlock(x, y, z);
-		boolean isSolid = worldObj.isSideSolid(x, y, z, ForgeDirection.UP);
-		
-		if ((isNotAir && isSolid) || isWater) {
-			System.out.println("Detected " + (isNotAir ? "Non-air block " : isSolid ? "solid block " : isWater ? "water block " : "unknown"));
-			result = true;
+		if (!worldObj.isAirBlock(x, y, z) /*&& worldObj.isSideSolid(x, y, z, ForgeDirection.UP)*/) {
+			return true;
 		}
-
 		return result;
 	}
 

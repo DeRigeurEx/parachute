@@ -52,7 +52,7 @@ public class Parachute {
 //	public static final PacketPipeline packetPipeline = new PacketPipeline();
 
 	public static final String modid = "parachutemod";
-	public static final String mcversion = "1.7.2";
+	public static final String mcversion = "1.7.10";
 	public static final String channel = modid;
 	public static final String name = "Parachute Mod";
 	public static final String parachuteName = "Parachute";
