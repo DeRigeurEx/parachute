@@ -23,8 +23,8 @@ package com.parachute.client;
 import com.parachute.common.CommonProxyParachute;
 import com.parachute.common.EntityParachute;
 import com.parachute.common.KeyPressTick;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 //import cpw.mods.fml.client.FMLClientHandler;
 //import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 
@@ -36,11 +36,11 @@ public class ClientProxyParachute extends CommonProxyParachute {
 		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute());
 	}
 
-	@Override
-	public int addArmor(String armorName)
-	{
-		return RenderingRegistry.addNewArmourRendererPrefix(armorName);
-	}
+//	@Override
+//	public int addArmor(String armorName)
+//	{
+//		return RenderingRegistry.addNewArmourRendererPrefix(armorName);
+//	}
 	
 	@Override
 	public void registerHandlers()

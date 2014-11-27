@@ -18,18 +18,17 @@
 //
 package com.parachute.common;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+//import net.minecraftforge.common.util.ForgeDirection;
 
 public class EntityParachute extends Entity {
 
@@ -65,7 +64,7 @@ public class EntityParachute extends Entity {
 
 		preventEntitySpawning = true;
 		setSize(2.0F, 1.0F);
-		yOffset = height / 2F;
+//		yOffset = height / 2F;
 		motionFactor = 0.07D;
 		ascendMode = false;
 
@@ -77,7 +76,7 @@ public class EntityParachute extends Entity {
 	{
 		this(world);
 
-		setPosition(x, y + (double) yOffset, z);
+		setPosition(x, y/* + (double) yOffset*/, z);
 
 		motionX = 0.0D;
 		motionY = 0.0D;
@@ -107,14 +106,14 @@ public class EntityParachute extends Entity {
 		dataWatcher.addObject(19, 0.0F); // damage taken | current damage
 	}
 
-	@Override
-	public AxisAlignedBB getCollisionBox(Entity entity)
-	{
-		if (entity != riddenByEntity && entity.ridingEntity != this) {
-			return entity.boundingBox;
-		}
-		return null;
-	}
+//	@Override
+//	public AxisAlignedBB getCollisionBox(Entity entity)
+//	{
+//		if (entity != riddenByEntity && entity.ridingEntity != this) {
+//			return entity.boundingBox;
+//		}
+//		return null;
+//	}
 
 //	@Override
 //	public boolean shouldRiderSit()
@@ -122,11 +121,11 @@ public class EntityParachute extends Entity {
 //		return isNearGround(posX, posX, posX, Math.abs(getMountedYOffset() + 1.0));
 //	}
 
-	@Override
-	public AxisAlignedBB getBoundingBox()
-	{
-		return boundingBox;
-	}
+//	@Override
+//	public AxisAlignedBB getBoundingBox()
+//	{
+//		return boundingBox;
+//	}
 
 	@Override
 	public boolean canBePushed()
@@ -151,24 +150,24 @@ public class EntityParachute extends Entity {
 		return !isDead;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int inc)
-	{
-		double deltaX = x - posX;
-		double deltaY = y - posY;
-		double deltaZ = z - posZ;
-		double magnitude = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-
-		if (magnitude <= 1.0D) {
-			return;
-		}
-
-		// forward/vertical motion
-		motionX = velocityX;
-		motionY = velocityY;
-		motionZ = velocityZ;
-	}
+//	@SideOnly(Side.CLIENT)
+//	@Override
+//	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int inc)
+//	{
+//		double deltaX = x - posX;
+//		double deltaY = y - posY;
+//		double deltaZ = z - posZ;
+//		double magnitude = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+//
+//		if (magnitude <= 1.0D) {
+//			return;
+//		}
+//
+//		// forward/vertical motion
+//		motionX = velocityX;
+//		motionY = velocityY;
+//		motionZ = velocityZ;
+//	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -187,6 +186,7 @@ public class EntityParachute extends Entity {
 		// the player has probably been killed or pressed LSHIFT
 		if (riddenByEntity == null) {
 			if (!worldObj.isRemote) {
+				Parachute.proxy.print("EntityParachute: 190, riddenByEntity == null");
 				destroyParachute();
 			}
 			return;
@@ -210,6 +210,7 @@ public class EntityParachute extends Entity {
 		if (Parachute.instance.isAutoDismount()) {
 			double offset = Math.abs(getMountedYOffset());
 			if (checkShouldDropChute(posX, posY, posZ, offset + 1.0)) {
+				Parachute.proxy.print("EntityParachute: 214, checkShouldDropChute() returned true");
 				return;
 			}
 		}
@@ -281,7 +282,7 @@ public class EntityParachute extends Entity {
 		setRotation(rotationYaw, rotationPitch);
 
 		if (!worldObj.isRemote) {
-			List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.2D, 0.0D, 0.2D));
+			List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(0.2D, 0.0D, 0.2D));
 			if (list != null && list.isEmpty()) {
 				for (Object list1 : list) {
 					Entity entity = (Entity) list1;
@@ -295,6 +296,7 @@ public class EntityParachute extends Entity {
 		if (riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
 			if (!worldObj.isRemote) {
+				Parachute.proxy.print("EntityParachute: 299, riddenByEntity == null && riddenByEntity.isDead");
 				destroyParachute();
 			}
 		}
@@ -346,8 +348,9 @@ public class EntityParachute extends Entity {
 		int x = MathHelper.floor_double(posx);
 		int y = MathHelper.floor_double(posy - distance);
 		int z = MathHelper.floor_double(posz);
+		BlockPos blockPos = new BlockPos(x, y, z);
 		
-		if (!worldObj.isAirBlock(x, y, z) /*&& worldObj.isSideSolid(x, y, z, ForgeDirection.UP)*/) {
+		if (!worldObj.isAirBlock(blockPos)) {
 			return true;
 		}
 		return result;
@@ -357,7 +360,7 @@ public class EntityParachute extends Entity {
 	{
 		if (parachute == null) {
 			if (ridingEntity != null) {
-				setLocationAndAngles(ridingEntity.posX, ridingEntity.boundingBox.minY + (double) ridingEntity.height, ridingEntity.posZ, rotationYaw, rotationPitch);
+				setLocationAndAngles(ridingEntity.posX, ridingEntity.getBoundingBox().minY + (double) ridingEntity.height, ridingEntity.posZ, rotationYaw, rotationPitch);
 				ridingEntity.riddenByEntity = null;
 			}
 			ridingEntity = null;
@@ -390,12 +393,12 @@ public class EntityParachute extends Entity {
 	{
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public float getShadowSize()
-	{
-		return 0.0F;
-	}
+//	@SideOnly(Side.CLIENT)
+//	@Override
+//	public float getShadowSize()
+//	{
+//		return 0.0F;
+//	}
 
 	public void setDamageTaken(float f)
 	{

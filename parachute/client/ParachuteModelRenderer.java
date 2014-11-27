@@ -217,10 +217,10 @@ public class ParachuteModelRenderer {
 	{
 		displayList = GLAllocation.generateDisplayLists(1);
 		GL11.glNewList(displayList, GL11.GL_COMPILE);
-		Tessellator tessellator = Tessellator.instance;
+		Tessellator tessellator = Tessellator.getInstance();
 
 		for (ParachuteTexturedQuad face : faces) {
-			face.draw(tessellator, f);
+			face.func_178765_a(tessellator.getWorldRenderer(), f);
 		}
 
 		GL11.glEndList();

@@ -21,6 +21,7 @@ package com.parachute.client;
 
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.Vec3;
 
 public class ParachuteTexturedQuad {
@@ -57,28 +58,50 @@ public class ParachuteTexturedQuad {
 
 		vertexPositions = texCoords;
 	}
-
-	public void draw(Tessellator tessellator, float f)
+	
+	public void func_178765_a(WorldRenderer worldrenderer, float face)
 	{
-		Vec3 vec3d = vertexPositions[1].vector3D.subtract(vertexPositions[0].vector3D);
-		Vec3 vec3d1 = vertexPositions[1].vector3D.subtract(vertexPositions[2].vector3D);
-		Vec3 vec3d2 = vec3d1.crossProduct(vec3d).normalize();
-		tessellator.startDrawingQuads();
+		Vec3 vec3 = this.vertexPositions[1].vector3D.subtractReverse(this.vertexPositions[0].vector3D);
+		Vec3 vec31 = this.vertexPositions[1].vector3D.subtractReverse(this.vertexPositions[2].vector3D);
+		Vec3 vec32 = vec31.crossProduct(vec3).normalize();
+		worldrenderer.startDrawingQuads();
 
-		if (invertNormal) {
-			tessellator.setNormal(-(float) vec3d2.xCoord, -(float) vec3d2.yCoord, -(float) vec3d2.zCoord);
+		if (this.invertNormal) {
+			worldrenderer.func_178980_d(-((float) vec32.xCoord), -((float) vec32.yCoord), -((float) vec32.zCoord));
 		} else {
-			tessellator.setNormal((float) vec3d2.xCoord, (float) vec3d2.yCoord, (float) vec3d2.zCoord);
+			worldrenderer.func_178980_d((float) vec32.xCoord, (float) vec32.yCoord, (float) vec32.zCoord);
 		}
 
-		for (int i = 0; i < 4; i++) {
-			PositionTextureVertex positiontexturevertex = vertexPositions[i];
-			tessellator.addVertexWithUV((float) positiontexturevertex.vector3D.xCoord * f,
-					(float) positiontexturevertex.vector3D.yCoord * f, (float) positiontexturevertex.vector3D.zCoord * f,
-					positiontexturevertex.texturePositionX, positiontexturevertex.texturePositionY);
+		for (int i = 0; i < 4; ++i) {
+			PositionTextureVertex positiontexturevertex = this.vertexPositions[i];
+			worldrenderer.addVertexWithUV(positiontexturevertex.vector3D.xCoord * (double) face, positiontexturevertex.vector3D.yCoord * (double) face, positiontexturevertex.vector3D.zCoord * (double) face, (double) positiontexturevertex.texturePositionX, (double) positiontexturevertex.texturePositionY);
 		}
 
-		tessellator.draw();
+		Tessellator.getInstance().draw();
 	}
+
+//	public void draw(Tessellator tessellator, float f)
+//	{
+//		Vec3 vec3d = vertexPositions[1].vector3D.subtract(vertexPositions[0].vector3D);
+//		Vec3 vec3d1 = vertexPositions[1].vector3D.subtract(vertexPositions[2].vector3D);
+//		Vec3 vec3d2 = vec3d1.crossProduct(vec3d).normalize();
+//		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+//		worldrenderer.startDrawingQuads();
+//
+//		if (invertNormal) {
+//			tessellator.setNormal(-(float) vec3d2.xCoord, -(float) vec3d2.yCoord, -(float) vec3d2.zCoord);
+//		} else {
+//			tessellator.setNormal((float) vec3d2.xCoord, (float) vec3d2.yCoord, (float) vec3d2.zCoord);
+//		}
+//
+//		for (int i = 0; i < 4; i++) {
+//			PositionTextureVertex positiontexturevertex = vertexPositions[i];
+//			tessellator.addVertexWithUV((float) positiontexturevertex.vector3D.xCoord * f,
+//					(float) positiontexturevertex.vector3D.yCoord * f, (float) positiontexturevertex.vector3D.zCoord * f,
+//					positiontexturevertex.texturePositionX, positiontexturevertex.texturePositionY);
+//		}
+//
+//		tessellator.draw();
+//	}
 
 }

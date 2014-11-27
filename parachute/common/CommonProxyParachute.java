@@ -19,7 +19,7 @@
 //
 package com.parachute.common;
 
-import cpw.mods.fml.common.FMLLog;
+import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Logger;
 
 public class CommonProxyParachute {

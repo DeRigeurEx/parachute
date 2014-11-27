@@ -19,19 +19,18 @@
 //
 package com.parachute.client;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
-
-import org.lwjgl.opengl.GL11;
-
 import com.parachute.common.EntityParachute;
 import com.parachute.common.Parachute;
 import java.util.Random;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class RenderParachute extends Render {
 
@@ -39,9 +38,10 @@ public class RenderParachute extends Render {
 	protected static ModelBase modelParachute;
 	private static ResourceLocation parachuteTexture = null;
 	private static final Random rand = new Random(System.currentTimeMillis());
-
-	public RenderParachute()
+	
+	public RenderParachute(RenderManager rm)
 	{
+		super(rm);
 		shadowSize = 0.0F;
 		modelParachute = new ModelParachute();
 	}
