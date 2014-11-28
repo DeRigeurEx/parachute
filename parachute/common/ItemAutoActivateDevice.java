@@ -19,9 +19,8 @@
 //
 package com.parachute.common;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-//import net.minecraft.client.renderer.texture.IIconRegister;
+//import net.minecraftforge.fml.relauncher.Side;
+//import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -29,13 +28,13 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
-//import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.util.BlockPos;
 
 public class ItemAutoActivateDevice extends Item {
 
-	private final IIcon[] aadIcon;
+//	private final IIcon[] aadIcon;
 	private final int maxIconIdx = 1;
 
 	// initial value is false (inactive) from config file
@@ -46,7 +45,7 @@ public class ItemAutoActivateDevice extends Item {
 	public ItemAutoActivateDevice()
 	{
 		super();
-		this.aadIcon = new IIcon[2];
+//		this.aadIcon = new IIcon[2];
 		maxStackSize = 1;
 		setMaxDamage(maxIconIdx + 1);
 		setCreativeTab(CreativeTabs.tabTools); // place in the tools tab in creative mode
@@ -66,15 +65,15 @@ public class ItemAutoActivateDevice extends Item {
 		return itemStack;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister iconReg)
-	{
-		super.registerIcons(iconReg);
-		aadIcon[0] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOff");
-		aadIcon[1] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOn");
-		itemIcon = getIconFromDamage(active ? 1 : 0);
-	}
+//	@SideOnly(Side.CLIENT)
+//	@Override
+//	public void registerIcons(IIconRegister iconReg)
+//	{
+//		super.registerIcons(iconReg);
+//		aadIcon[0] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOff");
+//		aadIcon[1] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOn");
+//		itemIcon = getIconFromDamage(active ? 1 : 0);
+//	}
 
 	// search inventory for an auto activation device
 	public static ItemStack inventoryContainsAAD(InventoryPlayer inventory)
@@ -90,12 +89,12 @@ public class ItemAutoActivateDevice extends Item {
 	}
 
 	// this allows us to change the item icon for on and off
-	@Override
-	public IIcon getIconFromDamage(int damage)
-	{
-		// clamp damage at maxIconIdx
-		return aadIcon[(damage > maxIconIdx) ? maxIconIdx : damage];
-	}
+//	@Override
+//	public IIcon getIconFromDamage(int damage)
+//	{
+//		// clamp damage at maxIconIdx
+//		return aadIcon[(damage > maxIconIdx) ? maxIconIdx : damage];
+//	}
 
 	public static boolean getAutoActivateAltitude(EntityPlayer player)
 	{
@@ -104,8 +103,9 @@ public class ItemAutoActivateDevice extends Item {
 		int x = MathHelper.floor_double(player.posX);
 		int y = MathHelper.floor_double(player.posY - altitude);
 		int z = MathHelper.floor_double(player.posZ);
+		BlockPos blockPos = new BlockPos(x, y, z);
 
-		if (!player.worldObj.isAirBlock(x, y, z) && player.fallDistance > fallThreshold) {
+		if (!player.worldObj.isAirBlock(blockPos) && player.fallDistance > fallThreshold) {
 			altitudeReached = true;
 		}
 		return altitudeReached;

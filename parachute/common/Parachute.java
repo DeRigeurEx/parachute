@@ -19,19 +19,22 @@
 //
 package com.parachute.common;
 
-import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemModelMesher;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.*;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.*;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -134,22 +137,28 @@ public class Parachute {
 
 		int chuteID = proxy.addArmor(parachuteName.toLowerCase());
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, this, 64, 10, true);
+		
+		ItemModelMesher mm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
 		// create new items, set unlocalized names and register
 		parachuteItem = (ItemParachute) (new ItemParachute(NYLON, chuteID, armorType)).setUnlocalizedName(parachuteName);
-		parachuteItem.setTextureName(Parachute.modid + ":" + parachuteName);
+		mm.register(parachuteItem, 0, new ModelResourceLocation(modid + ":" + parachuteName, "inventory"));
+//		parachuteItem.setTextureName(Parachute.modid + ":" + parachuteName);
 		GameRegistry.registerItem(parachuteItem, parachuteName);
 
 		ripcordItem = (ItemRipCord) (new ItemRipCord()).setUnlocalizedName(ripcordName);
-		ripcordItem.setTextureName(Parachute.modid + ":" + ripcordName);
+		mm.register(ripcordItem, 0, new ModelResourceLocation(modid + ":" + ripcordName, "inventory"));
+//		ripcordItem.setTextureName(Parachute.modid + ":" + ripcordName);
 		GameRegistry.registerItem(ripcordItem, ripcordName);
 
 		aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice()).setUnlocalizedName(aadName);
-		aadItem.setTextureName(Parachute.modid + ":" + aadName);
+		mm.register(aadItem, 0, new ModelResourceLocation(modid + ":" + aadName, "inventory"));
+//		aadItem.setTextureName(Parachute.modid + ":" + aadName);
 		GameRegistry.registerItem(aadItem, aadName);
 
 		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
-		hopnpopItem.setTextureName(Parachute.modid + ":" + hopnpopName);
+		mm.register(hopnpopItem, 0, new ModelResourceLocation(modid + ":" + hopnpopName, "inventory"));
+//		hopnpopItem.setTextureName(Parachute.modid + ":" + hopnpopName);
 		GameRegistry.registerItem(hopnpopItem, hopnpopName);
 
 		proxy.registerRenderer();

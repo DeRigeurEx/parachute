@@ -21,7 +21,7 @@ package com.parachute.common;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
+//import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -52,13 +52,13 @@ public class ItemRipCord extends Item {
 		return itemStack;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister iconReg)
-	{
-		super.registerIcons(iconReg);
-		itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":Ripcord");
-	}
+//	@SideOnly(Side.CLIENT)
+//	@Override
+//	public void registerIcons(IIconRegister iconReg)
+//	{
+//		super.registerIcons(iconReg);
+//		itemIcon = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":Ripcord");
+//	}
 
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2)

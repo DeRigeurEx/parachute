@@ -23,6 +23,9 @@ package com.parachute.client;
 import com.parachute.common.CommonProxyParachute;
 import com.parachute.common.EntityParachute;
 import com.parachute.common.KeyPressTick;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderManager;
+//import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 //import cpw.mods.fml.client.FMLClientHandler;
@@ -33,7 +36,8 @@ public class ClientProxyParachute extends CommonProxyParachute {
 	@Override
 	public void registerRenderer()
 	{
-		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute());
+		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
+		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute(rm));
 	}
 
 //	@Override
