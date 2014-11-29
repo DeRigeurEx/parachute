@@ -21,14 +21,14 @@ package com.parachute.common;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+//import net.minecraftforge.fml.relauncher.Side;
+//import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 
 // intercept the space bar to make the parachute go up
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public class KeyPressTick {
 
 	@SubscribeEvent

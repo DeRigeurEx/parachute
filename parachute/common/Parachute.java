@@ -55,7 +55,7 @@ public class Parachute {
 //	public static final PacketPipeline packetPipeline = new PacketPipeline();
 
 	public static final String modid = "parachutemod";
-	public static final String mcversion = "1.7.10";
+	public static final String mcversion = "1.8.0";
 	public static final String channel = modid;
 	public static final String name = "Parachute Mod";
 	public static final String parachuteName = "Parachute";
@@ -143,22 +143,18 @@ public class Parachute {
 		// create new items, set unlocalized names and register
 		parachuteItem = (ItemParachute) (new ItemParachute(NYLON, chuteID, armorType)).setUnlocalizedName(parachuteName);
 		mm.register(parachuteItem, 0, new ModelResourceLocation(modid + ":" + parachuteName, "inventory"));
-//		parachuteItem.setTextureName(Parachute.modid + ":" + parachuteName);
 		GameRegistry.registerItem(parachuteItem, parachuteName);
 
 		ripcordItem = (ItemRipCord) (new ItemRipCord()).setUnlocalizedName(ripcordName);
 		mm.register(ripcordItem, 0, new ModelResourceLocation(modid + ":" + ripcordName, "inventory"));
-//		ripcordItem.setTextureName(Parachute.modid + ":" + ripcordName);
 		GameRegistry.registerItem(ripcordItem, ripcordName);
 
 		aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice()).setUnlocalizedName(aadName);
 		mm.register(aadItem, 0, new ModelResourceLocation(modid + ":" + aadName, "inventory"));
-//		aadItem.setTextureName(Parachute.modid + ":" + aadName);
 		GameRegistry.registerItem(aadItem, aadName);
 
 		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
 		mm.register(hopnpopItem, 0, new ModelResourceLocation(modid + ":" + hopnpopName, "inventory"));
-//		hopnpopItem.setTextureName(Parachute.modid + ":" + hopnpopName);
 		GameRegistry.registerItem(hopnpopItem, hopnpopName);
 
 		proxy.registerRenderer();
