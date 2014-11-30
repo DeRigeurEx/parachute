@@ -44,5 +44,10 @@ public class CommonProxyParachute {
 	{
 		logger.info(s);
 	}
+	
+	public void registerResources()
+	{
+		
+	}
 
 }

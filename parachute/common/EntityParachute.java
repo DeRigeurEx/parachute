@@ -22,21 +22,14 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-//import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-//import net.minecraftforge.fml.relauncher.Side;
-//import net.minecraftforge.fml.relauncher.SideOnly;
-//import net.minecraftforge.common.util.ForgeDirection;
 
 public class EntityParachute extends Entity {
 
-//	@SideOnly(Side.CLIENT)
 	private double velocityX;
-//	@SideOnly(Side.CLIENT)
 	private double velocityY;
-//	@SideOnly(Side.CLIENT)
 	private double velocityZ;
 	private double motionFactor;
 	private double maxAltitude;

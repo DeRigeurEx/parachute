@@ -19,17 +19,24 @@
 //
 package com.parachute.client;
 
-//import com.parachute.common.AADTick;
 import com.parachute.common.CommonProxyParachute;
 import com.parachute.common.EntityParachute;
 import com.parachute.common.KeyPressTick;
+import static com.parachute.common.Parachute.aadItem;
+import static com.parachute.common.Parachute.aadName;
+import static com.parachute.common.Parachute.hopnpopItem;
+import static com.parachute.common.Parachute.hopnpopName;
+import static com.parachute.common.Parachute.modid;
+import static com.parachute.common.Parachute.parachuteItem;
+import static com.parachute.common.Parachute.parachuteName;
+import static com.parachute.common.Parachute.ripcordItem;
+import static com.parachute.common.Parachute.ripcordName;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.entity.RenderManager;
-//import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-//import cpw.mods.fml.client.FMLClientHandler;
-//import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 
 public class ClientProxyParachute extends CommonProxyParachute {
 
@@ -50,9 +57,16 @@ public class ClientProxyParachute extends CommonProxyParachute {
 	public void registerHandlers()
 	{
 		FMLCommonHandler.instance().bus().register(new KeyPressTick());
-		
-		// allow this mod to load if there are missing mappings
-//		FMLClientHandler.instance().setDefaultMissingAction(FMLMissingMappingsEvent.Action.IGNORE);
+	}
+	
+	@Override
+	public void registerResources()
+	{
+		ItemModelMesher mm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+		mm.register(parachuteItem, 0, new ModelResourceLocation(modid + ":" + parachuteName, "inventory"));
+		mm.register(ripcordItem, 0, new ModelResourceLocation(modid + ":" + ripcordName, "inventory"));
+		mm.register(aadItem, 0, new ModelResourceLocation(modid + ":" + aadName, "inventory"));
+		mm.register(hopnpopItem, 0, new ModelResourceLocation(modid + ":" + hopnpopName, "inventory"));
 	}
 
 }

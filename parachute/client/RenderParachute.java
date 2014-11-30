@@ -24,6 +24,7 @@ import com.parachute.common.Parachute;
 import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -35,23 +36,23 @@ import org.lwjgl.opengl.GL11;
 public class RenderParachute extends Render {
 
 	private static String curColor = Parachute.instance.getChuteColor();
-	protected static ModelBase modelParachute;
-	private static ResourceLocation parachuteTexture = null;
+	protected static ModelBase modelParachute = new ModelParachute();
+	private static ResourceLocation parachuteTexture = null;//new ResourceLocation("textures/blocks/wool_colored_black.png");
 	private static final Random rand = new Random(System.currentTimeMillis());
 	
 	public RenderParachute(RenderManager rm)
 	{
 		super(rm);
 		shadowSize = 0.0F;
-		modelParachute = new ModelParachute();
+//		modelParachute = new ModelParachute();
 	}
 
 	public void renderParachute(EntityParachute entityparachute, double x, double y, double z, float rotation, float center)
 	{
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
-		GL11.glTranslatef((float) x, (float) y, (float) z);
-		GL11.glRotatef(180.0F - rotation, 0.0F, 1.0F, 0.0F);
+		GlStateManager.translate((float) x, (float) y, (float) z);
+		GlStateManager.rotate(180.0F - rotation, 0.0F, 1.0F, 0.0F);
 
 		// rock the parachute when hit
 		float time = (float) entityparachute.getTimeSinceHit() - center;
@@ -62,10 +63,12 @@ public class RenderParachute extends Render {
 		}
 
 		if (time > 0.0F) {
-			GL11.glRotatef(MathHelper.sin(time) * time * damage / 20.0F * (float) entityparachute.getForwardDirection(), 0.0F, 0.0F, 1.0F);
+			GlStateManager.rotate(MathHelper.sin(time) * time * damage / 20.0F * (float) entityparachute.getForwardDirection(), 0.0F, 0.0F, 1.0F);
 		}
 
-		bindEntityTexture(entityparachute);
+		if (!bindEntityTexture(entityparachute)) {
+			return;
+		}
 		modelParachute.render(entityparachute, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 
 		if (entityparachute.riddenByEntity != null) {
@@ -77,7 +80,8 @@ public class RenderParachute extends Render {
 			}
 		}
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
+		super.doRender(entityparachute, x, y, z, rotation, center);
 	}
 
 	@Override
@@ -99,7 +103,7 @@ public class RenderParachute extends Render {
 
 		float b = rider.getBrightness(center);
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 
@@ -157,7 +161,7 @@ public class RenderParachute extends Render {
 
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public void renderSmallParachuteCords(EntityPlayer rider, float center)

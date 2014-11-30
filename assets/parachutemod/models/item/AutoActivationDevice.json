@@ -2,6 +2,7 @@
     "parent": "parachutemod:builtin/generated",
     "textures": {
         "layer0": "parachutemod:items/AADeviceOn"
+        "layer1": "parachutemod:items/AADeviceOff"
     },
     "display": {
         "thirdperson": {

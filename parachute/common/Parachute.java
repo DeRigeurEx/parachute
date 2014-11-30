@@ -19,9 +19,9 @@
 //
 package com.parachute.common;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemModelMesher;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+//import net.minecraft.client.Minecraft;
+//import net.minecraft.client.renderer.ItemModelMesher;
+//import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraft.item.Item;
@@ -39,7 +39,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.util.EnumHelper;
+//import net.minecraftforge.common.util.EnumHelper;
 
 
 @Mod(
@@ -50,8 +50,8 @@ import net.minecraftforge.common.util.EnumHelper;
 
 public class Parachute {
 
-	static ArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", 15, new int[] {2, 5, 4, 1}, 12); // same as CHAIN
-	static ToolMaterial RIPSTOP = EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
+	static ArmorMaterial NYLON = ArmorMaterial.CHAIN; //addArmorMaterial("nylon", 15, new int[] {2, 5, 4, 1}, 12); // same as CHAIN
+	static ToolMaterial RIPSTOP = ToolMaterial.WOOD; //EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
 //	public static final PacketPipeline packetPipeline = new PacketPipeline();
 
 	public static final String modid = "parachutemod";
@@ -138,23 +138,17 @@ public class Parachute {
 		int chuteID = proxy.addArmor(parachuteName.toLowerCase());
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, this, 64, 10, true);
 		
-		ItemModelMesher mm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-
 		// create new items, set unlocalized names and register
 		parachuteItem = (ItemParachute) (new ItemParachute(NYLON, chuteID, armorType)).setUnlocalizedName(parachuteName);
-		mm.register(parachuteItem, 0, new ModelResourceLocation(modid + ":" + parachuteName, "inventory"));
 		GameRegistry.registerItem(parachuteItem, parachuteName);
 
 		ripcordItem = (ItemRipCord) (new ItemRipCord()).setUnlocalizedName(ripcordName);
-		mm.register(ripcordItem, 0, new ModelResourceLocation(modid + ":" + ripcordName, "inventory"));
 		GameRegistry.registerItem(ripcordItem, ripcordName);
 
 		aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice()).setUnlocalizedName(aadName);
-		mm.register(aadItem, 0, new ModelResourceLocation(modid + ":" + aadName, "inventory"));
 		GameRegistry.registerItem(aadItem, aadName);
 
 		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
-		mm.register(hopnpopItem, 0, new ModelResourceLocation(modid + ":" + hopnpopName, "inventory"));
 		GameRegistry.registerItem(hopnpopItem, hopnpopName);
 
 		proxy.registerRenderer();
@@ -188,6 +182,14 @@ public class Parachute {
 
 		FMLCommonHandler.instance().bus().register(new AADTick());
 		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
+		
+		proxy.registerResources();
+		
+//		ItemModelMesher mm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+//		mm.register(parachuteItem, 0, new ModelResourceLocation(modid + ":" + parachuteName, "inventory"));
+//		mm.register(ripcordItem, 0, new ModelResourceLocation(modid + ":" + ripcordName, "inventory"));
+//		mm.register(aadItem, 0, new ModelResourceLocation(modid + ":" + aadName, "inventory"));
+//		mm.register(hopnpopItem, 0, new ModelResourceLocation(modid + ":" + hopnpopName, "inventory"));
 
 //		packetPipeline.initialise();
 //		packetPipeline.registerPacket(ParachutePacket.class);
@@ -289,5 +291,10 @@ public class Parachute {
 	{
 		return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
 	}
+	
+//	public static ArmorMaterial addArmorMaterial(String name, int durability, int enchantability)
+//	{
+//        return EnumHelper.addEnum(ArmorMaterial.class, name, durability/14, new int[]{0, 0, 0, 0}, enchantability);
+//    }
 	
 }
