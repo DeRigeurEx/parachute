@@ -37,7 +37,7 @@ public class RenderParachute extends Render {
 
 	private static String curColor = Parachute.instance.getChuteColor();
 	protected static ModelBase modelParachute = new ModelParachute();
-	private static ResourceLocation parachuteTexture = null;//new ResourceLocation("textures/blocks/wool_colored_black.png");
+	private static ResourceLocation parachuteTexture = null;
 	private static final Random rand = new Random(System.currentTimeMillis());
 	
 	public RenderParachute(RenderManager rm)

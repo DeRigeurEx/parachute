@@ -151,7 +151,7 @@ public class Parachute {
 		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
 		GameRegistry.registerItem(hopnpopItem, hopnpopName);
 
-		proxy.registerRenderer();
+//		proxy.registerRenderer();
 		PacketHandler.init();
 	}
 
@@ -177,6 +177,8 @@ public class Parachute {
 		// used to repair the parachutes
 		NYLON.customCraftingMaterial = Items.string;
 		RIPSTOP.customCraftingMaterial = Items.string;
+		
+		proxy.registerRenderer();
 
 		proxy.registerHandlers();
 
