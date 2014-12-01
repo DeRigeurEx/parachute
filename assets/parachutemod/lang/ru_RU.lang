@@ -1,4 +1,4 @@
-item.Parachute.name=Парашют
-item.HopAndPop.name=Прыжок и взлёт
-item.Ripcord.name=Вытяжной трос
-item.AutoActivationDevice.name=Устройство авто-активации
+item.parachute.name=Парашют
+item.hop_and_pop.name=Прыжок и взлёт
+item.ripcord.name=Вытяжной трос
+item.auto_activation_device.name=Устройство авто-активации

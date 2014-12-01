@@ -58,10 +58,10 @@ public class Parachute {
 	public static final String mcversion = "1.8.0";
 	public static final String channel = modid;
 	public static final String name = "Parachute Mod";
-	public static final String parachuteName = "Parachute";
-	public static final String ripcordName = "Ripcord";
-	public static final String aadName = "AutoActivationDevice";
-	public static final String hopnpopName = "HopAndPop";
+	public static final String parachuteName = "parachute";
+	public static final String ripcordName = "ripcord";
+	public static final String aadName = "auto_activation_device";
+	public static final String hopnpopName = "hop_and_pop";
 
 	private String type = parachuteName; // defaults to the normal parachute
 	private boolean singleUse = false; // applies to the hop and pop chute only
@@ -187,12 +187,6 @@ public class Parachute {
 		
 		proxy.registerResources();
 		
-//		ItemModelMesher mm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-//		mm.register(parachuteItem, 0, new ModelResourceLocation(modid + ":" + parachuteName, "inventory"));
-//		mm.register(ripcordItem, 0, new ModelResourceLocation(modid + ":" + ripcordName, "inventory"));
-//		mm.register(aadItem, 0, new ModelResourceLocation(modid + ":" + aadName, "inventory"));
-//		mm.register(hopnpopItem, 0, new ModelResourceLocation(modid + ":" + hopnpopName, "inventory"));
-
 //		packetPipeline.initialise();
 //		packetPipeline.registerPacket(ParachutePacket.class);
 

@@ -1,4 +1,4 @@
-item.Parachute.name=Parachute
-item.HopAndPop.name=Hop And Pop
-item.Ripcord.name=RipCord
-item.AutoActivationDevice.name=Auto Activation Device
+item.parachute.name=Parachute
+item.hop_and_pop.name=Hop And Pop
+item.ripcord.name=RipCord
+item.auto_activation_device.name=Auto Activation Device
