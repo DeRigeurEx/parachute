@@ -22,6 +22,7 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -99,14 +100,14 @@ public class EntityParachute extends Entity {
 		dataWatcher.addObject(19, 0.0F); // damage taken | current damage
 	}
 
-//	@Override
-//	public AxisAlignedBB getCollisionBox(Entity entity)
-//	{
-//		if (entity != riddenByEntity && entity.ridingEntity != this) {
-//			return entity.boundingBox;
-//		}
-//		return null;
-//	}
+	@Override
+	public AxisAlignedBB getCollisionBox(Entity entity)
+	{
+		if (entity != riddenByEntity && entity.ridingEntity != this) {
+			return entity.getEntityBoundingBox();
+		}
+		return null;
+	}
 
 //	@Override
 //	public boolean shouldRiderSit()
@@ -114,11 +115,11 @@ public class EntityParachute extends Entity {
 //		return isNearGround(posX, posX, posX, Math.abs(getMountedYOffset() + 1.0));
 //	}
 
-//	@Override
-//	public AxisAlignedBB getBoundingBox()
-//	{
-//		return boundingBox;
-//	}
+	@Override
+	public AxisAlignedBB getBoundingBox()
+	{
+		return getEntityBoundingBox();
+	}
 
 	@Override
 	public boolean canBePushed()
@@ -143,25 +144,24 @@ public class EntityParachute extends Entity {
 		return !isDead;
 	}
 
-//	@SideOnly(Side.CLIENT)
-//	@Override
-//	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int inc)
-//	{
-//		double deltaX = x - posX;
-//		double deltaY = y - posY;
-//		double deltaZ = z - posZ;
-//		double magnitude = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-//
-//		if (magnitude <= 1.0D) {
-//			return;
-//		}
-//
-//		// forward/vertical motion
-//		motionX = velocityX;
-//		motionY = velocityY;
-//		motionZ = velocityZ;
-//	}
+	@Override
+    public void func_180426_a(double x, double y, double z, float yaw, float pitch, int inc, boolean unused)
+    {
+		double deltaX = x - posX;
+		double deltaY = y - posY;
+		double deltaZ = z - posZ;
+		double magnitude = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
 
+		if (magnitude <= 1.0D) {
+			return;
+		}
+
+		// forward/vertical motion
+		motionX = velocityX;
+		motionY = velocityY;
+		motionZ = velocityZ;
+    }
+	
 //	@SideOnly(Side.CLIENT)
 	@Override
 	public void setVelocity(double x, double y, double z)
@@ -385,13 +385,6 @@ public class EntityParachute extends Entity {
 	protected void readEntityFromNBT(NBTTagCompound nbt)
 	{
 	}
-
-//	@SideOnly(Side.CLIENT)
-//	@Override
-//	public float getShadowSize()
-//	{
-//		return 0.0F;
-//	}
 
 	public void setDamageTaken(float f)
 	{

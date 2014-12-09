@@ -63,7 +63,7 @@ public class RenderParachute extends Render {
 		}
 
 		if (time > 0.0F) {
-			GlStateManager.rotate(MathHelper.sin(time) * time * damage / 20.0F * (float) entityparachute.getForwardDirection(), 0.0F, 0.0F, 1.0F);
+			GlStateManager.rotate(MathHelper.sin(time) * time * damage / 20.0F * (float) entityparachute.getForwardDirection(), 1.0F, 0.0F, 0.0F);
 		}
 
 		if (!bindEntityTexture(entityparachute)) {
