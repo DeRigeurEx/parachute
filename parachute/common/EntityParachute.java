@@ -344,7 +344,7 @@ public class EntityParachute extends Entity {
 		BlockPos blockPos = new BlockPos(x, y, z);
 		
 		if (!worldObj.isAirBlock(blockPos)) {
-			return true;
+			result = true;
 		}
 		return result;
 	}

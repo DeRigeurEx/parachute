@@ -136,7 +136,7 @@ public class Parachute {
 		fallThreshold = fallThreshold < 2 ? 2 : fallThreshold;
 
 		int chuteID = proxy.addArmor(parachuteName.toLowerCase());
-		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, this, 80, 3, true); // orig: 64, 10
+		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, this, 64, 10, true);
 		
 		// create new items, set unlocalized names and register
 		parachuteItem = (ItemParachute) (new ItemParachute(NYLON, chuteID, armorType)).setUnlocalizedName(parachuteName);
