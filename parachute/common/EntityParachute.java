@@ -24,6 +24,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -58,7 +59,6 @@ public class EntityParachute extends Entity {
 
 		preventEntitySpawning = true;
 		setSize(2.0F, 1.0F);
-//		yOffset = height / 2F;
 		motionFactor = 0.07D;
 		ascendMode = false;
 
@@ -70,7 +70,7 @@ public class EntityParachute extends Entity {
 	{
 		this(world);
 
-		setPosition(x, y/* + (double) yOffset*/, z);
+		setPosition(x, y, z);
 
 		motionX = 0.0D;
 		motionY = 0.0D;
@@ -115,11 +115,11 @@ public class EntityParachute extends Entity {
 //		return isNearGround(posX, posX, posX, Math.abs(getMountedYOffset() + 1.0));
 //	}
 
-	@Override
-	public AxisAlignedBB getBoundingBox()
-	{
-		return getEntityBoundingBox();
-	}
+//	@Override
+//	public AxisAlignedBB getBoundingBox()
+//	{
+//		return getEntityBoundingBox();
+//	}
 
 	@Override
 	public boolean canBePushed()
@@ -162,7 +162,6 @@ public class EntityParachute extends Entity {
 		motionZ = velocityZ;
     }
 	
-//	@SideOnly(Side.CLIENT)
 	@Override
 	public void setVelocity(double x, double y, double z)
 	{
@@ -170,6 +169,10 @@ public class EntityParachute extends Entity {
 		velocityY = motionY = y;
 		velocityZ = motionZ = z;
 	}
+	
+//	public int getLineNumber() {
+//		return Thread.currentThread().getStackTrace()[2].getLineNumber();
+//	}
 
 	@Override
 	public void onUpdate()
@@ -179,7 +182,7 @@ public class EntityParachute extends Entity {
 		// the player has probably been killed or pressed LSHIFT
 		if (riddenByEntity == null) {
 			if (!worldObj.isRemote) {
-				Parachute.proxy.print("EntityParachute: 190, riddenByEntity == null");
+//				Parachute.proxy.print("EntityParachute: " + getLineNumber() + ", riddenByEntity == null");
 				destroyParachute();
 			}
 			return;
@@ -203,7 +206,7 @@ public class EntityParachute extends Entity {
 		if (Parachute.instance.isAutoDismount()) {
 			double offset = Math.abs(getMountedYOffset());
 			if (checkShouldDropChute(posX, posY, posZ, offset + 1.0)) {
-				Parachute.proxy.print("EntityParachute: 214, checkShouldDropChute() returned true");
+//				Parachute.proxy.print("EntityParachute: " + getLineNumber() + ", checkShouldDropChute() returned true");
 				return;
 			}
 		}
@@ -289,7 +292,7 @@ public class EntityParachute extends Entity {
 		if (riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
 			if (!worldObj.isRemote) {
-				Parachute.proxy.print("EntityParachute: 299, riddenByEntity == null && riddenByEntity.isDead");
+//				Parachute.proxy.print("EntityParachute: " + getLineNumber() + ", riddenByEntity == null && riddenByEntity.isDead");
 				destroyParachute();
 			}
 		}
@@ -323,7 +326,8 @@ public class EntityParachute extends Entity {
 
 		if (isNearGround(x, y, z, distance)) {
 			if (riddenByEntity != null) {
-				dropParachute(this);
+				//dropParachute(this);
+				riddenByEntity.mountEntity(this);
 				if (!worldObj.isRemote) {
 					destroyParachute();
 				} else {
@@ -338,33 +342,35 @@ public class EntityParachute extends Entity {
 	public boolean isNearGround(double posx, double posy, double posz, double distance)
 	{
 		boolean result = false;
-		int x = MathHelper.floor_double(posx);
-		int y = MathHelper.floor_double(posy - distance);
-		int z = MathHelper.floor_double(posz);
-		BlockPos blockPos = new BlockPos(x, y, z);
 		
-		if (!worldObj.isAirBlock(blockPos)) {
+		BlockPos blockPos = new BlockPos(MathHelper.floor_double(posx), MathHelper.floor_double(posy - distance), MathHelper.floor_double(posz));
+		
+		boolean isAir = worldObj.isAirBlock(blockPos);
+		boolean isSolid = worldObj.isSideSolid(blockPos, EnumFacing.UP);
+		boolean isWater = worldObj.isAnyLiquid(getEntityBoundingBox().expand(0.0, distance, 0.0));
+		
+		if (!isAir && (isSolid || isWater)) {
 			result = true;
 		}
 		return result;
 	}
 
-	public void dropParachute(Entity parachute)
-	{
-		if (parachute == null) {
-			if (ridingEntity != null) {
-				setLocationAndAngles(ridingEntity.posX, ridingEntity.getBoundingBox().minY + (double) ridingEntity.height, ridingEntity.posZ, rotationYaw, rotationPitch);
-				ridingEntity.riddenByEntity = null;
-			}
-			ridingEntity = null;
-		} else {
-			if (ridingEntity != null) {
-				ridingEntity.riddenByEntity = null;
-			}
-			ridingEntity = parachute;
-			parachute.riddenByEntity = this;
-		}
-	}
+//	public void dropParachute(Entity parachute)
+//	{
+//		if (parachute == null) {
+//			if (ridingEntity != null) {
+//				setLocationAndAngles(ridingEntity.posX, ridingEntity.getEntityBoundingBox().minY + (double) ridingEntity.height, ridingEntity.posZ, rotationYaw, rotationPitch);
+//				ridingEntity.riddenByEntity = null;
+//			}
+//			ridingEntity = null;
+//		} else {
+//			if (ridingEntity != null) {
+//				ridingEntity.riddenByEntity = null;
+//			}
+//			ridingEntity = parachute;
+//			parachute.riddenByEntity = this;
+//		}
+//	}
 
 	@Override
 	public void updateRiderPosition()

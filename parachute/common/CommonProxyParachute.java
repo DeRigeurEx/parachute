@@ -19,6 +19,7 @@
 //
 package com.parachute.common;
 
+import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Logger;
 
@@ -26,14 +27,9 @@ public class CommonProxyParachute {
 	
 	private static final Logger logger = FMLLog.getLogger();
 	
-	public void registerRenderer()
-	{
-	}
+	public void registerRenderer() {}
 	
-	public void registerHandlers()
-	{
-		
-	}
+	public void registerHandlers() {}
 
 	public int addArmor(String armorName)
 	{
@@ -45,9 +41,10 @@ public class CommonProxyParachute {
 		logger.info(s);
 	}
 	
-	public void registerResources()
-	{
-		
-	}
+	public void registerResources() {}
+	
+    public void registerBlockTexture(final Block block, final String blockName) {}
+
+    public void registerBlockTexture(final Block block, final String blockName, int meta) {}
 
 }
