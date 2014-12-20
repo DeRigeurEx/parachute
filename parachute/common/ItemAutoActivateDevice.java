@@ -19,23 +19,20 @@
 //
 package com.parachute.common;
 
-//import net.minecraftforge.fml.relauncher.Side;
-//import net.minecraftforge.fml.relauncher.SideOnly;
+import static com.parachute.common.Parachute.aadName;
+import static com.parachute.common.Parachute.modid;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.util.BlockPos;
 
 public class ItemAutoActivateDevice extends Item {
-
-//	private final IIcon[] aadIcon;
-	private final int maxIconIdx = 1;
 
 	// initial value is false (inactive) from config file
 	public static boolean active = Parachute.getAADActive();
@@ -45,9 +42,8 @@ public class ItemAutoActivateDevice extends Item {
 	public ItemAutoActivateDevice()
 	{
 		super();
-//		this.aadIcon = new IIcon[2];
 		maxStackSize = 1;
-		setMaxDamage(maxIconIdx + 1);
+		setMaxDamage(2);
 		setCreativeTab(CreativeTabs.tabTools); // place in the tools tab in creative mode
 	}
 
@@ -56,24 +52,11 @@ public class ItemAutoActivateDevice extends Item {
 	{
 		if (!world.isRemote) {
 			active = !active;
-			// change the item icon based on the damage.
 			itemStack.setItemDamage(active ? 1 : 0);
-			entityPlayer.addChatMessage(new ChatComponentText("AAD: " + (active ? "On" : "Off")));
-            // TODO: figure out how to make the device have a finite life
-			//       since I'm using the damage for icons.
+			itemStack.setStackDisplayName(active ? "Active AAD" : "Inactive AAD");
 		}
 		return itemStack;
 	}
-
-//	@SideOnly(Side.CLIENT)
-//	@Override
-//	public void registerIcons(IIconRegister iconReg)
-//	{
-//		super.registerIcons(iconReg);
-//		aadIcon[0] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOff");
-//		aadIcon[1] = iconReg.registerIcon(Parachute.modid.toLowerCase() + ":AADeviceOn");
-//		itemIcon = getIconFromDamage(active ? 1 : 0);
-//	}
 
 	// search inventory for an auto activation device
 	public static ItemStack inventoryContainsAAD(InventoryPlayer inventory)
@@ -87,14 +70,6 @@ public class ItemAutoActivateDevice extends Item {
 		}
 		return itemstack;
 	}
-
-	// this allows us to change the item icon for on and off
-//	@Override
-//	public IIcon getIconFromDamage(int damage)
-//	{
-//		// clamp damage at maxIconIdx
-//		return aadIcon[(damage > maxIconIdx) ? maxIconIdx : damage];
-//	}
 
 	public static boolean getAutoActivateAltitude(EntityPlayer player)
 	{
@@ -116,5 +91,21 @@ public class ItemAutoActivateDevice extends Item {
 	{
 		return Items.redstone == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
 	}
+	
+	@Override
+	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining)
+	{
+		if (active) {
+			return new ModelResourceLocation(modid + ":" + aadName, "inventory");
+		} else {
+			return new ModelResourceLocation(modid + ":" + aadName + "_off", "inventory");
+		}
+	}
+	
+	@Override
+	public boolean showDurabilityBar(ItemStack stack)
+    {
+        return false;
+    }
 
 }

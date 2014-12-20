@@ -22,6 +22,7 @@ package com.parachute.common;
 import com.parachute.client.RenderParachute;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -78,7 +79,7 @@ public class ItemHopAndPop extends Item {
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2)
 	{
-		return Parachute.RIPSTOP.customCraftingMaterial == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
+		return Items.string == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
 	}
 
 }

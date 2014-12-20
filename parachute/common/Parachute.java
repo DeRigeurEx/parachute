@@ -36,6 +36,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.util.EnumHelper;
 
 
 @Mod(
@@ -45,11 +46,7 @@ import net.minecraftforge.common.config.Configuration;
 )
 
 public class Parachute {
-
-	static ArmorMaterial NYLON = ArmorMaterial.CHAIN; //addArmorMaterial("nylon", 15, new int[] {2, 5, 4, 1}, 12); // same as CHAIN
-	static ToolMaterial RIPSTOP = ToolMaterial.WOOD; //EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
-//	public static final PacketPipeline packetPipeline = new PacketPipeline();
-
+	
 	public static final String modid = "parachutemod";
 	public static final String mcversion = "1.8.0";
 	public static final String channel = modid;
@@ -58,6 +55,10 @@ public class Parachute {
 	public static final String ripcordName = "ripcord";
 	public static final String aadName = "auto_activation_device";
 	public static final String hopnpopName = "hop_and_pop";
+
+	static ArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", "", 15, new int[] {2, 5, 4, 1}, 12); // same as CHAIN
+	static ToolMaterial RIPSTOP = EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
+//	public static final PacketPipeline packetPipeline = new PacketPipeline();
 
 	private String type = parachuteName; // defaults to the normal parachute
 	private boolean singleUse = false; // applies to the hop and pop chute only
@@ -69,6 +70,9 @@ public class Parachute {
 	private static boolean AADActive = false;
 	private static boolean autoDismount = true;
 	private static double fallThreshold = 5.0;
+	private boolean lavaThermals;
+	private double minLavaDistance;
+	private double maxLavaDistance;
 	private final int entityID = EntityRegistry.findGlobalUniqueEntityId();
 	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs. 3 = boots
 	public static final int armorSlot = 2;  // armor slot: 0 = ??, 1 = ??, 2 = chestplate, 3 = ??
@@ -92,13 +96,16 @@ public class Parachute {
 	{
 		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
 				+ " For Minecraft Version " + Parachute.mcversion + "\n";
-		String usageComment = "singleUse - set to true for hop n pop single use (false)";
-		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (256)";
-		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
-		String aadAltitudeComment = "AADAltitude - altitude (in meters) at which auto deploy occurs (10)";
-		String fallThresholdComment = "fallThreshold - player must have fallen this far to activate AAD (5.0)";
-		String aaDActiveComment = "AADActive - whether the AAD is active or not. default is inactive. (false)";
-		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy (true)";
+		String usageComment = "set to true for hop n pop single use (false)";
+		String heightComment = "0 (zero) disables altitude limiting (256)";
+		String thermalComment = "true|false enable/disable thermals (true)";
+		String lavaThermalComment = "use lava heat to get thermals to rise up, disables space bar thermals (false)";
+		String minLavaDistanceComment = "minimum distance from lava to grab thermals, if you\n go less than 3.0 you will most likely dismount in the lava! (3.0)";
+		String maxLavaDistanceComment = "maximum distance from lava to grab thermals (48)";
+		String aadAltitudeComment = "altitude (in meters) at which auto deploy occurs (10)";
+		String fallThresholdComment = "player must have fallen this far to activate AAD (5.0)";
+		String aaDActiveComment = "whether the AAD is active or not. default is inactive. (false)";
+		String typeComment = "set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy (true)";
 		String autoComment = "If true the parachute will dismount the player automatically,\nif false the player has to use LSHIFT to dismount the arachute.";
 		String colorComment = "Parachute Colors Allowed:\n"
 				+ "black\nblue\n"
@@ -117,12 +124,23 @@ public class Parachute {
 		singleUse = config.get(Configuration.CATEGORY_GENERAL, "singleUse", false, usageComment).getBoolean(false);
 		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 256, heightComment).getInt();
 		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
+		lavaThermals = config.get(Configuration.CATEGORY_GENERAL, "lavaThermals", false, lavaThermalComment).getBoolean(false);
+		minLavaDistance = config.get(Configuration.CATEGORY_GENERAL, "minLavaDistance", 3.0, minLavaDistanceComment).getDouble(3.0);
+		maxLavaDistance = config.get(Configuration.CATEGORY_GENERAL, "maxLavaDistance", 48.0, maxLavaDistanceComment).getDouble(48.0);
 		fallThreshold = config.get(Configuration.CATEGORY_GENERAL, "fallThreshold", 5.0, fallThresholdComment).getDouble(5.0);
 		AADAltitude = config.get(Configuration.CATEGORY_GENERAL, "AADAltitude", 15.0, aadAltitudeComment).getDouble(15.0);
 		AADActive = config.get(Configuration.CATEGORY_GENERAL, "AADActive", false, aaDActiveComment).getBoolean(false);
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", true, typeComment).getBoolean(true);
 		autoDismount = config.get(Configuration.CATEGORY_GENERAL, "autoDismount", true, autoComment).getBoolean(true);
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", "random", colorComment).getString();
+		
+		// if using lava thermals disable space bar thermals.
+		if (lavaThermals) {
+			if (minLavaDistance < 2.0) {
+				minLavaDistance = 2.0;
+			}
+			thermals = false;
+		}
 
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 
@@ -147,7 +165,6 @@ public class Parachute {
 		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
 		GameRegistry.registerItem(hopnpopItem, hopnpopName);
 
-//		proxy.registerRenderer();
 		PacketHandler.init();
 	}
 
@@ -170,10 +187,6 @@ public class Parachute {
 		GameRegistry.addRecipe(new ItemStack(aadItem, 1), new Object[] {
 			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', ripcordItem});
 
-		// used to repair the parachutes
-		NYLON.customCraftingMaterial = Items.string;
-		RIPSTOP.customCraftingMaterial = Items.string;
-		
 		proxy.registerRenderer();
 
 		proxy.registerHandlers();
@@ -229,6 +242,21 @@ public class Parachute {
 	{
 		return fallThreshold;
 	}
+	
+	public boolean getAllowLavaThermals()
+	{
+		return lavaThermals;
+	}
+	
+	public double getMinLavaDistance()
+	{
+		return minLavaDistance;
+	}
+	
+	public double getMaxLavaDistance()
+	{
+		return maxLavaDistance;
+	}
 
 	public void setAADActive(boolean active)
 	{
@@ -283,10 +311,5 @@ public class Parachute {
 	{
 		return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
 	}
-	
-//	public static ArmorMaterial addArmorMaterial(String name, int durability, int enchantability)
-//	{
-//        return EnumHelper.addEnum(ArmorMaterial.class, name, durability/14, new int[]{0, 0, 0, 0}, enchantability);
-//    }
 	
 }
