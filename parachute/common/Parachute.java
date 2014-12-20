@@ -95,16 +95,16 @@ public class Parachute {
 	{
 		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
 				+ " For Minecraft Version " + Parachute.mcversion + "\n";
-		String usageComment = "set to true for hop n pop single use (false)";
+		String usageComment = "set to true for hop-n-pop single use (false)";
 		String heightComment = "0 (zero) disables altitude limiting (256)";
 		String thermalComment = "true|false enable/disable thermals (true)";
 		String lavaThermalComment = "use lava heat to get thermals to rise up, disables space bar thermals (false)";
-		String minLavaDistanceComment = "minimum distance from lava to grab thermals, if you\n go less than 3.0 you will most likely dismount in the lava! (3.0)";
-		String maxLavaDistanceComment = "maximum distance from lava to grab thermals (48)";
+		String minLavaDistanceComment = "minimum distance from lava to grab thermals, if you\ngo less than 3.0 you will most likely dismount in the lava! (3.0)";
+		String maxLavaDistanceComment = "maximum distance to rise from lava thermals (48)";
 		String aadAltitudeComment = "altitude (in meters) at which auto deploy occurs (10)";
 		String fallThresholdComment = "player must have fallen this far to activate AAD (5.0)";
 		String typeComment = "set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy (true)";
-		String autoComment = "If true the parachute will dismount the player automatically,\nif false the player has to use LSHIFT to dismount the arachute.";
+		String autoComment = "If true the parachute will dismount the player automatically,\nif false the player has to use LSHIFT to dismount the parachute.";
 		String colorComment = "Parachute Colors Allowed:\n"
 				+ "black\nblue\n"
 				+ "brown\ncyan\n"
