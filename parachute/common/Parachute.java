@@ -67,7 +67,6 @@ public class Parachute {
 	private boolean thermals = true;
 	private static double AADAltitude = 15.0;
 	private boolean smallCanopy = true;
-	private static boolean AADActive = false;
 	private static boolean autoDismount = true;
 	private static double fallThreshold = 5.0;
 	private boolean lavaThermals;
@@ -104,7 +103,6 @@ public class Parachute {
 		String maxLavaDistanceComment = "maximum distance from lava to grab thermals (48)";
 		String aadAltitudeComment = "altitude (in meters) at which auto deploy occurs (10)";
 		String fallThresholdComment = "player must have fallen this far to activate AAD (5.0)";
-		String aaDActiveComment = "whether the AAD is active or not. default is inactive. (false)";
 		String typeComment = "set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy (true)";
 		String autoComment = "If true the parachute will dismount the player automatically,\nif false the player has to use LSHIFT to dismount the arachute.";
 		String colorComment = "Parachute Colors Allowed:\n"
@@ -129,7 +127,6 @@ public class Parachute {
 		maxLavaDistance = config.get(Configuration.CATEGORY_GENERAL, "maxLavaDistance", 48.0, maxLavaDistanceComment).getDouble(48.0);
 		fallThreshold = config.get(Configuration.CATEGORY_GENERAL, "fallThreshold", 5.0, fallThresholdComment).getDouble(5.0);
 		AADAltitude = config.get(Configuration.CATEGORY_GENERAL, "AADAltitude", 15.0, aadAltitudeComment).getDouble(15.0);
-		AADActive = config.get(Configuration.CATEGORY_GENERAL, "AADActive", false, aaDActiveComment).getBoolean(false);
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", true, typeComment).getBoolean(true);
 		autoDismount = config.get(Configuration.CATEGORY_GENERAL, "autoDismount", true, autoComment).getBoolean(true);
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", "random", colorComment).getString();
@@ -233,11 +230,6 @@ public class Parachute {
 		return AADAltitude;
 	}
 
-	public static boolean getAADActive()
-	{
-		return AADActive;
-	}
-
 	public static double getFallThreshold()
 	{
 		return fallThreshold;
@@ -256,11 +248,6 @@ public class Parachute {
 	public double getMaxLavaDistance()
 	{
 		return maxLavaDistance;
-	}
-
-	public void setAADActive(boolean active)
-	{
-		AADActive = active;
 	}
 
 	public boolean isSmallCanopy()

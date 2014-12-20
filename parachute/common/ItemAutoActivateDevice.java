@@ -34,8 +34,8 @@ import net.minecraft.util.BlockPos;
 
 public class ItemAutoActivateDevice extends Item {
 
-	// initial value is false (inactive) from config file
-	public static boolean active = Parachute.getAADActive();
+	// initial value is false (inactive) set in ctor
+	public static boolean active;
 	private static final double fallThreshold = Parachute.getFallThreshold();
 	private static final double altitude = Parachute.getAADAltitude();
 
@@ -44,6 +44,7 @@ public class ItemAutoActivateDevice extends Item {
 		super();
 		maxStackSize = 1;
 		setMaxDamage(2);
+		active = false;
 		setCreativeTab(CreativeTabs.tabTools); // place in the tools tab in creative mode
 	}
 
@@ -107,5 +108,16 @@ public class ItemAutoActivateDevice extends Item {
     {
         return false;
     }
-
+	
+	public static boolean getAADActive()
+	{
+		return active;
+	}
+	
+	@Override
+	public int getMetadata(int damage)
+    {
+        return active ? 1 : 0;
+    }
+	
 }

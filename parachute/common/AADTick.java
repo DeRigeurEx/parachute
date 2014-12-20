@@ -43,13 +43,13 @@ public class AADTick {
 			ItemStack parachute = player.getCurrentArmor(Parachute.armorSlot);
 			ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
 			if (aad != null) {
-				boolean auto = (!player.capabilities.isCreativeMode);
+//				boolean auto = (!player.capabilities.isCreativeMode);
 				boolean autoAltitudeReached = ItemAutoActivateDevice.getAutoActivateAltitude(player);
-				if (auto && autoAltitudeReached && !player.onGround && !player.isOnLadder()) {
+				boolean isActive = ItemAutoActivateDevice.getAADActive();
+				if (isActive && /*auto && */autoAltitudeReached && !player.onGround && !player.isOnLadder()) {
 					((ItemParachute) parachute.getItem()).deployParachute(player.worldObj, player);
 				}
 			} // else fall to death!
 		}
 	}
-
 }

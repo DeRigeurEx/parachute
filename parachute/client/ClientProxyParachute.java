@@ -24,8 +24,6 @@ import com.parachute.common.EntityParachute;
 import com.parachute.common.KeyPressTick;
 import static com.parachute.common.Parachute.aadItem;
 import static com.parachute.common.Parachute.aadName;
-//import static com.parachute.common.Parachute.aadOff;
-//import static com.parachute.common.Parachute.aadOn;
 import static com.parachute.common.Parachute.hopnpopItem;
 import static com.parachute.common.Parachute.hopnpopName;
 import static com.parachute.common.Parachute.modid;
