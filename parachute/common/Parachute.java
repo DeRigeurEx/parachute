@@ -58,23 +58,22 @@ public class Parachute {
 
 	static ArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", "", 15, new int[] {2, 5, 4, 1}, 12); // same as CHAIN
 	static ToolMaterial RIPSTOP = EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
-//	public static final PacketPipeline packetPipeline = new PacketPipeline();
 
 	private String type = parachuteName; // defaults to the normal parachute
 	private boolean singleUse = false; // applies to the hop and pop chute only
 	private int heightLimit = 256;
 	private String chuteColor = "random";
 	private boolean thermals = true;
-	private static double AADAltitude = 15.0;
+	private double AADAltitude = 15.0;
 	private boolean smallCanopy = true;
-	private static boolean autoDismount = true;
-	private static double fallThreshold = 5.0;
+	private boolean autoDismount = true;
+	private double fallThreshold = 5.0;
 	private boolean lavaThermals;
 	private double minLavaDistance;
 	private double maxLavaDistance;
 	private final int entityID = EntityRegistry.findGlobalUniqueEntityId();
-	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs. 3 = boots
-	public static final int armorSlot = 2;  // armor slot: 0 = ??, 1 = ??, 2 = chestplate, 3 = ??
+	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs,       3 = boots
+	public static final int armorSlot = 2;  // armor slot: 0 = ??,     1 = ??,         2 = chestplate, 3 = ??
 
 	@SidedProxy(
 			clientSide = "com.parachute.client.ClientProxyParachute",
@@ -99,12 +98,14 @@ public class Parachute {
 		String heightComment = "0 (zero) disables altitude limiting (256)";
 		String thermalComment = "true|false enable/disable thermals (true)";
 		String lavaThermalComment = "use lava heat to get thermals to rise up, disables space bar thermals (false)";
-		String minLavaDistanceComment = "minimum distance from lava to grab thermals, if you\ngo less than 3.0 you will most likely dismount in the lava! (3.0)";
+		String minLavaDistanceComment = "minimum distance from lava to grab thermals, if you\n"
+				+ "go less than 3.0 you will most likely dismount in the lava! (3.0)";
 		String maxLavaDistanceComment = "maximum distance to rise from lava thermals (48)";
 		String aadAltitudeComment = "altitude (in meters) at which auto deploy occurs (10)";
 		String fallThresholdComment = "player must have fallen this far to activate AAD (5.0)";
 		String typeComment = "set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy (true)";
-		String autoComment = "If true the parachute will dismount the player automatically,\nif false the player has to use LSHIFT to dismount the parachute.";
+		String autoComment = "If true the parachute will dismount the player automatically,\n"
+				+ "if false the player has to use LSHIFT to dismount the parachute.";
 		String colorComment = "Parachute Colors Allowed:\n"
 				+ "black\nblue\n"
 				+ "brown\ncyan\n"
@@ -131,12 +132,10 @@ public class Parachute {
 		autoDismount = config.get(Configuration.CATEGORY_GENERAL, "autoDismount", true, autoComment).getBoolean(true);
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", "random", colorComment).getString();
 		
-		// if using lava thermals disable space bar thermals.
+		// if using lava thermals disable space bar thermals, clamp the minimum lava distance.
 		if (lavaThermals) {
-			if (minLavaDistance < 2.0) {
-				minLavaDistance = 2.0;
-			}
 			thermals = false;
+			minLavaDistance = minLavaDistance < 2.0 ? 2.0 : minLavaDistance;
 		}
 
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
@@ -144,7 +143,7 @@ public class Parachute {
 		config.save();
 
 		// clamp the fallThreshold to a minimum of 2
-		fallThreshold = fallThreshold < 2 ? 2 : fallThreshold;
+		fallThreshold = fallThreshold < 2.0 ? 2.0 : fallThreshold;
 
 		int chuteID = proxy.addArmor(parachuteName.toLowerCase());
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, this, 64, 10, true);
@@ -192,9 +191,6 @@ public class Parachute {
 		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
 		
 		proxy.registerResources();
-		
-//		packetPipeline.initialise();
-//		packetPipeline.registerPacket(ParachutePacket.class);
 
 		instance = this;
 	}
@@ -202,7 +198,7 @@ public class Parachute {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-//		packetPipeline.postInitialise();
+		proxy.print("ParachuteMod initialization is complete.");
 	}
 
 	public String getVersion()
@@ -225,12 +221,12 @@ public class Parachute {
 		return chuteColor;
 	}
 
-	public static double getAADAltitude()
+	public double getAADAltitude()
 	{
 		return AADAltitude;
 	}
 
-	public static double getFallThreshold()
+	public double getFallThreshold()
 	{
 		return fallThreshold;
 	}

@@ -21,14 +21,11 @@ package com.parachute.common;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-//import net.minecraftforge.fml.relauncher.Side;
-//import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 
 // intercept the space bar to make the parachute go up
 
-//@SideOnly(Side.CLIENT)
 public class KeyPressTick {
 
 	@SubscribeEvent
@@ -39,8 +36,6 @@ public class KeyPressTick {
 				EntityPlayer player = event.player;
 				if (player != null) {
 					boolean keyPressed = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-//					int playerID = player.getEntityId();
-//					Parachute.packetPipeline.sendToServer(new ParachutePacket(Keyboard.KEY_SPACE, keyPressed, playerID));
 					PacketHandler.INSTANCE.sendToServer(new KeyPressMessage(Keyboard.KEY_SPACE, keyPressed));
 				}
 			}

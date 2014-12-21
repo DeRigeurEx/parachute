@@ -36,8 +36,8 @@ public class ItemAutoActivateDevice extends Item {
 
 	// initial value is false (inactive) set in ctor
 	public static boolean active;
-	private static final double fallThreshold = Parachute.getFallThreshold();
-	private static final double altitude = Parachute.getAADAltitude();
+	private static final double fallThreshold = Parachute.instance.getFallThreshold();
+	private static final double altitude = Parachute.instance.getAADAltitude();
 
 	public ItemAutoActivateDevice()
 	{
