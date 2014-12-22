@@ -68,6 +68,7 @@ public class Parachute {
 	private boolean smallCanopy = true;
 	private boolean autoDismount = true;
 	private double fallThreshold = 5.0;
+	private boolean weatherAffectsDrift;
 	private boolean lavaThermals;
 	private double minLavaDistance;
 	private double maxLavaDistance;
@@ -106,6 +107,7 @@ public class Parachute {
 		String typeComment = "set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy (true)";
 		String autoComment = "If true the parachute will dismount the player automatically,\n"
 				+ "if false the player has to use LSHIFT to dismount the parachute.";
+		String weatherComment = "set to false if you don't want the drift rate to be affected by bad weather";
 		String colorComment = "Parachute Colors Allowed:\n"
 				+ "black\nblue\n"
 				+ "brown\ncyan\n"
@@ -131,6 +133,7 @@ public class Parachute {
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", true, typeComment).getBoolean(true);
 		autoDismount = config.get(Configuration.CATEGORY_GENERAL, "autoDismount", true, autoComment).getBoolean(true);
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", "random", colorComment).getString();
+		weatherAffectsDrift = config.get(Configuration.CATEGORY_GENERAL, "weatherAffectsDrift", true, weatherComment).getBoolean(true);
 		
 		// if using lava thermals disable space bar thermals, clamp the minimum lava distance.
 		if (lavaThermals) {
@@ -198,7 +201,7 @@ public class Parachute {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		proxy.print("ParachuteMod initialization is complete.");
+		proxy.info("ParachuteMod initialization is complete.");
 	}
 
 	public String getVersion()
@@ -234,6 +237,11 @@ public class Parachute {
 	public boolean getAllowLavaThermals()
 	{
 		return lavaThermals;
+	}
+	
+	public boolean getWeatherAffectsDrift()
+	{
+		return weatherAffectsDrift;
 	}
 	
 	public double getMinLavaDistance()

@@ -36,9 +36,14 @@ public class CommonProxyParachute {
 		return 0;
 	}
 	
-	public void print(String s)
+	public void info(String s)
 	{
 		logger.info(s);
+	}
+	
+	public void warn(String s)
+	{
+		logger.warn(s);
 	}
 	
 	public void registerResources() {}

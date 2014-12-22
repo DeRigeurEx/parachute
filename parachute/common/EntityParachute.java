@@ -26,8 +26,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
+//import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 
 public class EntityParachute extends Entity {
@@ -44,6 +45,7 @@ public class EntityParachute extends Entity {
 	private double lavaDistance;
 	private double maxThermalRise;
 	private double curLavaDistance;
+	private boolean weatherAffectsDrift;
 
 	final static double drift = 0.004;
 	final static double ascend = drift * -10.0;
@@ -64,6 +66,7 @@ public class EntityParachute extends Entity {
 		worldObj = world;
 
 		smallCanopy = Parachute.instance.isSmallCanopy();
+		weatherAffectsDrift = Parachute.instance.getWeatherAffectsDrift();
 
 		preventEntitySpawning = true;
 		setSize(2.0F, 1.0F);
@@ -127,7 +130,7 @@ public class EntityParachute extends Entity {
 //	{
 //		return isNearGround(posX, posX, posX, Math.abs(getMountedYOffset() + 1.0));
 //	}
-
+	
 	@Override
 	public boolean canBePushed()
 	{
@@ -152,8 +155,8 @@ public class EntityParachute extends Entity {
 	}
 
 	@Override
-    public void func_180426_a(double x, double y, double z, float yaw, float pitch, int inc, boolean unused)
-    {
+	public void func_180426_a(double x, double y, double z, float yaw, float pitch, int inc, boolean unused)
+	{
 		double deltaX = x - posX;
 		double deltaY = y - posY;
 		double deltaZ = z - posZ;
@@ -167,8 +170,8 @@ public class EntityParachute extends Entity {
 		motionX = velocityX;
 		motionY = velocityY;
 		motionZ = velocityZ;
-    }
-	
+	}
+
 	@Override
 	public void setVelocity(double x, double y, double z)
 	{
@@ -176,7 +179,7 @@ public class EntityParachute extends Entity {
 		velocityY = motionY = y;
 		velocityZ = motionZ = z;
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
@@ -207,7 +210,7 @@ public class EntityParachute extends Entity {
 		// drop the chute when close to ground
 		if (Parachute.instance.isAutoDismount()) {
 			double offset = Math.abs(getMountedYOffset());
-			if (checkShouldDropChute(posX, posY, posZ, offset + 1.0)) {
+			if (checkShouldDropChute(new BlockPos(this).subtract(new Vec3i(0.0, offset + 1.0, 0.0)))) {
 				return;
 			}
 		}
@@ -302,10 +305,20 @@ public class EntityParachute extends Entity {
 	{
 		double descentRate = drift; // defaults to drift
 
+		if (weatherAffectsDrift) {
+			if (worldObj.isRaining()) { // rain makes you fall faster
+				descentRate += 0.002;
+			}
+
+			if (worldObj.isThundering()) { // more rain really makes you fall faster
+				descentRate += 0.004;
+			}
+		}
+
 		if (!allowThermals && !lavaThermals) {
 			return descentRate;
 		}
-		
+
 		if (lavaThermals) {
 			descentRate = doLavaThermals();
 			return descentRate;
@@ -314,7 +327,7 @@ public class EntityParachute extends Entity {
 		if (ascendMode) {
 			descentRate = ascend;
 		}
-		
+
 		if (maxAltitude > 0.0D) { // altitude limiting
 			if (posY >= maxAltitude) {
 				descentRate = drift;
@@ -323,19 +336,15 @@ public class EntityParachute extends Entity {
 
 		return descentRate;
 	}
-	
+
 	public double doLavaThermals()
 	{
 		double thermals = drift;
 		double offset = Math.abs(getMountedYOffset());
-		
-		int x = MathHelper.floor_double(posX);
-		int y = MathHelper.floor_double((posY - offset) - curLavaDistance);
-		int z = MathHelper.floor_double(posZ);
-		
-		BlockPos blockPos = new BlockPos(x, y, z);
+
+		BlockPos blockPos = new BlockPos(posX, posY - offset - curLavaDistance, posZ);
 		Block block = worldObj.getBlockState(blockPos).getBlock();
-		
+
 		if (block == Blocks.lava || block == Blocks.flowing_lava) {
 			ridingThermals = true;
 			curLavaDistance += 1.0;
@@ -349,15 +358,14 @@ public class EntityParachute extends Entity {
 		}
 		return thermals;
 	}
-	
-	protected boolean checkShouldDropChute(double x, double y, double z, double distance)
+
+	protected boolean checkShouldDropChute(BlockPos bp)
 	{
 		boolean shouldDrop = false;
 
-		if (isNearGround(x, y, z, distance)) {
+		if (isNearGround(bp)) {
 			if (riddenByEntity != null) {
 				dropParachute(this);
-//				riddenByEntity.mountEntity(this);
 				if (!worldObj.isRemote) {
 					destroyParachute();
 				} else {
@@ -369,17 +377,11 @@ public class EntityParachute extends Entity {
 		return shouldDrop;
 	}
 
-	public boolean isNearGround(double posx, double posy, double posz, double distance)
+	public boolean isNearGround(BlockPos bp)
 	{
 		boolean result = false;
-		
-		BlockPos blockPos = new BlockPos(MathHelper.floor_double(posx), MathHelper.floor_double(posy - distance), MathHelper.floor_double(posz));
-		
-		boolean isAir = worldObj.isAirBlock(blockPos);
-		boolean isSolid = worldObj.isSideSolid(blockPos, EnumFacing.UP);
-		boolean isWater = worldObj.isAnyLiquid(getEntityBoundingBox().expand(0.0, distance, 0.0));
-		
-		if (!isAir && (isSolid || isWater)) {
+
+		if (!worldObj.isAirBlock(bp)) {
 			result = true;
 		}
 		return result;
@@ -396,6 +398,13 @@ public class EntityParachute extends Entity {
 		} else {
 			if (ridingEntity != null) {
 				ridingEntity.riddenByEntity = null;
+			}
+			if (parachute != null) {
+				for (Entity entity = parachute.ridingEntity; entity != null; entity = entity.ridingEntity) {
+					if (entity == this) {
+						return;
+					}
+				}
 			}
 			ridingEntity = parachute;
 			parachute.riddenByEntity = this;

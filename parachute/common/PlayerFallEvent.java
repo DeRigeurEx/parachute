@@ -29,7 +29,7 @@ public class PlayerFallEvent {
 	
 	public PlayerFallEvent()
 	{
-		Parachute.proxy.print("PlayerFallEvent ctor");
+		Parachute.proxy.info("PlayerFallEvent ctor");
 	}
 	
 	@SubscribeEvent
