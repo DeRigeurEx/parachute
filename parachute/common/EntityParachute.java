@@ -46,6 +46,7 @@ public class EntityParachute extends Entity {
 	private double maxThermalRise;
 	private double curLavaDistance;
 	private boolean weatherAffectsDrift;
+	private boolean allowTurbulence;
 
 	final static double drift = 0.004;
 	final static double ascend = drift * -10.0;
@@ -67,6 +68,7 @@ public class EntityParachute extends Entity {
 
 		smallCanopy = Parachute.instance.isSmallCanopy();
 		weatherAffectsDrift = Parachute.instance.getWeatherAffectsDrift();
+		allowTurbulence = Parachute.instance.getAllowturbulence();
 
 		preventEntitySpawning = true;
 		setSize(2.0F, 1.0F);
@@ -128,9 +130,8 @@ public class EntityParachute extends Entity {
 //	@Override
 //	public boolean shouldRiderSit()
 //	{
-//		return isNearGround(posX, posX, posX, Math.abs(getMountedYOffset() + 1.0));
+//		return isNearGround(new BlockPos(this).subtract(new Vec3i(0.0, Math.abs(getMountedYOffset() + 1.0), 0.0)));
 //	}
-	
 	@Override
 	public boolean canBePushed()
 	{
@@ -281,6 +282,10 @@ public class EntityParachute extends Entity {
 		rotationYaw += adjustedYaw;
 		setRotation(rotationYaw, rotationPitch);
 
+		if ((weatherAffectsDrift || allowTurbulence) && rand.nextBoolean() == true) {
+			applyTurbulence(worldObj.isThundering());
+		}
+
 		if (!worldObj.isRemote) {
 			List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(0.2D, 0.0D, 0.2D));
 			if (list != null && list.isEmpty()) {
@@ -408,6 +413,45 @@ public class EntityParachute extends Entity {
 			}
 			ridingEntity = parachute;
 			parachute.riddenByEntity = this;
+		}
+	}
+
+	public void applyTurbulence(boolean roughWeather)
+	{
+		double rmin = 0.1;
+		double rmax = roughWeather ? 0.8 : 0.5;
+		double deltaX = rmin + (rmax - rmin) * rand.nextDouble();
+		double deltaZ = rmin + (rmax - rmin) * rand.nextDouble();
+		double deltaY = 0.1 + 0.2 * rand.nextDouble();
+		double deltaPos = rand.nextDouble();
+
+		if (deltaPos >= 0.5) {
+			deltaPos = MathHelper.sqrt_double(deltaPos);
+			deltaX /= deltaPos;
+			deltaZ /= deltaPos;
+			deltaY /= deltaPos;
+			double deltaInv = 1.0 / deltaPos;
+
+			if (deltaInv > 1.0) {
+				deltaInv = 1.0;
+			}
+
+			deltaX *= deltaInv;
+			deltaZ *= deltaInv;
+			deltaY *= deltaInv;
+			deltaX *= 0.05;
+			deltaZ *= 0.05;
+			deltaY *= 0.05;
+
+			deltaX *= (1.0 - entityCollisionReduction);
+			deltaZ *= (1.0 - entityCollisionReduction);
+			deltaY *= (1.0 - entityCollisionReduction);
+
+			if (rand.nextBoolean()) {
+				addVelocity(-deltaX, -deltaY, -deltaZ);
+			} else {
+				addVelocity(deltaX, deltaY, deltaZ);
+			}
 		}
 	}
 
