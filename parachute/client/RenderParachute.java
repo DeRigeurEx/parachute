@@ -44,7 +44,6 @@ public class RenderParachute extends Render {
 	{
 		super(rm);
 		shadowSize = 0.0F;
-//		modelParachute = new ModelParachute();
 	}
 
 	public void renderParachute(EntityParachute entityparachute, double x, double y, double z, float rotation, float center)
@@ -95,7 +94,7 @@ public class RenderParachute extends Render {
 		float zOffset = 3.0F;
 		float x = -5.0F;
 		float y = 2.5F;
-		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) { // first person view
 			y = 1.5F;
 		}
 		float zl = -zOffset;
@@ -107,11 +106,13 @@ public class RenderParachute extends Render {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 
-		GL11.glScalef(0.0625F, -1.0F, 0.0625F);
+		GlStateManager.scale(0.0625F, -1.0F, 0.0625F);
+//		GL11.glScalef(0.0625F, -1.0F, 0.0625F);
 
 		GL11.glBegin(GL11.GL_LINES);
 		// left end
-		GL11.glColor3f(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
+		GlStateManager.color(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
+//		GL11.glColor3f(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
 
 		GL11.glVertex3f(-8F, 0.37F, -31.5F); 	// top - front
 		GL11.glVertex3f(x, y, zl); 		// bottom
@@ -127,7 +128,8 @@ public class RenderParachute extends Render {
 		GL11.glVertex3f(x, y, zl);
 
 		// right end
-		GL11.glColor3f(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
+		GlStateManager.color(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
+//		GL11.glColor3f(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
 
 		GL11.glVertex3f(-8F, 0.37F, 31.5F);
 		GL11.glVertex3f(x, y, zr);
@@ -143,7 +145,8 @@ public class RenderParachute extends Render {
 		GL11.glVertex3f(x, y, zr);
 
 		// center
-		GL11.glColor3f(b * 0.5F, b * 0.65F, b * 0.5F); // slightly green
+		GlStateManager.color(b * 0.5F, b * 0.65F, b * 0.5F); // slightly green
+//		GL11.glColor3f(b * 0.5F, b * 0.65F, b * 0.5F); // slightly green
 
 		GL11.glVertex3f(-8F, 0F, 0F);
 		GL11.glVertex3f(x, y, zl); // first center cord goes to the left 
@@ -169,7 +172,7 @@ public class RenderParachute extends Render {
 		float zOffset = 3.0F;
 		float x = -5.0F;
 		float y = 1.5F;
-		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) { // first person view
 			y = 1.25F;
 		}
 		float zl = -zOffset;
@@ -177,15 +180,18 @@ public class RenderParachute extends Render {
 
 		float b = rider.getBrightness(center);
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
+//		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 
-		GL11.glScalef(0.0625F, -1.0F, 0.0625F);
+		GlStateManager.scale(0.0625F, -1.0F, 0.0625F);
+//		GL11.glScalef(0.0625F, -1.0F, 0.0625F);
 
 		GL11.glBegin(GL11.GL_LINES);
 		// left side
-		GL11.glColor3f(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
+		GlStateManager.color(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
+//		GL11.glColor3f(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
 
 		GL11.glVertex3f(-8F, 0.25F, -23.5F);
 		GL11.glVertex3f(x, y, zl);
@@ -201,7 +207,8 @@ public class RenderParachute extends Render {
 		GL11.glVertex3f(x, y, zl);
 
 		// right side
-		GL11.glColor3f(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
+		GlStateManager.color(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
+//		GL11.glColor3f(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
 
 		GL11.glVertex3f(-8F, 0.25F, 23.5F);
 		GL11.glVertex3f(x, y, zr);
@@ -219,7 +226,8 @@ public class RenderParachute extends Render {
 
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
+//		GL11.glPopMatrix();
 	}
 
 	public static void setParachuteColor(String color)

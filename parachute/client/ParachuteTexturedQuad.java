@@ -59,7 +59,7 @@ public class ParachuteTexturedQuad {
 		vertexPositions = texCoords;
 	}
 	
-	public void func_178765_a(WorldRenderer worldrenderer, float face)
+	public void draw(WorldRenderer worldrenderer, float face)
 	{
 		Vec3 vec3 = this.vertexPositions[1].vector3D.subtractReverse(this.vertexPositions[0].vector3D);
 		Vec3 vec31 = this.vertexPositions[1].vector3D.subtractReverse(this.vertexPositions[2].vector3D);
@@ -79,29 +79,5 @@ public class ParachuteTexturedQuad {
 
 		Tessellator.getInstance().draw();
 	}
-
-//	public void draw(Tessellator tessellator, float f)
-//	{
-//		Vec3 vec3d = vertexPositions[1].vector3D.subtract(vertexPositions[0].vector3D);
-//		Vec3 vec3d1 = vertexPositions[1].vector3D.subtract(vertexPositions[2].vector3D);
-//		Vec3 vec3d2 = vec3d1.crossProduct(vec3d).normalize();
-//		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-//		worldrenderer.startDrawingQuads();
-//
-//		if (invertNormal) {
-//			tessellator.setNormal(-(float) vec3d2.xCoord, -(float) vec3d2.yCoord, -(float) vec3d2.zCoord);
-//		} else {
-//			tessellator.setNormal((float) vec3d2.xCoord, (float) vec3d2.yCoord, (float) vec3d2.zCoord);
-//		}
-//
-//		for (int i = 0; i < 4; i++) {
-//			PositionTextureVertex positiontexturevertex = vertexPositions[i];
-//			tessellator.addVertexWithUV((float) positiontexturevertex.vector3D.xCoord * f,
-//					(float) positiontexturevertex.vector3D.yCoord * f, (float) positiontexturevertex.vector3D.zCoord * f,
-//					positiontexturevertex.texturePositionX, positiontexturevertex.texturePositionY);
-//		}
-//
-//		tessellator.draw();
-//	}
 
 }

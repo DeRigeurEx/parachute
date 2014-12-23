@@ -282,21 +282,21 @@ public class EntityParachute extends Entity {
 		rotationYaw += adjustedYaw;
 		setRotation(rotationYaw, rotationPitch);
 
-		if ((weatherAffectsDrift || allowTurbulence) && rand.nextBoolean() == true) {
+		if ((isBadWeather() || allowTurbulence) && rand.nextBoolean() == true) {
 			applyTurbulence(worldObj.isThundering());
 		}
 
-		if (!worldObj.isRemote) {
-			List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(0.2D, 0.0D, 0.2D));
-			if (list != null && list.isEmpty()) {
-				for (Object list1 : list) {
-					Entity entity = (Entity) list1;
-					if (entity != riddenByEntity && entity.canBePushed() && (entity instanceof EntityParachute)) {
-						entity.applyEntityCollision(this);
-					}
-				}
-			}
-		}
+//		if (!worldObj.isRemote) {
+//			List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(0.2D, 0.0D, 0.2D));
+//			if (list != null && list.isEmpty()) {
+//				for (Object list1 : list) {
+//					Entity entity = (Entity) list1;
+//					if (entity != riddenByEntity && entity.canBePushed() && (entity instanceof EntityParachute)) {
+//						entity.applyEntityCollision(this);
+//					}
+//				}
+//			}
+//		}
 		// something bad happened, somehow the skydiver was killed.
 		if (riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
@@ -304,6 +304,11 @@ public class EntityParachute extends Entity {
 				destroyParachute();
 			}
 		}
+	}
+	
+	public boolean isBadWeather()
+	{
+		return weatherAffectsDrift && (worldObj.isRaining() || worldObj.isThundering());
 	}
 
 	public double currentDescentRate()
@@ -439,13 +444,10 @@ public class EntityParachute extends Entity {
 			deltaX *= deltaInv;
 			deltaZ *= deltaInv;
 			deltaY *= deltaInv;
+			
 			deltaX *= 0.05;
 			deltaZ *= 0.05;
 			deltaY *= 0.05;
-
-			deltaX *= (1.0 - entityCollisionReduction);
-			deltaZ *= (1.0 - entityCollisionReduction);
-			deltaY *= (1.0 - entityCollisionReduction);
 
 			if (rand.nextBoolean()) {
 				addVelocity(-deltaX, -deltaY, -deltaZ);
