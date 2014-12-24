@@ -26,10 +26,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 //import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class EntityParachute extends Entity {
 
@@ -391,7 +393,12 @@ public class EntityParachute extends Entity {
 	{
 		boolean result = false;
 
-		if (!worldObj.isAirBlock(bp)) {
+		boolean isAirBlock = worldObj.isAirBlock(bp);
+		boolean isSolidBlock = worldObj.isSideSolid(bp, EnumFacing.UP);
+		Block block =  worldObj.getBlockState(bp).getBlock();
+		boolean isLiquidBlock = (block == Blocks.water || block == Blocks.flowing_water);
+		
+		if (!isAirBlock && (isSolidBlock || isLiquidBlock)) {
 			result = true;
 		}
 		return result;
@@ -426,15 +433,15 @@ public class EntityParachute extends Entity {
 		double rmin = 0.1;
 		double rmax = roughWeather ? 0.8 : 0.5;
 		double deltaX = rmin + (rmax - rmin) * rand.nextDouble();
+		double deltaY = rmin + 0.2 * rand.nextDouble();
 		double deltaZ = rmin + (rmax - rmin) * rand.nextDouble();
-		double deltaY = 0.1 + 0.2 * rand.nextDouble();
 		double deltaPos = rand.nextDouble();
 
 		if (deltaPos >= 0.5) {
 			deltaPos = MathHelper.sqrt_double(deltaPos);
 			deltaX /= deltaPos;
-			deltaZ /= deltaPos;
 			deltaY /= deltaPos;
+			deltaZ /= deltaPos;
 			double deltaInv = 1.0 / deltaPos;
 
 			if (deltaInv > 1.0) {
@@ -442,12 +449,12 @@ public class EntityParachute extends Entity {
 			}
 
 			deltaX *= deltaInv;
-			deltaZ *= deltaInv;
 			deltaY *= deltaInv;
+			deltaZ *= deltaInv;
 			
 			deltaX *= 0.05;
-			deltaZ *= 0.05;
 			deltaY *= 0.05;
+			deltaZ *= 0.05;
 
 			if (rand.nextBoolean()) {
 				addVelocity(-deltaX, -deltaY, -deltaZ);

@@ -107,12 +107,10 @@ public class RenderParachute extends Render {
 		GL11.glDisable(GL11.GL_LIGHTING);
 
 		GlStateManager.scale(0.0625F, -1.0F, 0.0625F);
-//		GL11.glScalef(0.0625F, -1.0F, 0.0625F);
 
 		GL11.glBegin(GL11.GL_LINES);
 		// left end
 		GlStateManager.color(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
-//		GL11.glColor3f(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
 
 		GL11.glVertex3f(-8F, 0.37F, -31.5F); 	// top - front
 		GL11.glVertex3f(x, y, zl); 		// bottom
@@ -129,7 +127,6 @@ public class RenderParachute extends Render {
 
 		// right end
 		GlStateManager.color(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
-//		GL11.glColor3f(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
 
 		GL11.glVertex3f(-8F, 0.37F, 31.5F);
 		GL11.glVertex3f(x, y, zr);
@@ -146,7 +143,6 @@ public class RenderParachute extends Render {
 
 		// center
 		GlStateManager.color(b * 0.5F, b * 0.65F, b * 0.5F); // slightly green
-//		GL11.glColor3f(b * 0.5F, b * 0.65F, b * 0.5F); // slightly green
 
 		GL11.glVertex3f(-8F, 0F, 0F);
 		GL11.glVertex3f(x, y, zl); // first center cord goes to the left 
@@ -181,17 +177,14 @@ public class RenderParachute extends Render {
 		float b = rider.getBrightness(center);
 
 		GlStateManager.pushMatrix();
-//		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 
 		GlStateManager.scale(0.0625F, -1.0F, 0.0625F);
-//		GL11.glScalef(0.0625F, -1.0F, 0.0625F);
 
 		GL11.glBegin(GL11.GL_LINES);
 		// left side
 		GlStateManager.color(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
-//		GL11.glColor3f(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
 
 		GL11.glVertex3f(-8F, 0.25F, -23.5F);
 		GL11.glVertex3f(x, y, zl);
@@ -208,7 +201,6 @@ public class RenderParachute extends Render {
 
 		// right side
 		GlStateManager.color(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
-//		GL11.glColor3f(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
 
 		GL11.glVertex3f(-8F, 0.25F, 23.5F);
 		GL11.glVertex3f(x, y, zr);
@@ -227,7 +219,6 @@ public class RenderParachute extends Render {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GlStateManager.popMatrix();
-//		GL11.glPopMatrix();
 	}
 
 	public static void setParachuteColor(String color)

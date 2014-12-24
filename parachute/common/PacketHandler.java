@@ -31,6 +31,5 @@ public class PacketHandler {
 	public static void init()
 	{
 		INSTANCE.registerMessage(KeyPressMessage.class, KeyPressMessage.class, 0, Side.SERVER);
-//		INSTANCE.registerMessage(KeyPressMessage.class, KeyPressMessage.class, 0, Side.CLIENT);
 	}
 }

@@ -138,43 +138,28 @@ public class ParachuteModelRenderer {
 		}
 		if (rotateAngleX != 0.0F || rotateAngleY != 0.0F || rotateAngleZ != 0.0F) {
 			GlStateManager.pushMatrix();
-//			GL11.glPushMatrix();
 			GlStateManager.translate(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
-//			GL11.glTranslatef(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
 			if (rotateAngleZ != 0.0F) {
 				GlStateManager.rotate(rotateAngleZ * 57.29578F, 0.0F, 0.0F, 1.0F);
-//				GL11.glRotatef(rotateAngleZ * 57.29578F, 0.0F, 0.0F, 1.0F);
 			}
 			if (rotateAngleY != 0.0F) {
 				GlStateManager.rotate(rotateAngleY * 57.29578F, 0.0F, 1.0F, 0.0F);
-//				GL11.glRotatef(rotateAngleY * 57.29578F, 0.0F, 1.0F, 0.0F);
 			}
 			if (rotateAngleX != 0.0F) {
 				GlStateManager.rotate(rotateAngleX * 57.29578F, 1.0F, 0.0F, 0.0F);
-//				GL11.glRotatef(rotateAngleX * 57.29578F, 1.0F, 0.0F, 0.0F);
 			}
 			GlStateManager.callList(displayList);
-//			GL11.glCallList(displayList);
 			GlStateManager.popMatrix();
-//			GL11.glPopMatrix();
 		} else if (rotationPointX != 0.0F || rotationPointY != 0.0F || rotationPointZ != 0.0F) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
 			GlStateManager.callList(displayList);
 			GlStateManager.translate(-rotationPointX * f, -rotationPointY * f, -rotationPointZ * f);
 			GlStateManager.popMatrix();
-//			GL11.glPushMatrix();
-//			GL11.glTranslatef(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
-//			GL11.glCallList(displayList);
-//			GL11.glTranslatef(-rotationPointX * f, -rotationPointY * f, -rotationPointZ * f);
-//			GL11.glPopMatrix();
 		} else {
 			GlStateManager.pushMatrix();
 			GlStateManager.callList(displayList);
 			GlStateManager.popMatrix();
-//			GL11.glPushMatrix();
-//			GL11.glCallList(displayList);
-//			GL11.glPopMatrix();
 		}
 	}
 
@@ -188,24 +173,17 @@ public class ParachuteModelRenderer {
 		}
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
-//		GL11.glPushMatrix();
-//		GL11.glTranslatef(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
 		if (rotateAngleY != 0.0F) {
 			GlStateManager.rotate(rotateAngleY * 57.29578F, 0.0F, 1.0F, 0.0F);
-//			GL11.glRotatef(rotateAngleY * 57.29578F, 0.0F, 1.0F, 0.0F);
 		}
 		if (rotateAngleX != 0.0F) {
 			GlStateManager.rotate(rotateAngleX * 57.29578F, 1.0F, 0.0F, 0.0F);
-//			GL11.glRotatef(rotateAngleX * 57.29578F, 1.0F, 0.0F, 0.0F);
 		}
 		if (rotateAngleZ != 0.0F) {
 			GlStateManager.rotate(rotateAngleZ * 57.29578F, 0.0F, 0.0F, 1.0F);
-//			GL11.glRotatef(rotateAngleZ * 57.29578F, 0.0F, 0.0F, 1.0F);
 		}
 		GlStateManager.callList(displayList);
 		GlStateManager.popMatrix();
-//		GL11.glCallList(displayList);
-//		GL11.glPopMatrix();
 	}
 
 	public void postRender(float f)
@@ -219,29 +197,20 @@ public class ParachuteModelRenderer {
 		if (rotateAngleX != 0.0F || rotateAngleY != 0.0F || rotateAngleZ != 0.0F) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
-//			GL11.glPushMatrix();
-//			GL11.glTranslatef(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
 			if (rotateAngleZ != 0.0F) {
 				GlStateManager.rotate(rotateAngleZ * 57.29578F, 0.0F, 0.0F, 1.0F);
-//				GL11.glRotatef(rotateAngleZ * 57.29578F, 0.0F, 0.0F, 1.0F);
 			}
 			if (rotateAngleY != 0.0F) {
 				GlStateManager.rotate(rotateAngleY * 57.29578F, 0.0F, 1.0F, 0.0F);
-//				GL11.glRotatef(rotateAngleY * 57.29578F, 0.0F, 1.0F, 0.0F);
 			}
 			if (rotateAngleX != 0.0F) {
 				GlStateManager.rotate(rotateAngleX * 57.29578F, 1.0F, 0.0F, 0.0F);
-//				GL11.glRotatef(rotateAngleX * 57.29578F, 1.0F, 0.0F, 0.0F);
 			}
 			GlStateManager.popMatrix();
-//			GL11.glPopMatrix();
 		} else if (rotationPointX != 0.0F || rotationPointY != 0.0F || rotationPointZ != 0.0F) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
 			GlStateManager.popMatrix();
-//			GL11.glPushMatrix();
-//			GL11.glTranslatef(rotationPointX * f, rotationPointY * f, rotationPointZ * f);
-//			GL11.glPopMatrix();
 		}
 	}
 
