@@ -18,7 +18,6 @@
 //
 package com.parachute.common;
 
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -27,11 +26,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-//import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
 
 public class EntityParachute extends Entity {
 
@@ -134,6 +131,7 @@ public class EntityParachute extends Entity {
 //	{
 //		return isNearGround(new BlockPos(this).subtract(new Vec3i(0.0, Math.abs(getMountedYOffset() + 1.0), 0.0)));
 //	}
+	
 	@Override
 	public boolean canBePushed()
 	{
@@ -288,17 +286,6 @@ public class EntityParachute extends Entity {
 			applyTurbulence(worldObj.isThundering());
 		}
 
-//		if (!worldObj.isRemote) {
-//			List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(0.2D, 0.0D, 0.2D));
-//			if (list != null && list.isEmpty()) {
-//				for (Object list1 : list) {
-//					Entity entity = (Entity) list1;
-//					if (entity != riddenByEntity && entity.canBePushed() && (entity instanceof EntityParachute)) {
-//						entity.applyEntityCollision(this);
-//					}
-//				}
-//			}
-//		}
 		// something bad happened, somehow the skydiver was killed.
 		if (riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
@@ -353,16 +340,17 @@ public class EntityParachute extends Entity {
 	{
 		double thermals = drift;
 		double offset = Math.abs(getMountedYOffset());
+		final double inc = 1.0; // todo: try 0.5 for increment
 
 		BlockPos blockPos = new BlockPos(posX, posY - offset - curLavaDistance, posZ);
 		Block block = worldObj.getBlockState(blockPos).getBlock();
 
 		if (block == Blocks.lava || block == Blocks.flowing_lava) {
 			ridingThermals = true;
-			curLavaDistance += 1.0;
+			curLavaDistance += inc;
 			thermals = ascend;
 		} else if (ridingThermals && curLavaDistance < maxThermalRise) {
-			curLavaDistance += 1.0;
+			curLavaDistance += inc;
 			thermals = ascend;
 		} else {
 			ridingThermals = false;
@@ -396,9 +384,10 @@ public class EntityParachute extends Entity {
 		boolean isAirBlock = worldObj.isAirBlock(bp);
 		boolean isSolidBlock = worldObj.isSideSolid(bp, EnumFacing.UP);
 		Block block =  worldObj.getBlockState(bp).getBlock();
-		boolean isLiquidBlock = (block == Blocks.water || block == Blocks.flowing_water);
+		boolean isWaterBlock = (block == Blocks.water || block == Blocks.flowing_water);
+//		boolean isLavaBlock = (block == Blocks.lava || block == Blocks.flowing_lava);
 		
-		if (!isAirBlock && (isSolidBlock || isLiquidBlock)) {
+		if (!isAirBlock && (isSolidBlock || isWaterBlock)) {
 			result = true;
 		}
 		return result;

@@ -23,7 +23,6 @@ import static com.parachute.common.Parachute.aadName;
 import static com.parachute.common.Parachute.modid;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-//import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
@@ -121,12 +120,5 @@ public class ItemAutoActivateDevice extends Item {
     {
         return active ? 1 : 0;
     }
-	
-//	@Override
-//	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack)
-//	{
-//		entityLiving.playSound("random.click", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
-//		return true;
-//	}
 	
 }
