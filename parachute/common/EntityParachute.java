@@ -27,6 +27,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 
@@ -293,6 +295,7 @@ public class EntityParachute extends Entity {
 				destroyParachute();
 			}
 		}
+		
 	}
 	
 	public boolean isBadWeather()
@@ -335,23 +338,50 @@ public class EntityParachute extends Entity {
 
 		return descentRate;
 	}
+	
+	public boolean isLavaAt(BlockPos bp)
+	{
+		Block block = worldObj.getBlockState(bp).getBlock();
+		return (block == Blocks.lava || block == Blocks.flowing_lava);
+	}
+	
+	public boolean isLavaBelowInRange(BlockPos bp)
+	{
+		Vec3 v1 = new Vec3(posX, posY, posZ);
+		Vec3 v2 = new Vec3(bp.getX(), bp.getY(), bp.getZ());
+		MovingObjectPosition mop = worldObj.rayTraceBlocks(v1, v2, true);
+		if (mop != null) {
+			if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+				BlockPos blockpos = mop.func_178782_a();
+				if (isLavaAt(blockpos)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	public double doLavaThermals()
 	{
 		double thermals = drift;
 		double offset = Math.abs(getMountedYOffset());
-		final double inc = 1.0; // todo: try 0.5 for increment
+		final double inc = 0.5;
 
-		BlockPos blockPos = new BlockPos(posX, posY - offset - curLavaDistance, posZ);
-		Block block = worldObj.getBlockState(blockPos).getBlock();
+//		BlockPos blockPos = new BlockPos(posX, posY - offset - curLavaDistance, posZ);
+		BlockPos blockPos = new BlockPos(posX, posY - offset - maxThermalRise, posZ);
 
-		if (block == Blocks.lava || block == Blocks.flowing_lava) {
+		if (isLavaBelowInRange(blockPos)) {
 			ridingThermals = true;
 			curLavaDistance += inc;
 			thermals = ascend;
-		} else if (ridingThermals && curLavaDistance < maxThermalRise) {
-			curLavaDistance += inc;
-			thermals = ascend;
+			if (curLavaDistance >= maxThermalRise) {
+				ridingThermals = false;
+				curLavaDistance = lavaDistance;
+				thermals = drift;
+			}
+//		} else if (ridingThermals && curLavaDistance < maxThermalRise) {
+//			curLavaDistance += inc;
+//			thermals = ascend;
 		} else {
 			ridingThermals = false;
 			curLavaDistance = lavaDistance;
