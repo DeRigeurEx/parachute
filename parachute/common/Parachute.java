@@ -73,6 +73,7 @@ public class Parachute {
 	private double minLavaDistance;
 	private double maxLavaDistance;
 	private boolean allowTurbulence;
+	private boolean showContrails;
 	private final int entityID = EntityRegistry.findGlobalUniqueEntityId();
 	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs,       3 = boots
 	public static final int armorSlot = 2;  // armor slot: 0 = ??,     1 = ??,         2 = chestplate, 3 = ??
@@ -110,6 +111,7 @@ public class Parachute {
 				+ "if false the player has to use LSHIFT to dismount the parachute. (true)";
 		String weatherComment = "set to false if you don't want the drift rate to be affected by bad weather (true)";
 		String turbulenceComment = "set to true to feel the turbulent world of Minecraft (false)";
+		String trailsComment = "set to true to show contrails from parachute (false)";
 		String colorComment = "Parachute Colors Allowed:\n"
 				+ "black\nblue\n"
 				+ "brown\ncyan\n"
@@ -138,6 +140,7 @@ public class Parachute {
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", "random", colorComment).getString();
 		weatherAffectsDrift = config.get(Configuration.CATEGORY_GENERAL, "weatherAffectsDrift", true, weatherComment).getBoolean(true);
 		allowTurbulence = config.get(Configuration.CATEGORY_GENERAL, "allowTurbulence", false, turbulenceComment).getBoolean(false);
+		showContrails = config.get(Configuration.CATEGORY_GENERAL, "showContrails", false, trailsComment).getBoolean(false);
 		
 		// if using lava thermals disable space bar thermals, clamp the minimum lava distance.
 		if (lavaThermals) {
@@ -261,6 +264,11 @@ public class Parachute {
 	public boolean getAllowturbulence()
 	{
 		return allowTurbulence;
+	}
+	
+	public boolean getShowContrails()
+	{
+		return showContrails;
 	}
 
 	public boolean isSmallCanopy()

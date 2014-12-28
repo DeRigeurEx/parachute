@@ -26,6 +26,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -48,6 +49,7 @@ public class EntityParachute extends Entity {
 	private double curLavaDistance;
 	private boolean weatherAffectsDrift;
 	private boolean allowTurbulence;
+	private boolean showContrails;
 
 	final static double drift = 0.004;
 	final static double ascend = drift * -10.0;
@@ -70,6 +72,7 @@ public class EntityParachute extends Entity {
 		smallCanopy = Parachute.instance.isSmallCanopy();
 		weatherAffectsDrift = Parachute.instance.getWeatherAffectsDrift();
 		allowTurbulence = Parachute.instance.getAllowturbulence();
+		showContrails = Parachute.instance.getShowContrails();
 
 		preventEntitySpawning = true;
 		setSize(2.0F, 1.0F);
@@ -133,7 +136,12 @@ public class EntityParachute extends Entity {
 //	{
 //		return isNearGround(new BlockPos(this).subtract(new Vec3i(0.0, Math.abs(getMountedYOffset() + 1.0), 0.0)));
 //	}
-	
+	@Override
+	public boolean shouldDismountInWater(Entity rider)
+	{
+		return true;
+	}
+
 	@Override
 	public boolean canBePushed()
 	{
@@ -203,12 +211,20 @@ public class EntityParachute extends Entity {
 			setDamageTaken(0.0F);
 		}
 
-		prevPosX = posX;
-		prevPosY = posY;
-		prevPosZ = posZ;
+//		prevPosX = posX;
+//		prevPosY = posY;
+//		prevPosZ = posZ;
 
 		// forward velocity
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
+		
+		if (showContrails) {
+			showContrails(velocity);
+		}
+		
+		prevPosX = posX;
+		prevPosY = posY;
+		prevPosZ = posZ;
 
 		// drop the chute when close to ground
 		if (Parachute.instance.isAutoDismount()) {
@@ -295,9 +311,9 @@ public class EntityParachute extends Entity {
 				destroyParachute();
 			}
 		}
-		
+
 	}
-	
+
 	public boolean isBadWeather()
 	{
 		return weatherAffectsDrift && (worldObj.isRaining() || worldObj.isThundering());
@@ -338,13 +354,13 @@ public class EntityParachute extends Entity {
 
 		return descentRate;
 	}
-	
+
 	public boolean isLavaAt(BlockPos bp)
 	{
 		Block block = worldObj.getBlockState(bp).getBlock();
 		return (block == Blocks.lava || block == Blocks.flowing_lava);
 	}
-	
+
 	public boolean isLavaBelowInRange(BlockPos bp)
 	{
 		Vec3 v1 = new Vec3(posX, posY, posZ);
@@ -367,7 +383,6 @@ public class EntityParachute extends Entity {
 		double offset = Math.abs(getMountedYOffset());
 		final double inc = 0.5;
 
-//		BlockPos blockPos = new BlockPos(posX, posY - offset - curLavaDistance, posZ);
 		BlockPos blockPos = new BlockPos(posX, posY - offset - maxThermalRise, posZ);
 
 		if (isLavaBelowInRange(blockPos)) {
@@ -379,9 +394,6 @@ public class EntityParachute extends Entity {
 				curLavaDistance = lavaDistance;
 				thermals = drift;
 			}
-//		} else if (ridingThermals && curLavaDistance < maxThermalRise) {
-//			curLavaDistance += inc;
-//			thermals = ascend;
 		} else {
 			ridingThermals = false;
 			curLavaDistance = lavaDistance;
@@ -407,17 +419,17 @@ public class EntityParachute extends Entity {
 		return shouldDrop;
 	}
 
+	// Don't check for water - that is done by overriding shouldDismountInWater()
+	// Don't check for lava - you don't want to land there anyway
+	// Don't check for leaves - use LSHIFT, simulates getting caught in trees too!
 	public boolean isNearGround(BlockPos bp)
 	{
 		boolean result = false;
 
 		boolean isAirBlock = worldObj.isAirBlock(bp);
 		boolean isSolidBlock = worldObj.isSideSolid(bp, EnumFacing.UP);
-		Block block =  worldObj.getBlockState(bp).getBlock();
-		boolean isWaterBlock = (block == Blocks.water || block == Blocks.flowing_water);
-//		boolean isLavaBlock = (block == Blocks.lava || block == Blocks.flowing_lava);
-		
-		if (!isAirBlock && (isSolidBlock || isWaterBlock)) {
+
+		if (!isAirBlock && isSolidBlock) {
 			result = true;
 		}
 		return result;
@@ -470,7 +482,7 @@ public class EntityParachute extends Entity {
 			deltaX *= deltaInv;
 			deltaY *= deltaInv;
 			deltaZ *= deltaInv;
-			
+
 			deltaX *= 0.05;
 			deltaY *= 0.05;
 			deltaZ *= 0.05;
@@ -483,12 +495,29 @@ public class EntityParachute extends Entity {
 		}
 	}
 
+	public void showContrails(double velocity)
+	{
+		if (velocity > 0.15) {
+			double cosYaw = 2.0 * Math.cos((double) rotationYaw * d2r);
+			double sinYaw = 2.0 * Math.sin((double) rotationYaw * d2r);
+
+			for (int j = 0; (double) j < 1.0 + velocity * 5.0; ++j) {
+				double s1 = (double) (rand.nextFloat() * 2.0 - 1.0);
+				double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
+				double particleX = posX - cosYaw * s1 * 0.1 + sinYaw * s2;
+				double particleZ = posZ - sinYaw * s1 * -0.1 - cosYaw * s2;
+				
+				worldObj.spawnParticle(EnumParticleTypes.CLOUD, particleX, posY - 0.25, particleZ, motionX, motionY, motionZ, new int[0]);
+			}
+		}
+	}
+
 	@Override
 	public void updateRiderPosition()
 	{
 		if (riddenByEntity != null) {
-			double cosYaw = Math.cos((double) rotationYaw * d2r) * 0.4D;
-			double sinYaw = Math.sin((double) rotationYaw * d2r) * 0.4D;
+			double cosYaw = Math.cos((double) rotationYaw * d2r) * 0.4;
+			double sinYaw = Math.sin((double) rotationYaw * d2r) * 0.4;
 			riddenByEntity.setPosition(posX + cosYaw, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ + sinYaw);
 		}
 	}
