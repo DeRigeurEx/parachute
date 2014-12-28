@@ -67,25 +67,24 @@ public class EntityParachute extends Entity {
 	public EntityParachute(World world)
 	{
 		super(world);
-		worldObj = world;
 
 		smallCanopy = Parachute.instance.isSmallCanopy();
 		weatherAffectsDrift = Parachute.instance.getWeatherAffectsDrift();
 		allowTurbulence = Parachute.instance.getAllowturbulence();
 		showContrails = Parachute.instance.getShowContrails();
-
+		lavaDistance = Parachute.instance.getMinLavaDistance();
+		allowThermals = Parachute.instance.getAllowThermals();
+		maxAltitude = Parachute.instance.getMaxAltitude();
+		lavaThermals = Parachute.instance.getAllowLavaThermals();
+		
+		curLavaDistance = lavaDistance;
+		worldObj = world;
 		preventEntitySpawning = true;
 		setSize(2.0F, 1.0F);
 		motionFactor = 0.07D;
 		ascendMode = false;
 		ridingThermals = false;
-		lavaDistance = Parachute.instance.getMinLavaDistance();
 		maxThermalRise = 48;
-		curLavaDistance = lavaDistance;
-
-		allowThermals = Parachute.instance.getAllowThermals();
-		maxAltitude = Parachute.instance.getMaxAltitude();
-		lavaThermals = Parachute.instance.getAllowLavaThermals();
 	}
 
 	public EntityParachute(World world, double x, double y, double z)
@@ -136,6 +135,7 @@ public class EntityParachute extends Entity {
 //	{
 //		return isNearGround(new BlockPos(this).subtract(new Vec3i(0.0, Math.abs(getMountedYOffset() + 1.0), 0.0)));
 //	}
+	
 	@Override
 	public boolean shouldDismountInWater(Entity rider)
 	{
@@ -210,10 +210,6 @@ public class EntityParachute extends Entity {
 		if (getDamageTaken() > 0.0F) {
 			setDamageTaken(0.0F);
 		}
-
-//		prevPosX = posX;
-//		prevPosY = posY;
-//		prevPosZ = posZ;
 
 		// forward velocity
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
@@ -497,30 +493,28 @@ public class EntityParachute extends Entity {
 
 	public void showContrails(double velocity)
 	{
-		if (velocity > 0.15) {
+		if (velocity >= 0.20) {
 			double cosYaw = 2.0 * Math.cos((double) rotationYaw * d2r);
 			double sinYaw = 2.0 * Math.sin((double) rotationYaw * d2r);
 
 			for (int j = 0; (double) j < 1.0 + velocity * 5.0; ++j) {
-				double s1 = (double) (rand.nextFloat() * 2.0 - 1.0);
+				double s1 = (double) (rand.nextFloat() * 2.0 - 1.0) * 0.2;
 				double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
-				double particleX = posX - cosYaw * s1 * 0.1 + sinYaw * s2;
-				double particleZ = posZ - sinYaw * s1 * -0.1 - cosYaw * s2;
+				double particleX = prevPosX - cosYaw * s1 * -0.1 + sinYaw * s2;
+				double particleZ = prevPosZ - sinYaw * s1 * -0.1 - cosYaw * s2;
 				
 				worldObj.spawnParticle(EnumParticleTypes.CLOUD, particleX, posY - 0.25, particleZ, motionX, motionY, motionZ, new int[0]);
 			}
 		}
 	}
 
-	@Override
-	public void updateRiderPosition()
-	{
-		if (riddenByEntity != null) {
-			double cosYaw = Math.cos((double) rotationYaw * d2r) * 0.4;
-			double sinYaw = Math.sin((double) rotationYaw * d2r) * 0.4;
-			riddenByEntity.setPosition(posX + cosYaw, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ + sinYaw);
-		}
-	}
+//	@Override
+//	public void updateRiderPosition()
+//	{
+//		if (riddenByEntity != null) {
+//			riddenByEntity.setPosition(posX, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ);
+//		}
+//	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt)
