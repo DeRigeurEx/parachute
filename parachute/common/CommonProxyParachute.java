@@ -31,10 +31,10 @@ public class CommonProxyParachute {
 	
 	public void registerHandlers() {}
 
-	public int addArmor(String armorName)
-	{
-		return 0;
-	}
+//	public int addArmor(String armorName)
+//	{
+//		return 0;
+//	}
 	
 	public void info(String s)
 	{
