@@ -19,6 +19,7 @@
 package com.parachute.common;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -114,12 +115,7 @@ public class EntityParachute extends Entity {
 	}
 
 	@Override
-	protected void entityInit()
-	{
-		dataWatcher.addObject(17, 0); // time since last hit
-		dataWatcher.addObject(18, 1); // forward direction
-		dataWatcher.addObject(19, 0.0F); // damage taken | current damage
-	}
+	protected void entityInit() {}
 
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entity)
@@ -152,11 +148,6 @@ public class EntityParachute extends Entity {
 	public double getMountedYOffset()
 	{
 		return smallCanopy ? -2.5 : -3.5;
-	}
-
-	public void destroyParachute()
-	{
-		this.setDead();
 	}
 
 	@Override
@@ -199,16 +190,9 @@ public class EntityParachute extends Entity {
 		// the player has probably been killed or pressed LSHIFT
 		if (riddenByEntity == null) {
 			if (!worldObj.isRemote) {
-				destroyParachute();
+				setDead();
 			}
 			return;
-		}
-
-		if (getTimeSinceHit() > 0) {
-			setTimeSinceHit(getTimeSinceHit() - 1);
-		}
-		if (getDamageTaken() > 0.0F) {
-			setDamageTaken(0.0F);
 		}
 
 		// forward velocity
@@ -222,11 +206,13 @@ public class EntityParachute extends Entity {
 		prevPosY = posY;
 		prevPosZ = posZ;
 
-		// drop the chute when close to ground
-		if (Parachute.instance.isAutoDismount()) {
-			double offset = Math.abs(getMountedYOffset());
-			if (checkShouldDropChute(new BlockPos(this).subtract(new Vec3i(0.0, offset + 1.0, 0.0)))) {
-				return;
+		if (!worldObj.isRemote && !isDead) {
+			// drop the chute when close to ground
+			if (Parachute.instance.isAutoDismount()) {
+				double offset = Math.abs(getMountedYOffset());
+				if (checkShouldDropChute(new BlockPos(this).subtract(new Vec3i(0.0, offset + 1.0, 0.0)))) {
+					return;
+				}
 			}
 		}
 
@@ -304,7 +290,7 @@ public class EntityParachute extends Entity {
 		if (riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
 			if (!worldObj.isRemote) {
-				destroyParachute();
+				setDead();
 			}
 		}
 
@@ -405,7 +391,7 @@ public class EntityParachute extends Entity {
 			if (riddenByEntity != null) {
 				dropParachute(this);
 				if (!worldObj.isRemote) {
-					destroyParachute();
+					setDead();
 				} else {
 					riddenByEntity = null;
 				}
@@ -418,19 +404,18 @@ public class EntityParachute extends Entity {
 	// Don't check for water - that is done by overriding shouldDismountInWater()
 	// Don't check for lava - you don't want to land there anyway
 	// Don't check for leaves - use LSHIFT, simulates getting caught in trees too!
+	// Do check for stair blocks. isSideSolid doesn't seem to catch those.
 	public boolean isNearGround(BlockPos bp)
 	{
-		boolean result = false;
-
+		Block block = worldObj.getBlockState(bp).getBlock();
+		
 		boolean isAirBlock = worldObj.isAirBlock(bp);
+		boolean isStairBlock = (block instanceof BlockStairs);
 		boolean isSolidBlock = worldObj.isSideSolid(bp, EnumFacing.UP);
-
-		if (!isAirBlock && isSolidBlock) {
-			result = true;
-		}
-		return result;
+		
+		return (!isAirBlock && (isSolidBlock || isStairBlock));
 	}
-
+	
 	public void dropParachute(Entity parachute)
 	{
 		if (parachute == null) {
@@ -508,51 +493,10 @@ public class EntityParachute extends Entity {
 		}
 	}
 
-//	@Override
-//	public void updateRiderPosition()
-//	{
-//		if (riddenByEntity != null) {
-//			riddenByEntity.setPosition(posX, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ);
-//		}
-//	}
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt) {}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt)
-	{
-	}
+	protected void readEntityFromNBT(NBTTagCompound nbt) {}
 
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt)
-	{
-	}
-
-	public void setDamageTaken(float f)
-	{
-		dataWatcher.updateObject(19, f);
-	}
-
-	public float getDamageTaken()
-	{
-		return dataWatcher.getWatchableObjectFloat(19);
-	}
-
-	public void setTimeSinceHit(int time)
-	{
-		dataWatcher.updateObject(17, time);
-	}
-
-	public int getTimeSinceHit()
-	{
-		return dataWatcher.getWatchableObjectInt(17);
-	}
-
-	public void setForwardDirection(int forward)
-	{
-		dataWatcher.updateObject(18, forward);
-	}
-
-	public int getForwardDirection()
-	{
-		return dataWatcher.getWatchableObjectInt(18);
-	}
 }

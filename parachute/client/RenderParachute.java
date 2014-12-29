@@ -29,7 +29,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
+//import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -54,16 +54,16 @@ public class RenderParachute extends Render {
 		GlStateManager.rotate(180.0F - rotation, 0.0F, 1.0F, 0.0F);
 
 		// rock the parachute when hit
-		float time = (float) entityparachute.getTimeSinceHit() - center;
-		float damage = (float) entityparachute.getDamageTaken() - center;
-
-		if (damage < 0.0F) {
-			damage = 0.0F;
-		}
-
-		if (time > 0.0F) {
-			GlStateManager.rotate(MathHelper.sin(time) * time * damage / 20.0F * (float) entityparachute.getForwardDirection(), 1.0F, 0.0F, 0.0F);
-		}
+//		float time = (float) entityparachute.getTimeSinceHit() - center;
+//		float damage = (float) entityparachute.getDamageTaken() - center;
+//
+//		if (damage < 0.0F) {
+//			damage = 0.0F;
+//		}
+//
+//		if (time > 0.0F) {
+//			GlStateManager.rotate(MathHelper.sin(time) * time * damage / 20.0F * (float) entityparachute.getForwardDirection(), 1.0F, 0.0F, 0.0F);
+//		}
 
 		if (!bindEntityTexture(entityparachute)) {
 			return;

@@ -47,7 +47,7 @@ public class ClientProxyParachute extends CommonProxyParachute {
 		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
 		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute(rm));
 	}
-
+	
 	@Override
 	public void registerHandlers()
 	{
