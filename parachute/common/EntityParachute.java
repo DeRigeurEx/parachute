@@ -188,10 +188,8 @@ public class EntityParachute extends Entity {
 		super.onUpdate();
 
 		// the player has probably been killed or pressed LSHIFT
-		if (riddenByEntity == null) {
-			if (!worldObj.isRemote) {
-				setDead();
-			}
+		if (riddenByEntity == null && !worldObj.isRemote) {
+			setDead();
 			return;
 		}
 
@@ -206,15 +204,13 @@ public class EntityParachute extends Entity {
 		prevPosY = posY;
 		prevPosZ = posZ;
 
-//		if (!worldObj.isRemote && !isDead) {
-			// drop the chute when close to ground
-			if (Parachute.instance.isAutoDismount()) {
-				double offset = Math.abs(getMountedYOffset());
-				if (checkShouldDropChute(new BlockPos(this).subtract(new Vec3i(0.0, offset + 1.0, 0.0)))) {
-					return;
-				}
+		// drop the chute when close to ground
+		if (Parachute.instance.isAutoDismount()) {
+			double offset = Math.abs(getMountedYOffset());
+			if (checkShouldDropChute(new BlockPos(this).subtract(new Vec3i(0.0, offset + 1.0, 0.0)))) {
+				return;
 			}
-//		}
+		}
 
 		// forward velocity for 'W' keypress
 		// moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
