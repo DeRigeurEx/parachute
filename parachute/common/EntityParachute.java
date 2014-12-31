@@ -510,7 +510,7 @@ public class EntityParachute extends Entity {
 				double particleX = prevPosX - cosYaw * s1 * -0.1 + sinYaw * s2;
 				double particleZ = prevPosZ - sinYaw * s1 * -0.1 - cosYaw * s2;
 				
-				worldObj.spawnParticle("portal", particleX, posY - 0.25, particleZ, motionX, motionY, motionZ);
+				worldObj.spawnParticle("smoke", particleX, posY - 0.25, particleZ, motionX, motionY, motionZ);
 			}
 		}
 	}

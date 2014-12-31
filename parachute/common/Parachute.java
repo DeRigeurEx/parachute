@@ -124,7 +124,8 @@ public class Parachute {
 				+ "pink\npurple\n"
 				+ "red\nsilver\n"
 				+ "white\nyellow\n"
-				+ "random - allows randomly chosen color each time chute is opened\n";
+				+ "random - allows randomly chosen color each time chute is opened\n"
+				+ "custom[0-9] - allows use of a custom texture called 'custom' with a single number appended";
 
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();

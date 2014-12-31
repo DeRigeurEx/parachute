@@ -222,6 +222,8 @@ public class RenderParachute extends Render {
 	{
 		if (color.equalsIgnoreCase("random")) {
 			parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + getRandomColor() + ".png");
+		} else if (color.startsWith("custom")) {
+			parachuteTexture = new ResourceLocation(Parachute.modid + ":textures/blocks/" + color + ".png");
 		} else {
 			parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + color + ".png");
 		}
@@ -233,6 +235,8 @@ public class RenderParachute extends Render {
 		if (parachuteTexture == null) {
 			if (color.equalsIgnoreCase("random")) {
 				parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + getRandomColor() + ".png");
+			} else if (color.startsWith("custom")) {
+				parachuteTexture = new ResourceLocation(Parachute.modid + ":textures/blocks/" + color + ".png");
 			} else {
 				parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + color + ".png");
 			}
