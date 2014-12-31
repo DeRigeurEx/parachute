@@ -65,11 +65,17 @@ public class Parachute {
 	private int heightLimit = 256;
 	private String chuteColor = "random";
 	private boolean thermals = true;
-	private static double AADAltitude = 15.0;
+	private double AADAltitude = 15.0;
 	private boolean smallCanopy = true;
-	private static boolean AADActive = false;
-	private static boolean autoDismount = true;
-	private static double fallThreshold = 5.0;
+	private boolean AADActive = false;
+	private boolean autoDismount = true;
+	private double fallThreshold = 5.0;
+	private boolean weatherAffectsDrift;
+	private boolean lavaThermals;
+	private double minLavaDistance;
+	private double maxLavaDistance;
+	private boolean allowTurbulence;
+	private boolean showContrails;
 	private final int entityID = EntityRegistry.findGlobalUniqueEntityId();
 	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs. 3 = boots
 	public static final int armorSlot = 2;  // armor slot: 0 = ??, 1 = ??, 2 = chestplate, 3 = ??
@@ -96,11 +102,19 @@ public class Parachute {
 		String usageComment = "singleUse - set to true for hop n pop single use (false)";
 		String heightComment = "heightLimit  - 0 (zero) disables altitude limiting (256)";
 		String thermalComment = "allowThermals - true|false enable/disable thermals (true)";
+		String lavaThermalComment = "use lava heat to get thermals to rise up, disables space bar thermals (false)";
+		String minLavaDistanceComment = "minimum distance from lava to grab thermals, if you\n"
+				+ "go less than 3.0 you will most likely dismount in the lava! (3.0)";
+		String maxLavaDistanceComment = "maximum distance to rise from lava thermals (48)";
 		String aadAltitudeComment = "AADAltitude - altitude (in meters) at which auto deploy occurs (10)";
 		String fallThresholdComment = "fallThreshold - player must have fallen this far to activate AAD (5.0)";
 		String aaDActiveComment = "AADActive - whether the AAD is active or not. default is inactive. (false)";
 		String typeComment = "smallCanopy - set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy (true)";
-		String autoComment = "If true the parachute will dismount the player automatically,\nif false the player has to use LSHIFT to dismount the arachute.";
+		String autoComment = "If true the parachute will dismount the player automatically,\n"
+				+ "if false the player has to use LSHIFT to dismount the parachute.";
+		String weatherComment = "set to false if you don't want the drift rate to be affected by bad weather (true)";
+		String turbulenceComment = "set to true to feel the turbulent world of Minecraft (false)";
+		String trailsComment = "set to true to show contrails from parachute (false)";
 		String colorComment = "Parachute Colors Allowed:\n"
 				+ "black\nblue\n"
 				+ "brown\ncyan\n"
@@ -117,6 +131,9 @@ public class Parachute {
 
 		singleUse = config.get(Configuration.CATEGORY_GENERAL, "singleUse", false, usageComment).getBoolean(false);
 		heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 256, heightComment).getInt();
+		lavaThermals = config.get(Configuration.CATEGORY_GENERAL, "lavaThermals", false, lavaThermalComment).getBoolean(false);
+		minLavaDistance = config.get(Configuration.CATEGORY_GENERAL, "minLavaDistance", 3.0, minLavaDistanceComment).getDouble(3.0);
+		maxLavaDistance = config.get(Configuration.CATEGORY_GENERAL, "maxLavaDistance", 48.0, maxLavaDistanceComment).getDouble(48.0);
 		thermals = config.get(Configuration.CATEGORY_GENERAL, "allowThermals", true, thermalComment).getBoolean(true);
 		fallThreshold = config.get(Configuration.CATEGORY_GENERAL, "fallThreshold", 5.0, fallThresholdComment).getDouble(5.0);
 		AADAltitude = config.get(Configuration.CATEGORY_GENERAL, "AADAltitude", 15.0, aadAltitudeComment).getDouble(15.0);
@@ -124,6 +141,15 @@ public class Parachute {
 		smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", true, typeComment).getBoolean(true);
 		autoDismount = config.get(Configuration.CATEGORY_GENERAL, "autoDismount", true, autoComment).getBoolean(true);
 		chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", "random", colorComment).getString();
+		weatherAffectsDrift = config.get(Configuration.CATEGORY_GENERAL, "weatherAffectsDrift", true, weatherComment).getBoolean(true);
+		allowTurbulence = config.get(Configuration.CATEGORY_GENERAL, "allowTurbulence", false, turbulenceComment).getBoolean(false);
+		showContrails = config.get(Configuration.CATEGORY_GENERAL, "showContrails", false, trailsComment).getBoolean(false);
+		
+		// if using lava thermals disable space bar thermals, clamp the minimum lava distance.
+		if (lavaThermals) {
+			thermals = false;
+			minLavaDistance = minLavaDistance < 2.0 ? 2.0 : minLavaDistance;
+		}
 
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 
@@ -210,23 +236,53 @@ public class Parachute {
 	{
 		return thermals;
 	}
+	
+	public boolean getAllowLavaThermals()
+	{
+		return lavaThermals;
+	}
+	
+	public boolean getWeatherAffectsDrift()
+	{
+		return weatherAffectsDrift;
+	}
+	
+	public double getMinLavaDistance()
+	{
+		return minLavaDistance;
+	}
+	
+	public double getMaxLavaDistance()
+	{
+		return maxLavaDistance;
+	}
+	
+	public boolean getAllowturbulence()
+	{
+		return allowTurbulence;
+	}
+	
+	public boolean getShowContrails()
+	{
+		return showContrails;
+	}
 
 	public String getChuteColor()
 	{
 		return chuteColor;
 	}
 
-	public static double getAADAltitude()
+	public double getAADAltitude()
 	{
 		return AADAltitude;
 	}
 
-	public static boolean getAADActive()
+	public boolean getAADActive()
 	{
 		return AADActive;
 	}
 
-	public static double getFallThreshold()
+	public double getFallThreshold()
 	{
 		return fallThreshold;
 	}

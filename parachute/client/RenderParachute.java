@@ -54,16 +54,16 @@ public class RenderParachute extends Render {
 		GL11.glRotatef(180.0F - rotation, 0.0F, 1.0F, 0.0F);
 
 		// rock the parachute when hit
-		float time = (float) entityparachute.getTimeSinceHit() - center;
-		float damage = (float) entityparachute.getDamageTaken() - center;
-
-		if (damage < 0.0F) {
-			damage = 0.0F;
-		}
-
-		if (time > 0.0F) {
-			GL11.glRotatef(MathHelper.sin(time) * time * damage / 20.0F * (float) entityparachute.getForwardDirection(), 0.0F, 0.0F, 1.0F);
-		}
+//		float time = (float) entityparachute.getTimeSinceHit() - center;
+//		float damage = (float) entityparachute.getDamageTaken() - center;
+//
+//		if (damage < 0.0F) {
+//			damage = 0.0F;
+//		}
+//
+//		if (time > 0.0F) {
+//			GL11.glRotatef(MathHelper.sin(time) * time * damage / 20.0F * (float) entityparachute.getForwardDirection(), 0.0F, 0.0F, 1.0F);
+//		}
 
 		bindEntityTexture(entityparachute);
 		modelParachute.render(entityparachute, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);

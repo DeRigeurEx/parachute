@@ -20,16 +20,17 @@ package com.parachute.common;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.List;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Block;
+//import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class EntityParachute extends Entity {
 
@@ -43,6 +44,14 @@ public class EntityParachute extends Entity {
 	private double maxAltitude;
 	private boolean allowThermals;
 	private boolean smallCanopy;
+	private boolean lavaThermals;
+	private boolean ridingThermals;
+	private double lavaDistance;
+	private double maxThermalRise;
+	private double curLavaDistance;
+	private boolean weatherAffectsDrift;
+	private boolean allowTurbulence;
+	private boolean showContrails;
 
 	final static double drift = 0.004;
 	final static double ascend = drift * -10.0;
@@ -61,16 +70,26 @@ public class EntityParachute extends Entity {
 	{
 		super(world);
 
+		allowThermals = Parachute.instance.getAllowThermals();
+		maxAltitude = Parachute.instance.getMaxAltitude();
 		smallCanopy = Parachute.instance.isSmallCanopy();
+		weatherAffectsDrift = Parachute.instance.getWeatherAffectsDrift();
+		allowTurbulence = Parachute.instance.getAllowturbulence();
+		showContrails = Parachute.instance.getShowContrails();
+		lavaDistance = Parachute.instance.getMinLavaDistance();
+		allowThermals = Parachute.instance.getAllowThermals();
+		maxAltitude = Parachute.instance.getMaxAltitude();
+		lavaThermals = Parachute.instance.getAllowLavaThermals();
+		
+		curLavaDistance = lavaDistance;
 
 		preventEntitySpawning = true;
 		setSize(2.0F, 1.0F);
 		yOffset = height / 2F;
 		motionFactor = 0.07D;
 		ascendMode = false;
-
-		allowThermals = Parachute.instance.getAllowThermals();
-		maxAltitude = Parachute.instance.getMaxAltitude();
+		ridingThermals = false;
+		maxThermalRise = 48;
 	}
 
 	public EntityParachute(World world, double x, double y, double z)
@@ -102,9 +121,15 @@ public class EntityParachute extends Entity {
 	@Override
 	protected void entityInit()
 	{
-		dataWatcher.addObject(17, 0); // time since last hit
-		dataWatcher.addObject(18, 1); // forward direction
-		dataWatcher.addObject(19, 0.0F); // damage taken | current damage
+//		dataWatcher.addObject(17, 0); // time since last hit
+//		dataWatcher.addObject(18, 1); // forward direction
+//		dataWatcher.addObject(19, 0.0F); // damage taken | current damage
+	}
+	
+	@Override
+	public boolean shouldDismountInWater(Entity rider)
+	{
+		return true;
 	}
 
 	@Override
@@ -192,19 +217,23 @@ public class EntityParachute extends Entity {
 			return;
 		}
 
-		if (getTimeSinceHit() > 0) {
-			setTimeSinceHit(getTimeSinceHit() - 1);
-		}
-		if (getDamageTaken() > 0.0F) {
-			setDamageTaken(0.0F);
-		}
-
-		prevPosX = posX;
-		prevPosY = posY;
-		prevPosZ = posZ;
+//		if (getTimeSinceHit() > 0) {
+//			setTimeSinceHit(getTimeSinceHit() - 1);
+//		}
+//		if (getDamageTaken() > 0.0F) {
+//			setDamageTaken(0.0F);
+//		}
 
 		// forward velocity
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
+		
+		if (showContrails) {
+			showContrails(velocity);
+		}
+		
+		prevPosX = posX;
+		prevPosY = posY;
+		prevPosZ = posZ;
 
 		// drop the chute when close to ground
 		if (Parachute.instance.isAutoDismount()) {
@@ -280,17 +309,10 @@ public class EntityParachute extends Entity {
 		rotationYaw += adjustedYaw;
 		setRotation(rotationYaw, rotationPitch);
 
-		if (!worldObj.isRemote) {
-			List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.2D, 0.0D, 0.2D));
-			if (list != null && list.isEmpty()) {
-				for (Object list1 : list) {
-					Entity entity = (Entity) list1;
-					if (entity != riddenByEntity && entity.canBePushed() && (entity instanceof EntityParachute)) {
-						entity.applyEntityCollision(this);
-					}
-				}
-			}
+		if ((isBadWeather() || allowTurbulence) && rand.nextBoolean() == true) {
+			applyTurbulence(worldObj.isThundering());
 		}
+		
 		// something bad happened, somehow the skydiver was killed.
 		if (riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
@@ -298,14 +320,33 @@ public class EntityParachute extends Entity {
 				destroyParachute();
 			}
 		}
-//		ascendMode = false;
+	}
+	
+	public boolean isBadWeather()
+	{
+		return weatherAffectsDrift && (worldObj.isRaining() || worldObj.isThundering());
 	}
 
 	public double currentDescentRate()
 	{
 		double descentRate = drift; // defaults to drift
 
-		if (!allowThermals) {
+		if (weatherAffectsDrift) {
+			if (worldObj.isRaining()) { // rain makes you fall faster
+				descentRate += 0.002;
+			}
+
+			if (worldObj.isThundering()) { // more rain really makes you fall faster
+				descentRate += 0.004;
+			}
+		}
+
+		if (!allowThermals && !lavaThermals) {
+			return descentRate;
+		}
+
+		if (lavaThermals) {
+			descentRate = doLavaThermals();
 			return descentRate;
 		}
 
@@ -320,6 +361,57 @@ public class EntityParachute extends Entity {
 		}
 
 		return descentRate;
+	}
+	
+	public boolean isLavaAt(double posx, double posy, double posz)
+	{
+		int x = MathHelper.floor_double(posx);
+		int y = MathHelper.floor_double(posy);
+		int z = MathHelper.floor_double(posz);
+		Block block = worldObj.getBlock(x, y, z);
+		
+		return (block == Blocks.lava || block == Blocks.flowing_lava);
+	}
+
+	public boolean isLavaBelowInRange(double posx, double posy, double posz)
+	{
+		int x = MathHelper.floor_double(posX);
+		int y = MathHelper.floor_double(posY);
+		int z = MathHelper.floor_double(posZ);
+		
+		Vec3 v1 = Vec3.createVectorHelper(x, y, z);
+		Vec3 v2 = Vec3.createVectorHelper(posx, posy, posz);
+		MovingObjectPosition mop = worldObj.rayTraceBlocks(v1, v2, true);
+		if (mop != null) {
+			if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+				if (isLavaAt(mop.blockX, mop.blockY, mop.blockZ)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public double doLavaThermals()
+	{
+		double thermals = drift;
+		double offset = Math.abs(getMountedYOffset());
+		final double inc = 0.5;
+
+		if (isLavaBelowInRange(posX, posY - offset - maxThermalRise, posZ)) {
+			ridingThermals = true;
+			curLavaDistance += inc;
+			thermals = ascend;
+			if (curLavaDistance >= maxThermalRise) {
+				ridingThermals = false;
+				curLavaDistance = lavaDistance;
+				thermals = drift;
+			}
+		} else {
+			ridingThermals = false;
+			curLavaDistance = lavaDistance;
+		}
+		return thermals;
 	}
 
 	protected boolean checkShouldDropChute(double x, double y, double z, double distance)
@@ -369,61 +461,103 @@ public class EntityParachute extends Entity {
 			parachute.riddenByEntity = this;
 		}
 	}
-
-	@Override
-	public void updateRiderPosition()
+	
+	public void applyTurbulence(boolean roughWeather)
 	{
-		if (riddenByEntity != null) {
-			double cosYaw = Math.cos((double) rotationYaw * d2r) * 0.4D;
-			double sinYaw = Math.sin((double) rotationYaw * d2r) * 0.4D;
-			riddenByEntity.setPosition(posX + cosYaw, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ + sinYaw);
+		double rmin = 0.1;
+		double rmax = roughWeather ? 0.8 : 0.5;
+		double deltaX = rmin + (rmax - rmin) * rand.nextDouble();
+		double deltaY = rmin + 0.2 * rand.nextDouble();
+		double deltaZ = rmin + (rmax - rmin) * rand.nextDouble();
+		double deltaPos = rand.nextDouble();
+
+		if (deltaPos >= 0.5) {
+			deltaPos = MathHelper.sqrt_double(deltaPos);
+			deltaX /= deltaPos;
+			deltaY /= deltaPos;
+			deltaZ /= deltaPos;
+			double deltaInv = 1.0 / deltaPos;
+
+			if (deltaInv > 1.0) {
+				deltaInv = 1.0;
+			}
+
+			deltaX *= deltaInv;
+			deltaY *= deltaInv;
+			deltaZ *= deltaInv;
+
+			deltaX *= 0.05;
+			deltaY *= 0.05;
+			deltaZ *= 0.05;
+
+			if (rand.nextBoolean()) {
+				addVelocity(-deltaX, -deltaY, -deltaZ);
+			} else {
+				addVelocity(deltaX, deltaY, deltaZ);
+			}
 		}
 	}
 
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt)
+	public void showContrails(double velocity)
 	{
+		if (velocity >= 0.20) {
+			double cosYaw = 2.0 * Math.cos((double) rotationYaw * d2r);
+			double sinYaw = 2.0 * Math.sin((double) rotationYaw * d2r);
+
+			for (int j = 0; (double) j < 1.0 + velocity * 5.0; ++j) {
+				double s1 = (double) (rand.nextFloat() * 2.0 - 1.0) * 0.2;
+				double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
+				double particleX = prevPosX - cosYaw * s1 * -0.1 + sinYaw * s2;
+				double particleZ = prevPosZ - sinYaw * s1 * -0.1 - cosYaw * s2;
+				
+				worldObj.spawnParticle("portal", particleX, posY - 0.25, particleZ, motionX, motionY, motionZ);
+			}
+		}
 	}
+
+//	@Override
+//	public void updateRiderPosition()
+//	{
+//		if (riddenByEntity != null) {
+//			double cosYaw = Math.cos((double) rotationYaw * d2r) * 0.4D;
+//			double sinYaw = Math.sin((double) rotationYaw * d2r) * 0.4D;
+//			riddenByEntity.setPosition(posX + cosYaw, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ + sinYaw);
+//		}
+//	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt)
-	{
-	}
+	protected void writeEntityToNBT(NBTTagCompound nbt) {}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public float getShadowSize()
-	{
-		return 0.0F;
-	}
+	protected void readEntityFromNBT(NBTTagCompound nbt) {}
 
-	public void setDamageTaken(float f)
-	{
-		dataWatcher.updateObject(19, f);
-	}
-
-	public float getDamageTaken()
-	{
-		return dataWatcher.getWatchableObjectFloat(19);
-	}
-
-	public void setTimeSinceHit(int time)
-	{
-		dataWatcher.updateObject(17, time);
-	}
-
-	public int getTimeSinceHit()
-	{
-		return dataWatcher.getWatchableObjectInt(17);
-	}
-
-	public void setForwardDirection(int forward)
-	{
-		dataWatcher.updateObject(18, forward);
-	}
-
-	public int getForwardDirection()
-	{
-		return dataWatcher.getWatchableObjectInt(18);
-	}
+//	public void setDamageTaken(float f)
+//	{
+//		dataWatcher.updateObject(19, f);
+//	}
+//
+//	public float getDamageTaken()
+//	{
+//		return dataWatcher.getWatchableObjectFloat(19);
+//	}
+//
+//	public void setTimeSinceHit(int time)
+//	{
+//		dataWatcher.updateObject(17, time);
+//	}
+//
+//	public int getTimeSinceHit()
+//	{
+//		return dataWatcher.getWatchableObjectInt(17);
+//	}
+//
+//	public void setForwardDirection(int forward)
+//	{
+//		dataWatcher.updateObject(18, forward);
+//	}
+//
+//	public int getForwardDirection()
+//	{
+//		return dataWatcher.getWatchableObjectInt(18);
+//	}
 }

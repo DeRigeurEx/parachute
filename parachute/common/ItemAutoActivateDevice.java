@@ -39,9 +39,9 @@ public class ItemAutoActivateDevice extends Item {
 	private final int maxIconIdx = 1;
 
 	// initial value is false (inactive) from config file
-	public static boolean active = Parachute.getAADActive();
-	private static final double fallThreshold = Parachute.getFallThreshold();
-	private static final double altitude = Parachute.getAADAltitude();
+	public boolean active = Parachute.instance.getAADActive();
+	private static final double fallThreshold = Parachute.instance.getFallThreshold();
+	private static final double altitude = Parachute.instance.getAADAltitude();
 
 	public ItemAutoActivateDevice()
 	{
