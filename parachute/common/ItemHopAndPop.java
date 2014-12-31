@@ -55,11 +55,10 @@ public class ItemHopAndPop extends Item {
 			EntityParachute chute = new EntityParachute(world, entityplayer.posX, entityplayer.posY + offset, entityplayer.posZ);
 			chute.playSound("step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
 			chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
-			if (!world.isRemote) {
+			if (world.isRemote) {
+				RenderParachute.setParachuteColor(Parachute.instance.getChuteColor());
+			} else  {
 				world.spawnEntityInWorld(chute);
-				if (FMLCommonHandler.instance().getSide().isClient()) {
-					RenderParachute.setParachuteColor(Parachute.instance.getChuteColor());
-				}
 			}
 			entityplayer.mountEntity(chute);
 

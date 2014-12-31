@@ -206,7 +206,7 @@ public class EntityParachute extends Entity {
 		prevPosY = posY;
 		prevPosZ = posZ;
 
-		if (!worldObj.isRemote && !isDead) {
+//		if (!worldObj.isRemote && !isDead) {
 			// drop the chute when close to ground
 			if (Parachute.instance.isAutoDismount()) {
 				double offset = Math.abs(getMountedYOffset());
@@ -214,7 +214,7 @@ public class EntityParachute extends Entity {
 					return;
 				}
 			}
-		}
+//		}
 
 		// forward velocity for 'W' keypress
 		// moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
@@ -387,16 +387,14 @@ public class EntityParachute extends Entity {
 	{
 		boolean shouldDrop = false;
 
-		if (isNearGround(bp)) {
-			if (riddenByEntity != null) {
-				dropParachute(this);
-				if (!worldObj.isRemote) {
+		if (!worldObj.isRemote && !isDead) {
+			if (isNearGround(bp)) {
+				if (riddenByEntity != null) {
+					dropParachute(this);
 					setDead();
-				} else {
-					riddenByEntity = null;
 				}
+				shouldDrop = true;
 			}
-			shouldDrop = true;
 		}
 		return shouldDrop;
 	}
