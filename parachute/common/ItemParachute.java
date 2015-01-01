@@ -20,7 +20,6 @@
 package com.parachute.common;
 
 import com.parachute.client.RenderParachute;
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

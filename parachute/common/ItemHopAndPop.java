@@ -26,7 +26,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.item.Item;
-import cpw.mods.fml.common.FMLCommonHandler;
 
 public class ItemHopAndPop extends Item {
 

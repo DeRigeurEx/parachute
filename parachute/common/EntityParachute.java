@@ -21,7 +21,6 @@ package com.parachute.common;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-//import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -31,6 +30,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+//import net.minecraftforge.common.util.ForgeDirection;
 
 public class EntityParachute extends Entity {
 
@@ -119,12 +119,7 @@ public class EntityParachute extends Entity {
 	}
 
 	@Override
-	protected void entityInit()
-	{
-//		dataWatcher.addObject(17, 0); // time since last hit
-//		dataWatcher.addObject(18, 1); // forward direction
-//		dataWatcher.addObject(19, 0.0F); // damage taken | current damage
-	}
+	protected void entityInit() {}
 	
 	@Override
 	public boolean shouldDismountInWater(Entity rider)
@@ -216,13 +211,6 @@ public class EntityParachute extends Entity {
 			}
 			return;
 		}
-
-//		if (getTimeSinceHit() > 0) {
-//			setTimeSinceHit(getTimeSinceHit() - 1);
-//		}
-//		if (getDamageTaken() > 0.0F) {
-//			setDamageTaken(0.0F);
-//		}
 
 		// forward velocity
 		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
@@ -432,14 +420,20 @@ public class EntityParachute extends Entity {
 		return shouldDrop;
 	}
 
+	// Don't check for water - that is done by overriding shouldDismountInWater()
+	// Don't check for lava - you don't want to land there anyway
+	// Check for leaves and exclude - use LSHIFT, simulates getting caught in trees too!
 	public boolean isNearGround(double posx, double posy, double posz, double distance)
 	{
 		boolean result = false;
 		int x = MathHelper.floor_double(posx);
 		int y = MathHelper.floor_double(posy - distance);
 		int z = MathHelper.floor_double(posz);
+		Block block = worldObj.getBlock(x, y, z);
+		boolean isLeafBlock = (block == Blocks.leaves || block == Blocks.leaves2);
+//		boolean isSolid = worldObj.isSideSolid(x, y, z, ForgeDirection.UP);
 		
-		if (!worldObj.isAirBlock(x, y, z) /*&& worldObj.isSideSolid(x, y, z, ForgeDirection.UP)*/) {
+		if (!worldObj.isAirBlock(x, y, z) && !isLeafBlock) {
 			return true;
 		}
 		return result;
@@ -504,7 +498,7 @@ public class EntityParachute extends Entity {
 			double cosYaw = 2.0 * Math.cos((double) rotationYaw * d2r);
 			double sinYaw = 2.0 * Math.sin((double) rotationYaw * d2r);
 
-			for (int j = 0; (double) j < 1.0 + velocity * 5.0; ++j) {
+			for (int j = 0; (double) j < 1.0 + velocity * 15.0; ++j) {
 				double s1 = (double) (rand.nextFloat() * 2.0 - 1.0) * 0.2;
 				double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
 				double particleX = prevPosX - cosYaw * s1 * -0.1 + sinYaw * s2;
@@ -515,49 +509,10 @@ public class EntityParachute extends Entity {
 		}
 	}
 
-//	@Override
-//	public void updateRiderPosition()
-//	{
-//		if (riddenByEntity != null) {
-//			double cosYaw = Math.cos((double) rotationYaw * d2r) * 0.4D;
-//			double sinYaw = Math.sin((double) rotationYaw * d2r) * 0.4D;
-//			riddenByEntity.setPosition(posX + cosYaw, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ + sinYaw);
-//		}
-//	}
-
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {}
 
-//	public void setDamageTaken(float f)
-//	{
-//		dataWatcher.updateObject(19, f);
-//	}
-//
-//	public float getDamageTaken()
-//	{
-//		return dataWatcher.getWatchableObjectFloat(19);
-//	}
-//
-//	public void setTimeSinceHit(int time)
-//	{
-//		dataWatcher.updateObject(17, time);
-//	}
-//
-//	public int getTimeSinceHit()
-//	{
-//		return dataWatcher.getWatchableObjectInt(17);
-//	}
-//
-//	public void setForwardDirection(int forward)
-//	{
-//		dataWatcher.updateObject(18, forward);
-//	}
-//
-//	public int getForwardDirection()
-//	{
-//		return dataWatcher.getWatchableObjectInt(18);
-//	}
 }
