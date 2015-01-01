@@ -346,7 +346,7 @@ public class EntityParachute extends Entity {
 		MovingObjectPosition mop = worldObj.rayTraceBlocks(v1, v2, true);
 		if (mop != null) {
 			if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-				BlockPos blockpos = mop.func_178782_a();
+				BlockPos blockpos = mop.getBlockPos();
 				if (isLavaAt(blockpos)) {
 					return true;
 				}

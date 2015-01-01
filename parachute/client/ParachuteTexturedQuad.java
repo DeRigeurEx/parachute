@@ -67,9 +67,9 @@ public class ParachuteTexturedQuad {
 		worldrenderer.startDrawingQuads();
 
 		if (this.invertNormal) {
-			worldrenderer.func_178980_d(-((float) vec32.xCoord), -((float) vec32.yCoord), -((float) vec32.zCoord));
+			worldrenderer.setNormal(-((float) vec32.xCoord), -((float) vec32.yCoord), -((float) vec32.zCoord));
 		} else {
-			worldrenderer.func_178980_d((float) vec32.xCoord, (float) vec32.yCoord, (float) vec32.zCoord);
+			worldrenderer.setNormal((float) vec32.xCoord, (float) vec32.yCoord, (float) vec32.zCoord);
 		}
 
 		for (int i = 0; i < 4; ++i) {
