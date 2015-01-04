@@ -49,7 +49,6 @@ public class Parachute {
 	
 	public static final String modid = "parachutemod";
 	public static final String mcversion = "1.8.0";
-//	public static final String channel = modid;
 	public static final String name = "Parachute Mod";
 	public static final String parachuteName = "parachute";
 	public static final String ripcordName = "ripcord";

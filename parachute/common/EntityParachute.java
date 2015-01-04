@@ -19,6 +19,8 @@
 package com.parachute.common;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFlower;
+import net.minecraft.block.BlockGrass;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -81,7 +83,7 @@ public class EntityParachute extends Entity {
 		curLavaDistance = lavaDistance;
 		worldObj = world;
 		preventEntitySpawning = true;
-		setSize(2.0F, 1.0F);
+		setSize(1.0f, smallCanopy ? 3.0f : 4.0f);
 		motionFactor = 0.07D;
 		ascendMode = false;
 		ridingThermals = false;
@@ -125,7 +127,22 @@ public class EntityParachute extends Entity {
 		}
 		return null;
 	}
-
+	
+	@Override
+	public AxisAlignedBB getBoundingBox()
+    {
+        return getEntityBoundingBox();
+    }
+    
+    //
+	// skydiver should 'hang' when on the parachute and then
+	// 'pick up legs' when landing.
+	//
+	// FIXME: Unfortunately this stopped working around 1.6.x, movement packets
+	// are not sent to server if shouldRiderSit returns false. need for shouldRiderSit
+	// to return true in order to receive packets. need for it to return false for
+	// player to not be in the sitting position on the parachute.
+	//
 //	@Override
 //	public boolean shouldRiderSit()
 //	{
@@ -193,11 +210,11 @@ public class EntityParachute extends Entity {
 			return;
 		}
 
-		// forward velocity
-		double velocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
+		// initial forward velocity
+		double initialVelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 		
-		if (showContrails) {
-			showContrails(velocity);
+		if (showContrails && initialVelocity > 0.2) {
+			showContrails(initialVelocity);
 		}
 		
 		prevPosX = posX;
@@ -212,31 +229,31 @@ public class EntityParachute extends Entity {
 			}
 		}
 
-		// forward velocity for 'W' keypress
+		// forward velocity for 'W' key press
 		// moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
 		// when allowThermals is false forwardMovement is set to the constant 'forwardSpeed'
-		// and appied to motionX and motionZ
+		// and applied to motionX and motionZ
 		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
 			EntityLivingBase rider = (EntityLivingBase) riddenByEntity;
 			double forwardMovement = (allowThermals || lavaThermals) ? (double) rider.moveForward : forwardSpeed;
 			if (forwardMovement > 0.0) {
-				double f = rider.rotationYaw + -rider.moveStrafing * 90.0;
-				motionX += (-Math.sin((double) (f * d2r)) * motionFactor * 0.05) * forwardMovement;
-				motionZ += (Math.cos((double) (f * d2r)) * motionFactor * 0.05) * forwardMovement;
+				double yaw = rider.rotationYaw + -rider.moveStrafing * 90.0;
+				motionX += (-Math.sin((double) (yaw * d2r)) * motionFactor * 0.05) * forwardMovement;
+				motionZ += (Math.cos((double) (yaw * d2r)) * motionFactor * 0.05) * forwardMovement;
 			}
 		}
 
-		// forward velocity when drifting
-		double localvelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
+		// forward velocity after forwardMovement is applied
+		double adjustedVelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
-		if (localvelocity > 0.35D) {
-			double motionAdj = 0.35D / localvelocity;
+		if (adjustedVelocity > 0.35D) {
+			double motionAdj = 0.35D / adjustedVelocity;
 			motionX *= motionAdj;
 			motionZ *= motionAdj;
-			localvelocity = 0.35D;
+			adjustedVelocity = 0.35D;
 		}
 
-		if (localvelocity > velocity && motionFactor < 0.35D) {
+		if (adjustedVelocity > initialVelocity && motionFactor < 0.35D) {
 			motionFactor += (0.35D - motionFactor) / 35.0D;
 			if (motionFactor > 0.35D) {
 				motionFactor = 0.35D;
@@ -384,7 +401,8 @@ public class EntityParachute extends Entity {
 		boolean shouldDrop = false;
 
 		if (!worldObj.isRemote && !isDead) {
-			if (isNearGround(bp)) {
+//			if (isNearGround(bp)) {
+			if (checkForGround(bp)) {
 				if (riddenByEntity != null) {
 					dropParachute(this);
 					setDead();
@@ -403,11 +421,18 @@ public class EntityParachute extends Entity {
 	{
 		Block block = worldObj.getBlockState(bp).getBlock();
 		
-		boolean isAirBlock = worldObj.isAirBlock(bp);
+		boolean isAirBlock = (block == Blocks.air);
 		boolean isStairBlock = (block instanceof BlockStairs);
 		boolean isSolidBlock = worldObj.isSideSolid(bp, EnumFacing.UP);
 		
 		return (!isAirBlock && (isSolidBlock || isStairBlock));
+	}
+	
+	// alternate ground test, more like the original
+	public boolean checkForGround(BlockPos bp)
+	{
+		Block block = worldObj.getBlockState(bp).getBlock();
+		return (block != Blocks.air && !(block instanceof BlockFlower) && !(block instanceof BlockGrass));
 	}
 	
 	public void dropParachute(Entity parachute)
@@ -472,21 +497,19 @@ public class EntityParachute extends Entity {
 
 	public void showContrails(double velocity)
 	{
-		if (velocity >= 0.20) {
-			double cosYaw = 2.0 * Math.cos((double) rotationYaw * d2r);
-			double sinYaw = 2.0 * Math.sin((double) rotationYaw * d2r);
+		double cosYaw = 2.0 * Math.cos(rotationYaw * d2r);
+		double sinYaw = 2.0 * Math.sin(rotationYaw * d2r);
 
-			for (int j = 0; (double) j < 1.0 + velocity * 5.0; ++j) {
-				double s1 = (double) (rand.nextFloat() * 2.0 - 1.0) * 0.2;
-				double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
-				double particleX = prevPosX - cosYaw * s1 * -0.1 + sinYaw * s2;
-				double particleZ = prevPosZ - sinYaw * s1 * -0.1 - cosYaw * s2;
-				
-				worldObj.spawnParticle(EnumParticleTypes.CLOUD, particleX, posY - 0.25, particleZ, motionX, motionY, motionZ, new int[0]);
-			}
+		for (int j = 0; (double) j < 1.0 + velocity * 8.0; ++j) {
+			double s1 = (rand.nextDouble() * 2.0 - 1.0) * 0.2;
+			double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
+			double particleX = prevPosX - cosYaw * s1 * 0.8 + sinYaw * s2;
+			double particleZ = prevPosZ - sinYaw * s1 * 0.8 - cosYaw * s2;
+
+			worldObj.spawnParticle(EnumParticleTypes.CLOUD, particleX, posY - 0.25, particleZ, motionX, motionY, motionZ, new int[0]);
 		}
 	}
-
+	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {}
 
