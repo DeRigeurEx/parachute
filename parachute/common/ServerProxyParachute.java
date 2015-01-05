@@ -3,7 +3,6 @@ package com.parachute.common;
 import static com.parachute.common.Parachute.modid;
 
 public class ServerProxyParachute extends CommonProxyParachute {
-	// nothing to do on the server
 	@Override
 	public void preInit()
 	{

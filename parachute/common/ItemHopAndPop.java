@@ -36,7 +36,7 @@ public class ItemHopAndPop extends Item {
 		setMaxDamage(toolmaterial.getMaxUses());
 		maxStackSize = 4;
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
-		Parachute.instance.setType(Parachute.hopnpopName);
+		Parachute.instance.setType(CommonProxyParachute.hopnpopName);
 	}
 
 	@Override

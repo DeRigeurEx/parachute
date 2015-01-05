@@ -23,14 +23,14 @@ import com.parachute.common.CommonProxyParachute;
 import com.parachute.common.EntityParachute;
 import com.parachute.common.KeyPressTick;
 import static com.parachute.common.Parachute.aadItem;
-import static com.parachute.common.Parachute.aadName;
+//import static com.parachute.common.Parachute.aadName;
 import static com.parachute.common.Parachute.hopnpopItem;
-import static com.parachute.common.Parachute.hopnpopName;
+//import static com.parachute.common.Parachute.hopnpopName;
 import static com.parachute.common.Parachute.modid;
 import static com.parachute.common.Parachute.parachuteItem;
-import static com.parachute.common.Parachute.parachuteName;
+//import static com.parachute.common.Parachute.parachuteName;
 import static com.parachute.common.Parachute.ripcordItem;
-import static com.parachute.common.Parachute.ripcordName;
+//import static com.parachute.common.Parachute.ripcordName;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -74,31 +74,5 @@ public class ClientProxyParachute extends CommonProxyParachute {
 	{
 		info(modid + " ConbinedClient postInit is complete.");
 	}
-
-//	@Override
-//	public void registerRenderer()
-//	{
-//		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
-//		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute(rm));
-//	}
-//	
-//	@Override
-//	public void registerHandlers()
-//	{
-//		FMLCommonHandler.instance().bus().register(new KeyPressTick());
-//	}
-//	
-//	@Override
-//	public void registerResources()
-//	{
-//		ItemModelMesher mm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-//		mm.register(parachuteItem, 0, new ModelResourceLocation(modid + ":" + parachuteName, "inventory"));
-//		mm.register(ripcordItem, 0, new ModelResourceLocation(modid + ":" + ripcordName, "inventory"));
-//		mm.register(hopnpopItem, 0, new ModelResourceLocation(modid + ":" + hopnpopName, "inventory"));
-//		
-//		ModelBakery.addVariantName(aadItem, new String[] {modid + ":" + aadName, modid + ":" + aadName + "_off"});
-//		mm.register(aadItem, 1, new ModelResourceLocation(modid + ":" + aadName, "inventory"));
-//		mm.register(aadItem, 0, new ModelResourceLocation(modid + ":" + aadName + "_off", "inventory"));
-//	}
 
 }

@@ -20,7 +20,7 @@
 package com.parachute.common;
 
 import com.parachute.client.RenderParachute;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+//import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -40,7 +40,7 @@ public class ItemParachute extends ItemArmor {
 		setMaxDamage(armorMaterial.getDurability(armorType));
 		maxStackSize = 1;
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
-		Parachute.instance.setType(Parachute.parachuteName);
+		Parachute.instance.setType(CommonProxyParachute.parachuteName);
 	}
 
 	public boolean deployParachute(World world, EntityPlayer entityplayer)
