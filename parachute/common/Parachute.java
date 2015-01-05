@@ -79,7 +79,7 @@ public class Parachute {
 
 	@SidedProxy(
 			clientSide = "com.parachute.client.ClientProxyParachute",
-			serverSide = "com.parachute.common.CommonProxyParachute"
+			serverSide = "com.parachute.common.ServerProxyParachute"
 	)
 	public static CommonProxyParachute proxy;
 
@@ -154,10 +154,10 @@ public class Parachute {
 		// clamp the fallThreshold to a minimum of 2
 		fallThreshold = fallThreshold < 2.0 ? 2.0 : fallThreshold;
 
-		int renderIndex = 0;//proxy.addArmor(parachuteName.toLowerCase());
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, this, 80, 3, true);
 		
-		// create new items, set unlocalized names and register
+		// create the items, set unlocalized names and register
+		int renderIndex = 0;//proxy.addArmor(parachuteName.toLowerCase());
 		parachuteItem = (ItemParachute) (new ItemParachute(NYLON, renderIndex, armorType)).setUnlocalizedName(parachuteName);
 		GameRegistry.registerItem(parachuteItem, parachuteName);
 
@@ -170,7 +170,9 @@ public class Parachute {
 		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
 		GameRegistry.registerItem(hopnpopItem, hopnpopName);
 
-		PacketHandler.init();
+//		PacketHandler.init();
+		
+		proxy.preInit();
 	}
 
 	@EventHandler
@@ -192,14 +194,16 @@ public class Parachute {
 		GameRegistry.addRecipe(new ItemStack(aadItem, 1), new Object[] {
 			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', ripcordItem});
 
-		proxy.registerRenderer();
+//		proxy.registerRenderer();
 
-		proxy.registerHandlers();
+//		proxy.registerHandlers();
 
-		FMLCommonHandler.instance().bus().register(new AADTick());
-		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
+//		FMLCommonHandler.instance().bus().register(new AADTick());
+//		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
 		
-		proxy.registerResources();
+//		proxy.registerResources();
+		
+		proxy.Init();
 
 		instance = this;
 	}
@@ -207,7 +211,7 @@ public class Parachute {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		proxy.info("ParachuteMod initialization is complete.");
+		proxy.postInit();
 	}
 
 	public String getVersion()

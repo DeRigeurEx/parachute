@@ -43,7 +43,7 @@ public class ItemParachute extends ItemArmor {
 		Parachute.instance.setType(Parachute.parachuteName);
 	}
 
-	public void deployParachute(World world, EntityPlayer entityplayer)
+	public boolean deployParachute(World world, EntityPlayer entityplayer)
 	{
 		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
 		if (entityplayer != null && Parachute.isFalling(entityplayer) && entityplayer.ridingEntity == null) {
@@ -69,7 +69,10 @@ public class ItemParachute extends ItemArmor {
 					parachute.damageItem(damageAmount, entityplayer);
 				}
 			}
+		} else {
+			return false;
 		}
+		return true;
 	}
 
 	@Override

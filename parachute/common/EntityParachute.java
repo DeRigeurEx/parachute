@@ -21,6 +21,7 @@ package com.parachute.common;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockGrass;
+import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -57,7 +58,7 @@ public class EntityParachute extends Entity {
 	final static double drift = 0.004;
 	final static double ascend = drift * -10.0;
 
-	final static int modeDrift = 0; // key up
+	final static int modeDrift = 0;  // key up
 	final static int modeAscend = 1; // key down
 
 	final static double forwardSpeed = 0.75;
@@ -402,7 +403,7 @@ public class EntityParachute extends Entity {
 
 		if (!worldObj.isRemote && !isDead) {
 //			if (isNearGround(bp)) {
-			if (checkForGround(bp)) {
+			if (checkForGroundProximity(bp)) {
 				if (riddenByEntity != null) {
 					dropParachute(this);
 					setDead();
@@ -429,10 +430,11 @@ public class EntityParachute extends Entity {
 	}
 	
 	// alternate ground test, more like the original
-	public boolean checkForGround(BlockPos bp)
+	// add negative test for leaves
+	public boolean checkForGroundProximity(BlockPos bp)
 	{
 		Block block = worldObj.getBlockState(bp).getBlock();
-		return (block != Blocks.air && !(block instanceof BlockFlower) && !(block instanceof BlockGrass));
+		return (block != Blocks.air && !(block instanceof BlockFlower) && !(block instanceof BlockGrass) && !(block instanceof BlockLeaves));
 	}
 	
 	public void dropParachute(Entity parachute)
@@ -466,9 +468,9 @@ public class EntityParachute extends Entity {
 		double deltaX = rmin + (rmax - rmin) * rand.nextDouble();
 		double deltaY = rmin + 0.2 * rand.nextDouble();
 		double deltaZ = rmin + (rmax - rmin) * rand.nextDouble();
-		double deltaPos = rand.nextDouble();
+		double deltaPos = rmin + 0.9 * rand.nextDouble();
 
-		if (deltaPos >= 0.5) {
+		if (deltaPos >= 0.20) {
 			deltaPos = MathHelper.sqrt_double(deltaPos);
 			deltaX /= deltaPos;
 			deltaY /= deltaPos;

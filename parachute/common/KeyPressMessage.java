@@ -59,9 +59,9 @@ public class KeyPressMessage implements IMessage, IMessageHandler<KeyPressMessag
 	}
 
 	@Override
-	public IMessage onMessage(KeyPressMessage msg, MessageContext mc)
+	public IMessage onMessage(KeyPressMessage msg, MessageContext ctx)
 	{
-		EntityPlayer entityPlayer = mc.getServerHandler().playerEntity;
+		EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
 		if (entityPlayer != null) {
 			if (msg.keyCode == Keyboard.KEY_SPACE) {
 				EntityParachute.setAscendMode(msg.keyPressed);
