@@ -120,7 +120,7 @@ public class ParachuteCommonProxy {
 	public void readConfigInfo(File configFile)
 	{
 		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
-				+ " For Minecraft Version " + Parachute.mcversion + "\n";
+				+ " For Minecraft Version " + Parachute.modversion + "\n";
 		String usageComment = "set to true for hop-n-pop single use (false)";
 		String heightComment = "0 (zero) disables altitude limiting (256)";
 		String thermalComment = "true|false enable/disable thermals (true)";

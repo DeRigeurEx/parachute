@@ -28,12 +28,12 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
 
-@Mod( modid = Parachute.modid, name = Parachute.name, version = Parachute.mcversion )
+@Mod( modid = Parachute.modid, name = Parachute.name, version = Parachute.modversion )
 
 public class Parachute {
 	
 	public static final String modid = "parachutemod";
-	public static final String mcversion = "1.8.0";
+	public static final String modversion = "3.0.3";
 	public static final String name = "Parachute Mod";
 	
 	private File configFile;
@@ -79,7 +79,7 @@ public class Parachute {
 	
 	public String getVersion()
 	{
-		return Parachute.mcversion;
+		return Parachute.modversion;
 	}
 
 }
