@@ -20,6 +20,6 @@ public class ParachuteServerProxy extends ParachuteCommonProxy {
 	@Override
 	public void postInit()
 	{
-		info(modid + " DedicatedServer initialization is complete.");
+		info(modid + " DedicatedServer postInit is complete.");
 	}
 }

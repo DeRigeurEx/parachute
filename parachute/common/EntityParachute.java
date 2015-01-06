@@ -225,7 +225,9 @@ public class EntityParachute extends Entity {
 		// drop the chute when close to ground
 		if (Parachute.proxy.isAutoDismount()) {
 			double offset = Math.abs(getMountedYOffset());
-			if (checkShouldDropChute(new BlockPos(this).subtract(new Vec3i(0.0, offset + 1.0, 0.0)))) {
+			// found out the hard way that BlockPos().subtract() is client only,
+			// using BlockPos().add() with negative value.
+			if (checkShouldDropChute(new BlockPos(this).add(0.0, -(offset + 1.0), 0.0))) {
 				return;
 			}
 		}
