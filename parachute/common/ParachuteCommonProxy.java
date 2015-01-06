@@ -52,7 +52,7 @@ public class ParachuteCommonProxy {
 	public static final String ripcordName = "ripcord";
 	public static final String aadName = "auto_activation_device";
 	
-	private String type = ParachuteCommonProxy.parachuteName; // defaults to the normal parachute
+	private String type = parachuteName; // defaults to the normal parachute
 	private boolean singleUse = false; // applies to the hop and pop chute only
 	private int heightLimit = 256;
 	private String chuteColor = "random";
@@ -278,7 +278,7 @@ public class ParachuteCommonProxy {
 	
 	public static boolean playerIsWearingParachute(EntityPlayer player)
 	{
-		ItemStack stack = player == null ? null : player.getCurrentArmor(ParachuteCommonProxy.armorSlot);
+		ItemStack stack = player == null ? null : player.getCurrentArmor(armorSlot);
 		if (stack != null) {
 			Item item = stack.getItem();
 			if (item != null && item instanceof ItemParachute) {

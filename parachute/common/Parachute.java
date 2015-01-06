@@ -20,16 +20,12 @@
 package com.parachute.common;
 
 import java.io.File;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraft.entity.player.EntityPlayer;
-//import net.minecraftforge.common.config.Configuration;
 
 
 @Mod( modid = Parachute.modid, name = Parachute.name, version = Parachute.mcversion )
@@ -86,21 +82,4 @@ public class Parachute {
 		return Parachute.mcversion;
 	}
 
-//	public static boolean playerIsWearingParachute(EntityPlayer player)
-//	{
-//		ItemStack stack = player == null ? null : player.getCurrentArmor(ParachuteCommonProxy.armorSlot);
-//		if (stack != null) {
-//			Item item = stack.getItem();
-//			if (item != null && item instanceof ItemParachute) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//	public static boolean isFalling(EntityPlayer entity)
-//	{
-//		return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
-//	}
-	
 }
