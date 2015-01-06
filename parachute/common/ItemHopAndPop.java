@@ -36,7 +36,7 @@ public class ItemHopAndPop extends Item {
 		setMaxDamage(toolmaterial.getMaxUses());
 		maxStackSize = 4;
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
-		Parachute.instance.setType(CommonProxyParachute.hopnpopName);
+		Parachute.proxy.setType(ParachuteCommonProxy.hopnpopName);
 	}
 
 	@Override
@@ -48,14 +48,14 @@ public class ItemHopAndPop extends Item {
 	public ItemStack deployParachute(ItemStack itemstack, World world, EntityPlayer entityplayer)
 	{
 		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
-		if (entityplayer != null && Parachute.isFalling(entityplayer) && entityplayer.ridingEntity == null) {
+		if (entityplayer != null && ParachuteCommonProxy.isFalling(entityplayer) && entityplayer.ridingEntity == null) {
 			float offset = 2.5F; // small parachute only
 
 			EntityParachute chute = new EntityParachute(world, entityplayer.posX, entityplayer.posY + offset, entityplayer.posZ);
 			chute.playSound("step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
 			chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
 			if (world.isRemote) {
-				RenderParachute.setParachuteColor(Parachute.instance.getChuteColor());
+				RenderParachute.setParachuteColor(Parachute.proxy.getChuteColor());
 			} else  {
 				world.spawnEntityInWorld(chute);
 			}
@@ -63,7 +63,7 @@ public class ItemHopAndPop extends Item {
 
 			if (!entityplayer.capabilities.isCreativeMode) {
 				if (itemstack != null) {
-					itemstack.damageItem(Parachute.instance.getHopAndPopDamageAmount(), entityplayer);
+					itemstack.damageItem(Parachute.proxy.getHopAndPopDamageAmount(), entityplayer);
 				}
 			}
 		}

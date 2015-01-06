@@ -39,8 +39,8 @@ public class ItemRipCord extends Item {
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
 	{
-		if (Parachute.playerIsWearingParachute(entityPlayer)) {
-			ItemStack itemstack = entityPlayer.getCurrentArmor(Parachute.armorSlot);
+		if (ParachuteCommonProxy.playerIsWearingParachute(entityPlayer)) {
+			ItemStack itemstack = entityPlayer.getCurrentArmor(ParachuteCommonProxy.armorSlot);
 			if (((ItemParachute) itemstack.getItem()).deployParachute(world, entityPlayer)) {
 				if (!entityPlayer.capabilities.isCreativeMode) {
 					itemStack.damageItem(1, entityPlayer);

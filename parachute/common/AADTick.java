@@ -39,8 +39,8 @@ public class AADTick {
 	// and deactivate the AAD, consider it a one shot, you must re-activate it.
 	private void onPlayerTick(EntityPlayer player)
 	{
-		if (Parachute.playerIsWearingParachute(player)) {
-			ItemStack parachute = player.getCurrentArmor(Parachute.armorSlot);
+		if (ParachuteCommonProxy.playerIsWearingParachute(player)) {
+			ItemStack parachute = player.getCurrentArmor(ParachuteCommonProxy.armorSlot);
 			ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
 			if (aad != null) {
 				boolean autoAltitudeReached = ItemAutoActivateDevice.getAutoActivateAltitude(player);

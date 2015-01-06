@@ -34,7 +34,7 @@ public class ModelParachute extends ModelBase {
 
 	public ModelParachute()
 	{
-		smallCanopy = Parachute.instance.isSmallCanopy();
+		smallCanopy = Parachute.proxy.isSmallCanopy();
 
 		// small canopy sections
 		sections[0] = new ParachuteModelRenderer(0, 0);

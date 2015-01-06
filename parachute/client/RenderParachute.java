@@ -35,7 +35,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderParachute extends Render {
 
-	private static String curColor = Parachute.instance.getChuteColor();
+	private static String curColor = Parachute.proxy.getChuteColor();
 	protected static ModelBase modelParachute = new ModelParachute();
 	private static ResourceLocation parachuteTexture = null;
 	private static final Random rand = new Random(System.currentTimeMillis());
@@ -60,7 +60,7 @@ public class RenderParachute extends Render {
 
 		if (entityparachute.riddenByEntity != null) {
 			EntityPlayer rider = (EntityPlayer) entityparachute.riddenByEntity;
-			if (Parachute.instance.isSmallCanopy()) {
+			if (Parachute.proxy.isSmallCanopy()) {
 				renderSmallParachuteCords(rider, center);
 			} else {
 				renderLargeParachuteCords(rider, center);

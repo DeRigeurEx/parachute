@@ -36,8 +36,8 @@ public class ItemAutoActivateDevice extends Item {
 
 	// initial value is false (inactive) set in ctor
 	public static boolean active;
-	private static final double fallThreshold = Parachute.instance.getFallThreshold();
-	private static final double altitude = Parachute.instance.getAADAltitude();
+	private static final double fallThreshold = Parachute.proxy.getFallThreshold();
+	private static final double altitude = Parachute.proxy.getAADAltitude();
 
 	public ItemAutoActivateDevice()
 	{
@@ -98,9 +98,9 @@ public class ItemAutoActivateDevice extends Item {
 	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining)
 	{
 		if (active) {
-			return new ModelResourceLocation(modid + ":" + CommonProxyParachute.aadName, "inventory");
+			return new ModelResourceLocation(modid + ":" + ParachuteCommonProxy.aadName, "inventory");
 		} else {
-			return new ModelResourceLocation(modid + ":" + CommonProxyParachute.aadName + "_off", "inventory");
+			return new ModelResourceLocation(modid + ":" + ParachuteCommonProxy.aadName + "_off", "inventory");
 		}
 	}
 	

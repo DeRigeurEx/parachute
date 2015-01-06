@@ -72,14 +72,14 @@ public class EntityParachute extends Entity {
 	{
 		super(world);
 
-		smallCanopy = Parachute.instance.isSmallCanopy();
-		weatherAffectsDrift = Parachute.instance.getWeatherAffectsDrift();
-		allowTurbulence = Parachute.instance.getAllowturbulence();
-		showContrails = Parachute.instance.getShowContrails();
-		lavaDistance = Parachute.instance.getMinLavaDistance();
-		allowThermals = Parachute.instance.getAllowThermals();
-		maxAltitude = Parachute.instance.getMaxAltitude();
-		lavaThermals = Parachute.instance.getAllowLavaThermals();
+		smallCanopy = Parachute.proxy.isSmallCanopy();
+		weatherAffectsDrift = Parachute.proxy.getWeatherAffectsDrift();
+		allowTurbulence = Parachute.proxy.getAllowturbulence();
+		showContrails = Parachute.proxy.getShowContrails();
+		lavaDistance = Parachute.proxy.getMinLavaDistance();
+		allowThermals = Parachute.proxy.getAllowThermals();
+		maxAltitude = Parachute.proxy.getMaxAltitude();
+		lavaThermals = Parachute.proxy.getAllowLavaThermals();
 		
 		curLavaDistance = lavaDistance;
 		worldObj = world;
@@ -223,7 +223,7 @@ public class EntityParachute extends Entity {
 		prevPosZ = posZ;
 
 		// drop the chute when close to ground
-		if (Parachute.instance.isAutoDismount()) {
+		if (Parachute.proxy.isAutoDismount()) {
 			double offset = Math.abs(getMountedYOffset());
 			if (checkShouldDropChute(new BlockPos(this).subtract(new Vec3i(0.0, offset + 1.0, 0.0)))) {
 				return;
