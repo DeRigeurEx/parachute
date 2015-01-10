@@ -72,7 +72,7 @@ public class ParachuteCommonProxy {
 	{
 		readConfigInfo(Parachute.instance.getConfigFile());
 		
-		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, Parachute.instance, 80, 3, true);
+		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, Parachute.instance, 80, 20, true);
 		
 		final int renderIndex = 0;
 		parachuteItem = (ItemParachute) (new ItemParachute(NYLON, renderIndex, armorType)).setUnlocalizedName(parachuteName);

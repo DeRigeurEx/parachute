@@ -22,14 +22,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockGrass;
 import net.minecraft.block.BlockLeaves;
-import net.minecraft.block.BlockStairs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -83,7 +81,7 @@ public class EntityParachute extends Entity {
 		curLavaDistance = lavaDistance;
 		worldObj = world;
 		preventEntitySpawning = true;
-		setSize(1.0f, smallCanopy ? 3.0f : 4.0f);
+		setSize(smallCanopy ? 3.0f : 4.0f, 0.0625f);
 		motionFactor = 0.07D;
 		ascendMode = false;
 		ridingThermals = false;
@@ -146,17 +144,11 @@ public class EntityParachute extends Entity {
 //	@Override
 //	public boolean shouldRiderSit()
 //	{
-//		return isNearGround(new BlockPos(this).subtract(new Vec3i(0.0, Math.abs(getMountedYOffset() + 1.0), 0.0)));
+//		return isNearGround(new BlockPos(this).add(new Vec3i(0.0, -(Math.abs(getMountedYOffset()) + 1.0), 0.0)));
 //	}
 	
 	@Override
 	public boolean shouldDismountInWater(Entity rider)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean canBePushed()
 	{
 		return true;
 	}
@@ -174,7 +166,7 @@ public class EntityParachute extends Entity {
 	}
 
 	@Override
-	public void func_180426_a(double x, double y, double z, float yaw, float pitch, int inc, boolean unused)
+	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int inc, boolean unused)
 	{
 		double deltaX = x - posX;
 		double deltaY = y - posY;
@@ -203,8 +195,9 @@ public class EntityParachute extends Entity {
 	public void onUpdate()
 	{
 		super.onUpdate();
-
-		// the player has probably been killed or pressed LSHIFT
+		
+		// the player has pressed LSHIFT or been killed,
+		// this is necessary for LSHIFT to kill the parachute
 		if (riddenByEntity == null && !worldObj.isRemote) {
 			setDead();
 			return;
@@ -223,11 +216,15 @@ public class EntityParachute extends Entity {
 
 		// drop the chute when close to ground
 		if (Parachute.proxy.isAutoDismount()) {
-			double offset = Math.abs(getMountedYOffset());
-			// found out the hard way that BlockPos().subtract() is client only,
-			// using BlockPos().add() with negative value.
-			if (checkShouldDropChute(new BlockPos(this).add(0.0, -(offset + 1.0), 0.0))) {
-				return;
+			if (riddenByEntity != null) {
+				BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
+				if (checkForGroundProximity(bp)) {
+					Parachute.proxy.info(bp.toString());
+					Parachute.proxy.info(this.toString());
+					dropParachute(this);
+					setDead();
+					return;
+				}
 			}
 		}
 
@@ -237,11 +234,11 @@ public class EntityParachute extends Entity {
 		// and applied to motionX and motionZ
 		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
 			EntityLivingBase rider = (EntityLivingBase) riddenByEntity;
-			double forwardMovement = (allowThermals || lavaThermals) ? (double) rider.moveForward : forwardSpeed;
+			double forwardMovement = (allowThermals || lavaThermals) ? rider.moveForward : forwardSpeed;
 			if (forwardMovement > 0.0) {
 				double yaw = rider.rotationYaw + -rider.moveStrafing * 90.0;
-				motionX += (-Math.sin((double) (yaw * d2r)) * motionFactor * 0.05) * forwardMovement;
-				motionZ += (Math.cos((double) (yaw * d2r)) * motionFactor * 0.05) * forwardMovement;
+				motionX += (-Math.sin((yaw * d2r)) * motionFactor * 0.05) * forwardMovement;
+				motionZ += (Math.cos((yaw * d2r)) * motionFactor * 0.05) * forwardMovement;
 			}
 		}
 
@@ -282,10 +279,10 @@ public class EntityParachute extends Entity {
 		double delta_Z = prevPosZ - posZ;
 
 		if (delta_X * delta_X + delta_Z * delta_Z > 0.001D) {
-			yaw = (float) ((Math.atan2(delta_Z, delta_X) * r2d));
+			yaw = ((Math.atan2(delta_Z, delta_X) * r2d));
 		}
 
-		double adjustedYaw = MathHelper.wrapAngleTo180_double(yaw - (double) rotationYaw);
+		double adjustedYaw = MathHelper.wrapAngleTo180_double(yaw - rotationYaw);
 
 		if (adjustedYaw > 20.0D) {
 			adjustedYaw = 20.0D;
@@ -302,11 +299,9 @@ public class EntityParachute extends Entity {
 		}
 
 		// something bad happened, somehow the skydiver was killed.
-		if (riddenByEntity != null && riddenByEntity.isDead) {
+		if (!worldObj.isRemote && riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
-			if (!worldObj.isRemote) {
-				setDead();
-			}
+			setDead();
 		}
 
 	}
@@ -377,10 +372,9 @@ public class EntityParachute extends Entity {
 	public double doLavaThermals()
 	{
 		double thermals = drift;
-		double offset = Math.abs(getMountedYOffset());
 		final double inc = 0.5;
 
-		BlockPos blockPos = new BlockPos(posX, posY - offset - maxThermalRise, posZ);
+		BlockPos blockPos = new BlockPos(posX, posY - Math.abs(getMountedYOffset()) - maxThermalRise, posZ);
 
 		if (isLavaBelowInRange(blockPos)) {
 			ridingThermals = true;
@@ -398,44 +392,27 @@ public class EntityParachute extends Entity {
 		return thermals;
 	}
 
-	protected boolean checkShouldDropChute(BlockPos bp)
-	{
-		boolean shouldDrop = false;
-
-		if (!worldObj.isRemote && !isDead) {
-//			if (isNearGround(bp)) {
-			if (checkForGroundProximity(bp)) {
-				if (riddenByEntity != null) {
-					dropParachute(this);
-					setDead();
-				}
-				shouldDrop = true;
-			}
-		}
-		return shouldDrop;
-	}
-
-	// Don't check for water - that is done by overriding shouldDismountInWater()
-	// Don't check for lava - you don't want to land there anyway
-	// Don't check for leaves - use LSHIFT, simulates getting caught in trees too!
-	// Do check for stair blocks. isSideSolid doesn't seem to catch those.
-	public boolean isNearGround(BlockPos bp)
-	{
-		Block block = worldObj.getBlockState(bp).getBlock();
-		
-		boolean isAirBlock = (block == Blocks.air);
-		boolean isStairBlock = (block instanceof BlockStairs);
-		boolean isSolidBlock = worldObj.isSideSolid(bp, EnumFacing.UP);
-		
-		return (!isAirBlock && (isSolidBlock || isStairBlock));
-	}
+//	protected boolean checkShouldDropChute(BlockPos bp)
+//	{
+//		if (!worldObj.isRemote && !isDead) {
+//			if (checkForGroundProximity(bp)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
-	// alternate ground test, more like the original
-	// add negative test for leaves
 	public boolean checkForGroundProximity(BlockPos bp)
 	{
-		Block block = worldObj.getBlockState(bp).getBlock();
-		return (block != Blocks.air && !(block instanceof BlockFlower) && !(block instanceof BlockGrass) && !(block instanceof BlockLeaves));
+		boolean result = false;
+		
+		if (!worldObj.isRemote && !isDead) {
+			Block block = worldObj.getBlockState(bp).getBlock();
+			boolean isAir = (block == Blocks.air);
+			boolean isVegetation = (block instanceof BlockFlower) && (block instanceof BlockGrass) && (block instanceof BlockLeaves);
+			result = (!isAir && !isVegetation);
+		}
+		return result;
 	}
 	
 	public void dropParachute(Entity parachute)
@@ -461,7 +438,7 @@ public class EntityParachute extends Entity {
 			parachute.riddenByEntity = this;
 		}
 	}
-
+	
 	public void applyTurbulence(boolean roughWeather)
 	{
 		double rmin = 0.1;
@@ -505,7 +482,7 @@ public class EntityParachute extends Entity {
 
 		for (int j = 0; (double) j < 1.0 + velocity * 8.0; ++j) {
 			double s1 = (rand.nextDouble() * 2.0 - 1.0) * 0.2;
-			double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
+			double s2 = (double)(rand.nextInt(2) * 2 - 1) * 0.7;
 			double particleX = prevPosX - cosYaw * s1 * 0.8 + sinYaw * s2;
 			double particleZ = prevPosZ - sinYaw * s1 * 0.8 - cosYaw * s2;
 
@@ -518,5 +495,11 @@ public class EntityParachute extends Entity {
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {}
+	
+	@Override
+	public String toString()
+	{
+		return String.format("%s: {x=%.1f, y=%.1f, z=%.1f}, {yaw=%.1f, pitch=%.1f}", getClass().getSimpleName(), posX, posY, posZ, rotationYaw, rotationPitch);
+	}
 
 }
