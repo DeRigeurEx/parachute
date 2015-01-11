@@ -32,6 +32,7 @@ import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -52,6 +53,7 @@ public class ParachuteClientProxy extends ParachuteCommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute(rm));
 		
 		FMLCommonHandler.instance().bus().register(new KeyPressTick());
+		MinecraftForge.EVENT_BUS.register(new AltitudeDisplay());
 		
 		ItemModelMesher mm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 		mm.register(parachuteItem, 0, new ModelResourceLocation(modid + ":" + parachuteName, "inventory"));

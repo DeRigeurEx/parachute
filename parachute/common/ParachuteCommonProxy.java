@@ -292,4 +292,9 @@ public class ParachuteCommonProxy {
 	{
 		return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
 	}
+	
+	public static boolean onParachute(EntityPlayer entity)
+	{
+		return entity.isRiding();
+	}
 }

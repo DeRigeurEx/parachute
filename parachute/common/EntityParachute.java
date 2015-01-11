@@ -18,6 +18,7 @@
 //
 package com.parachute.common;
 
+import com.parachute.client.AltitudeDisplay;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockGrass;
@@ -213,6 +214,10 @@ public class EntityParachute extends Entity {
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
+		
+		if (!worldObj.isRemote) {
+			AltitudeDisplay.setAltitudeString(String.format("%.1f", posY));
+		}
 
 		// drop the chute when close to ground
 		if (Parachute.proxy.isAutoDismount()) {
