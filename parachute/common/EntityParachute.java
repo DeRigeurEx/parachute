@@ -70,14 +70,14 @@ public class EntityParachute extends Entity {
 	{
 		super(world);
 
-		smallCanopy = Parachute.proxy.isSmallCanopy();
-		weatherAffectsDrift = Parachute.proxy.getWeatherAffectsDrift();
-		allowTurbulence = Parachute.proxy.getAllowturbulence();
-		showContrails = Parachute.proxy.getShowContrails();
-		lavaDistance = Parachute.proxy.getMinLavaDistance();
-		allowThermals = Parachute.proxy.getAllowThermals();
-		maxAltitude = Parachute.proxy.getMaxAltitude();
-		lavaThermals = Parachute.proxy.getAllowLavaThermals();
+		smallCanopy = ConfigHandler.isSmallCanopy();
+		weatherAffectsDrift = ConfigHandler.getWeatherAffectsDrift();
+		allowTurbulence = ConfigHandler.getAllowturbulence();
+		showContrails = ConfigHandler.getShowContrails();
+		lavaDistance = ConfigHandler.getMinLavaDistance();
+		allowThermals = ConfigHandler.getAllowThermals();
+		maxAltitude = ConfigHandler.getMaxAltitude();
+		lavaThermals = ConfigHandler.getAllowLavaThermals();
 		
 		curLavaDistance = lavaDistance;
 		worldObj = world;
@@ -200,6 +200,7 @@ public class EntityParachute extends Entity {
 		// the player has pressed LSHIFT or been killed,
 		// this is necessary for LSHIFT to kill the parachute
 		if (riddenByEntity == null && !worldObj.isRemote) {
+			ParachuteCommonProxy.setDeployed(false);
 			setDead();
 			return;
 		}
@@ -220,13 +221,14 @@ public class EntityParachute extends Entity {
 		}
 
 		// drop the chute when close to ground
-		if (Parachute.proxy.isAutoDismount()) {
+		if (ConfigHandler.isAutoDismount()) {
 			if (riddenByEntity != null) {
 				BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
 				if (checkForGroundProximity(bp)) {
 					Parachute.proxy.info(bp.toString());
 					Parachute.proxy.info(this.toString());
 					dropParachute(this);
+					ParachuteCommonProxy.setDeployed(false);
 					setDead();
 					return;
 				}
@@ -306,6 +308,7 @@ public class EntityParachute extends Entity {
 		// something bad happened, somehow the skydiver was killed.
 		if (!worldObj.isRemote && riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
+			ParachuteCommonProxy.setDeployed(false);
 			setDead();
 		}
 
@@ -506,5 +509,5 @@ public class EntityParachute extends Entity {
 	{
 		return String.format("%s: {x=%.1f, y=%.1f, z=%.1f}, {yaw=%.1f, pitch=%.1f}", getClass().getSimpleName(), posX, posY, posZ, rotationYaw, rotationPitch);
 	}
-
+	
 }

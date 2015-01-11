@@ -55,7 +55,7 @@ public class Parachute {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		configFile = event.getSuggestedConfigurationFile();
+		ConfigHandler.startConfig(event);
 		instance = this;
 		proxy.preInit();
 	}

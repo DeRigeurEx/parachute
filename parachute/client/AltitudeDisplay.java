@@ -32,7 +32,7 @@ public class AltitudeDisplay {
     private int screenX;
 	private int screenY;
 	private final int color1 = -3407872;  // 0xffcc0000 red
-	private final int color2 = -16724992; // 0x ff00cc00 green
+	private final int color2 = -16724992; // 0xff00cc00 green
 	
 	public AltitudeDisplay()
 	{
@@ -46,7 +46,7 @@ public class AltitudeDisplay {
 	{
 		ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		screenX = (sr.getScaledWidth() / 2) + 10;
-        screenY = sr.getScaledHeight() - 40;
+        screenY = sr.getScaledHeight() - 38;
 	}
 	
 	@SubscribeEvent()

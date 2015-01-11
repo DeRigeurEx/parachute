@@ -19,6 +19,7 @@
 //
 package com.parachute.client;
 
+import com.parachute.common.ConfigHandler;
 import com.parachute.common.EntityParachute;
 import com.parachute.common.Parachute;
 import java.util.Random;
@@ -35,7 +36,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderParachute extends Render {
 
-	private static String curColor = Parachute.proxy.getChuteColor();
+	private static String curColor = ConfigHandler.getChuteColor();
 	protected static ModelBase modelParachute = new ModelParachute();
 	private static ResourceLocation parachuteTexture = null;
 	private static final Random rand = new Random(System.currentTimeMillis());
@@ -60,7 +61,7 @@ public class RenderParachute extends Render {
 
 		if (entityparachute.riddenByEntity != null) {
 			EntityPlayer rider = (EntityPlayer) entityparachute.riddenByEntity;
-			if (Parachute.proxy.isSmallCanopy()) {
+			if (ConfigHandler.isSmallCanopy()) {
 				renderSmallParachuteCords(rider, center);
 			} else {
 				renderLargeParachuteCords(rider, center);

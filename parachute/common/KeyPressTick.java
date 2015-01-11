@@ -36,7 +36,7 @@ public class KeyPressTick {
 				EntityPlayer player = event.player;
 				if (player != null) {
 					boolean keyPressed = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-					PacketHandler.INSTANCE.sendToServer(new KeyPressMessage(Keyboard.KEY_SPACE, keyPressed));
+					PacketHandler.network.sendToServer(new KeyPressMessage(Keyboard.KEY_SPACE, keyPressed));
 				}
 			}
 		}

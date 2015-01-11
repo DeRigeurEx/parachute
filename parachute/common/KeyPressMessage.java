@@ -28,7 +28,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 
 
-public class KeyPressMessage implements IMessage, IMessageHandler<KeyPressMessage, IMessage> {
+public class KeyPressMessage implements IMessage {
 	
 	private boolean keyPressed;
 	private int keyCode;
@@ -44,6 +44,8 @@ public class KeyPressMessage implements IMessage, IMessageHandler<KeyPressMessag
 		this.keyPressed = keyPressed;
 	}
 
+	// the server does not respond with any messages so this isn't
+	// being used; I included the method body for future possibilities.
 	@Override
 	public void fromBytes(ByteBuf bb)
 	{
@@ -51,23 +53,27 @@ public class KeyPressMessage implements IMessage, IMessageHandler<KeyPressMessag
 		keyPressed = bb.readBoolean();
 	}
 
+	// write the data to the stream
 	@Override
 	public void toBytes(ByteBuf bb)
 	{
 		bb.writeInt(keyCode);
 		bb.writeBoolean(keyPressed);
 	}
+	
+	public static class Handler implements IMessageHandler<KeyPressMessage, IMessage> {
 
-	@Override
-	public IMessage onMessage(KeyPressMessage msg, MessageContext ctx)
-	{
-		EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
-		if (entityPlayer != null) {
-			if (msg.keyCode == Keyboard.KEY_SPACE) {
-				EntityParachute.setAscendMode(msg.keyPressed);
+		@Override
+		public IMessage onMessage(KeyPressMessage msg, MessageContext ctx)
+		{
+			EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
+			if (entityPlayer != null) {
+				if (msg.keyCode == Keyboard.KEY_SPACE) {
+					EntityParachute.setAscendMode(msg.keyPressed);
+				}
 			}
+			return null;
 		}
-		return null;
 	}
 	
 }

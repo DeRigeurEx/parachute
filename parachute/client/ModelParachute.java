@@ -19,9 +19,10 @@
 //
 package com.parachute.client;
 
+import com.parachute.common.ConfigHandler;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.entity.Entity;
-import com.parachute.common.Parachute;
+//import com.parachute.common.Parachute;
 
 public class ModelParachute extends ModelBase {
 
@@ -34,7 +35,7 @@ public class ModelParachute extends ModelBase {
 
 	public ModelParachute()
 	{
-		smallCanopy = Parachute.proxy.isSmallCanopy();
+		smallCanopy = ConfigHandler.isSmallCanopy();
 
 		// small canopy sections
 		sections[0] = new ParachuteModelRenderer(0, 0);

@@ -20,7 +20,6 @@
 package com.parachute.common;
 
 import com.parachute.client.RenderParachute;
-//import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -40,7 +39,7 @@ public class ItemParachute extends ItemArmor {
 		setMaxDamage(armorMaterial.getDurability(armorType));
 		maxStackSize = 1;
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
-		Parachute.proxy.setType(ParachuteCommonProxy.parachuteName);
+		ConfigHandler.setType(ParachuteCommonProxy.parachuteName);
 	}
 
 	public boolean deployParachute(World world, EntityPlayer entityplayer)
@@ -48,7 +47,7 @@ public class ItemParachute extends ItemArmor {
 		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
 		if (entityplayer != null && ParachuteCommonProxy.isFalling(entityplayer) && entityplayer.ridingEntity == null) {
 			float offset;
-			if (Parachute.proxy.isSmallCanopy()) {
+			if (ConfigHandler.isSmallCanopy()) {
 				offset = 2.5F;  // small canopy
 			} else {
 				offset = 3.5F;  // large canopy
@@ -57,11 +56,12 @@ public class ItemParachute extends ItemArmor {
 			chute.playSound("step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
 			chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
 			if (world.isRemote) {
-				RenderParachute.setParachuteColor(Parachute.proxy.getChuteColor());
+				RenderParachute.setParachuteColor(ConfigHandler.getChuteColor());
 			} else {
 				world.spawnEntityInWorld(chute);
 			}
 			entityplayer.mountEntity(chute);
+			ParachuteCommonProxy.setDeployed(true);
 
 			if (!entityplayer.capabilities.isCreativeMode) {
 				ItemStack parachute = entityplayer.inventory.armorItemInSlot(ParachuteCommonProxy.armorSlot);
