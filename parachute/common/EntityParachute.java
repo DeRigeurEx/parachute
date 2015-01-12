@@ -14,7 +14,7 @@
 //  =====================================================================
 //
 //
-// Copyright 2011-2014 Michael Sheppard (crackedEgg)
+// Copyright 2011-2015 Michael Sheppard (crackedEgg)
 //
 package com.parachute.common;
 
@@ -45,10 +45,10 @@ public class EntityParachute extends Entity {
 	private boolean allowThermals;
 	private boolean smallCanopy;
 	private boolean lavaThermals;
-	private boolean ridingThermals;
 	private double lavaDistance;
 	private double maxThermalRise;
 	private double curLavaDistance;
+	private boolean ridingThermals;
 	private boolean weatherAffectsDrift;
 	private boolean allowTurbulence;
 	private boolean showContrails;
