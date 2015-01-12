@@ -77,11 +77,11 @@ public class ConfigHandler {
 
         config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load(); // only need to load config once during pre init
-		initConfigInfo();
+		updateConfigInfo();
     }
 	
 	// true to load the config from disk and false to read changes from GUI and save
-	public static void initConfigInfo(/*boolean load*/)
+	public static void updateConfigInfo()
 	{
 		try {
 			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
