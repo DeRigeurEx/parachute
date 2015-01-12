@@ -76,7 +76,6 @@ public class ConfigHandler {
 		updateConfigInfo();
     }
 	
-	// true to load the config from disk and false to read changes from GUI and save
 	public static void updateConfigInfo()
 	{
 		try {
