@@ -48,7 +48,6 @@ public class EntityParachute extends Entity {
 	private double lavaDistance;
 	private double maxThermalRise;
 	private double curLavaDistance;
-	private boolean ridingThermals;
 	private boolean weatherAffectsDrift;
 	private boolean allowTurbulence;
 	private boolean showContrails;
@@ -85,7 +84,7 @@ public class EntityParachute extends Entity {
 		setSize(smallCanopy ? 3.0f : 4.0f, 0.0625f);
 		motionFactor = 0.07D;
 		ascendMode = false;
-		ridingThermals = false;
+//		ridingThermals = false;
 		maxThermalRise = 48;
 	}
 
@@ -390,16 +389,13 @@ public class EntityParachute extends Entity {
 		BlockPos blockPos = new BlockPos(posX, posY - Math.abs(getMountedYOffset()) - maxThermalRise, posZ);
 
 		if (isLavaBelowInRange(blockPos)) {
-			ridingThermals = true;
 			curLavaDistance += inc;
 			thermals = ascend;
 			if (curLavaDistance >= maxThermalRise) {
-				ridingThermals = false;
 				curLavaDistance = lavaDistance;
 				thermals = drift;
 			}
 		} else {
-			ridingThermals = false;
 			curLavaDistance = lavaDistance;
 		}
 		return thermals;
