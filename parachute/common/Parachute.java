@@ -34,7 +34,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Parachute {
 	
 	public static final String modid = "parachutemod";
-	public static final String modversion = "3.0.3";
+	public static final String modversion = "3.1.0";
 	public static final String name = "Parachute Mod";
 	public static final String guifactory = "com.parachute.client.ParachuteConfigGUIFactory";
 	
@@ -76,11 +76,12 @@ public class Parachute {
 		return Parachute.modversion;
 	}
 	
+	// user has changed entries in the GUI config. save the results.
 	@SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.modID.equals(Parachute.modid)) {
-			Parachute.proxy.info("onConfigChanged has been called for changed configuration");
-            initConfigInfo(false);
+			Parachute.proxy.info("Configuration changes have been updated for " + Parachute.modid);
+            initConfigInfo(/*false*/);
 		}
     }
 	

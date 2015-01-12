@@ -78,16 +78,17 @@ public class ConfigHandler {
 	public static void startConfig(FMLPreInitializationEvent event) {
 
         config = new Configuration(event.getSuggestedConfigurationFile());
-		initConfigInfo(true);
+		config.load(); // only need to load config once during pre init
+		initConfigInfo(/*true*/);
     }
 	
 	// true to load the config from disk and false to read changes from GUI and save
-	public static void initConfigInfo(boolean load)
+	public static void initConfigInfo(/*boolean load*/)
 	{
 		try {
-			if (load) {
-				config.load();
-			}
+//			if (load) {
+//				config.load();
+//			}
 			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 
 			singleUse = config.get(Configuration.CATEGORY_GENERAL, "singleUse", false, usageComment).getBoolean(false);
