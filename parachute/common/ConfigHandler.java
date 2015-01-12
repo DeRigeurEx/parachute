@@ -23,9 +23,7 @@ import static com.parachute.common.Parachute.hopnpopItem;
 import static com.parachute.common.ParachuteCommonProxy.hopnpopName;
 import static com.parachute.common.ParachuteCommonProxy.parachuteName;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ConfigHandler {
 	
@@ -79,16 +77,13 @@ public class ConfigHandler {
 
         config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load(); // only need to load config once during pre init
-		initConfigInfo(/*true*/);
+		initConfigInfo();
     }
 	
 	// true to load the config from disk and false to read changes from GUI and save
 	public static void initConfigInfo(/*boolean load*/)
 	{
 		try {
-//			if (load) {
-//				config.load();
-//			}
 			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 
 			singleUse = config.get(Configuration.CATEGORY_GENERAL, "singleUse", false, usageComment).getBoolean(false);

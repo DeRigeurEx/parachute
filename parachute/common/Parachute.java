@@ -81,7 +81,7 @@ public class Parachute {
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.modID.equals(Parachute.modid)) {
 			Parachute.proxy.info("Configuration changes have been updated for " + Parachute.modid);
-            initConfigInfo(/*false*/);
+            initConfigInfo();
 		}
     }
 	
