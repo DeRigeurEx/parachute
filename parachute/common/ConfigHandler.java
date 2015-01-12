@@ -62,15 +62,11 @@ public class ConfigHandler {
 	private static final String turbulenceComment = "set to true to feel the turbulent world of Minecraft"; // false
 	private static final String trailsComment = "set to true to show contrails from parachute"; // false
 	private static final String colorComment = "Parachute Colors Allowed:\n"
-			+ "black\nblue\n"
-			+ "brown\ncyan\n"
-			+ "gray\ngreen\n"
-			+ "light_blue\nlime\n"
-			+ "magenta\norange\n"
-			+ "pink\npurple\n"
-			+ "red\nsilver\n"
-			+ "white\nyellow\n"
-			+ "random - allows randomly chosen color each time chute is opened\n" // random is default
+			+ "black, blue, brown, cyan,\n"
+			+ "gray, green, light_blue, lime,\n"
+			+ "magenta, orange, pink, purple,\n"
+			+ "red, silver, white, yellow,\n"
+			+ "random - randomly chosen color each time chute is opened\n" // random is default
 			+ "custom[0-9] - allows use of a custom texture called 'custom' with a single number appended";
 			
 	public static void startConfig(FMLPreInitializationEvent event) {
