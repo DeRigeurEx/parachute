@@ -19,25 +19,25 @@
 //
 package com.parachute.common;
 
-import java.io.File;
-import net.minecraftforge.fml.common.Mod.EventHandler;
+import static com.parachute.common.ConfigHandler.initConfigInfo;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
-@Mod( modid = Parachute.modid, name = Parachute.name, version = Parachute.modversion )
+@Mod( modid = Parachute.modid, name = Parachute.name, version = Parachute.modversion, guiFactory = Parachute.guifactory )
 
 public class Parachute {
 	
 	public static final String modid = "parachutemod";
 	public static final String modversion = "3.0.3";
 	public static final String name = "Parachute Mod";
+	public static final String guifactory = "com.parachute.client.ParachuteConfigGUIFactory";
 	
-	private File configFile;
-
 	@SidedProxy(
 			clientSide = "com.parachute.client.ParachuteClientProxy",
 			serverSide = "com.parachute.common.ParachuteServerProxy"
@@ -52,34 +52,36 @@ public class Parachute {
 	@Mod.Instance(modid)
 	public static Parachute instance;
 
-	@EventHandler
+	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		ConfigHandler.startConfig(event);
-		instance = this;
 		proxy.preInit();
 	}
 
-	@EventHandler
+	@Mod.EventHandler
 	public void Init(FMLInitializationEvent event)
 	{
 		proxy.Init();
 	}
 
-	@EventHandler
+	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		proxy.postInit();
-	}
-	
-	public File getConfigFile()
-	{
-		return configFile;
 	}
 	
 	public String getVersion()
 	{
 		return Parachute.modversion;
 	}
-
+	
+	@SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.modID.equals(Parachute.modid)) {
+			Parachute.proxy.info("onConfigChanged has been called for changed configuration");
+            initConfigInfo(false);
+		}
+    }
+	
 }

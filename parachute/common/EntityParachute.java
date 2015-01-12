@@ -200,8 +200,7 @@ public class EntityParachute extends Entity {
 		// the player has pressed LSHIFT or been killed,
 		// this is necessary for LSHIFT to kill the parachute
 		if (riddenByEntity == null && !worldObj.isRemote) {
-			ParachuteCommonProxy.setDeployed(false);
-			setDead();
+			killParachute(false);
 			return;
 		}
 
@@ -225,11 +224,9 @@ public class EntityParachute extends Entity {
 			if (riddenByEntity != null) {
 				BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
 				if (checkForGroundProximity(bp)) {
-					Parachute.proxy.info(bp.toString());
-					Parachute.proxy.info(this.toString());
-					dropParachute(this);
-					ParachuteCommonProxy.setDeployed(false);
-					setDead();
+//					Parachute.proxy.info(bp.toString());
+//					Parachute.proxy.info(this.toString());
+					killParachute(true);
 					return;
 				}
 			}
@@ -308,10 +305,18 @@ public class EntityParachute extends Entity {
 		// something bad happened, somehow the skydiver was killed.
 		if (!worldObj.isRemote && riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
-			ParachuteCommonProxy.setDeployed(false);
-			setDead();
+			killParachute(false);
 		}
 
+	}
+	
+	public void killParachute(boolean drop)
+	{
+		if (drop) {
+			dropParachute(this);
+		}
+		ParachuteCommonProxy.setDeployed(false);
+		setDead();
 	}
 
 	public boolean isBadWeather()
@@ -400,16 +405,6 @@ public class EntityParachute extends Entity {
 		return thermals;
 	}
 
-//	protected boolean checkShouldDropChute(BlockPos bp)
-//	{
-//		if (!worldObj.isRemote && !isDead) {
-//			if (checkForGroundProximity(bp)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-	
 	public boolean checkForGroundProximity(BlockPos bp)
 	{
 		boolean result = false;

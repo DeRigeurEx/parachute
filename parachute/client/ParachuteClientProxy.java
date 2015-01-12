@@ -19,6 +19,7 @@
 //
 package com.parachute.client;
 
+//import com.parachute.common.ConfigHandler;
 import com.parachute.common.ParachuteCommonProxy;
 import com.parachute.common.EntityParachute;
 import com.parachute.common.KeyPressTick;

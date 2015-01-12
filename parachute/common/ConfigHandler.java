@@ -45,46 +45,49 @@ public class ConfigHandler {
 	private static boolean allowTurbulence;
 	private static boolean showContrails;
 	private static String type = parachuteName; // defaults to the normal parachute
+	
+	private static final String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
+				+ " For Minecraft Version " + Parachute.modversion + "\n";
+	private static final String usageComment = "set to true for hop-n-pop single use"; // false
+	private static final String heightComment = "0 (zero) disables altitude limiting"; // 256
+	private static final String thermalComment = "true|false enable/disable thermals"; // true
+	private static final String lavaThermalComment = "use lava heat to get thermals to rise up, disables space bar thermals"; // false
+	private static final String minLavaDistanceComment = "minimum distance from lava to grab thermals, if you\n"
+			+ "go less than 3.0 you will most likely dismount in the lava!"; // 3.0
+	private static final String maxLavaDistanceComment = "maximum distance to rise from lava thermals"; // 48
+	private static final String aadAltitudeComment = "altitude (in meters) at which auto deploy occurs"; // 10
+	private static final String fallThresholdComment = "player must have fallen this far to activate AAD"; // 5.0
+	private static final String typeComment = "set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy"; // true
+	private static final String autoComment = "If true the parachute will dismount the player automatically,\n"
+			+ "if false the player has to use LSHIFT to dismount the parachute"; // true
+	private static final String weatherComment = "set to false if you don't want the drift rate to be affected by bad weather"; // true
+	private static final String turbulenceComment = "set to true to feel the turbulent world of Minecraft"; // false
+	private static final String trailsComment = "set to true to show contrails from parachute"; // false
+	private static final String colorComment = "Parachute Colors Allowed:\n"
+			+ "black\nblue\n"
+			+ "brown\ncyan\n"
+			+ "gray\ngreen\n"
+			+ "light_blue\nlime\n"
+			+ "magenta\norange\n"
+			+ "pink\npurple\n"
+			+ "red\nsilver\n"
+			+ "white\nyellow\n"
+			+ "random - allows randomly chosen color each time chute is opened\n" // random is default
+			+ "custom[0-9] - allows use of a custom texture called 'custom' with a single number appended";
 			
 	public static void startConfig(FMLPreInitializationEvent event) {
 
         config = new Configuration(event.getSuggestedConfigurationFile());
-		readConfigInfo();
+		initConfigInfo(true);
     }
 	
-	public static void readConfigInfo()
+	// true to load the config from disk and false to read changes from GUI and save
+	public static void initConfigInfo(boolean load)
 	{
-		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
-				+ " For Minecraft Version " + Parachute.modversion + "\n";
-		String usageComment = "set to true for hop-n-pop single use (false)";
-		String heightComment = "0 (zero) disables altitude limiting (256)";
-		String thermalComment = "true|false enable/disable thermals (true)";
-		String lavaThermalComment = "use lava heat to get thermals to rise up, disables space bar thermals (false)";
-		String minLavaDistanceComment = "minimum distance from lava to grab thermals, if you\n"
-				+ "go less than 3.0 you will most likely dismount in the lava! (3.0)";
-		String maxLavaDistanceComment = "maximum distance to rise from lava thermals (48)";
-		String aadAltitudeComment = "altitude (in meters) at which auto deploy occurs (10)";
-		String fallThresholdComment = "player must have fallen this far to activate AAD (5.0)";
-		String typeComment = "set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy (true)";
-		String autoComment = "If true the parachute will dismount the player automatically,\n"
-				+ "if false the player has to use LSHIFT to dismount the parachute. (true)";
-		String weatherComment = "set to false if you don't want the drift rate to be affected by bad weather (true)";
-		String turbulenceComment = "set to true to feel the turbulent world of Minecraft (false)";
-		String trailsComment = "set to true to show contrails from parachute (false)";
-		String colorComment = "Parachute Colors Allowed:\n"
-				+ "black\nblue\n"
-				+ "brown\ncyan\n"
-				+ "gray\ngreen\n"
-				+ "light_blue\nlime\n"
-				+ "magenta\norange\n"
-				+ "pink\npurple\n"
-				+ "red\nsilver\n"
-				+ "white\nyellow\n"
-				+ "random - allows randomly chosen color each time chute is opened\n"
-				+ "custom[0-9] - allows use of a custom texture called 'custom' with a single number appended";
-
 		try {
-			config.load();
+			if (load) {
+				config.load();
+			}
 			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 
 			singleUse = config.get(Configuration.CATEGORY_GENERAL, "singleUse", false, usageComment).getBoolean(false);
@@ -110,18 +113,13 @@ public class ConfigHandler {
 			// clamp the fallThreshold to a minimum of 2
 			fallThreshold = fallThreshold < 2.0 ? 2.0 : fallThreshold;
 		} catch (Exception e) {
-			Parachute.proxy.info("I broke!");
+			Parachute.proxy.info("failed to load or read the config file");
 		} finally {
-			config.save();
+			if (config.hasChanged()) {
+				config.save();
+			}
 		}
 	}
-	
-	@SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-        if(eventArgs.modID.equals(Parachute.modid)) {
-            readConfigInfo();
-		}
-    }
 	
 	public static double getMaxAltitude()
 	{

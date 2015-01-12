@@ -27,12 +27,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AltitudeDisplay {
 	
-	public static String altitude = "unknown";
+	public static String altitude = "";
 	private final Minecraft mc = Minecraft.getMinecraft();
     private int screenX;
 	private int screenY;
-	private final int color1 = -3407872;  // 0xffcc0000 red
-	private final int color2 = -16724992; // 0xff00cc00 green
+	private final int colorRed = 0xffcc0000;
+	private final int colorGreen = 0xff00cc00;
 	
 	public AltitudeDisplay()
 	{
@@ -42,6 +42,8 @@ public class AltitudeDisplay {
         screenY = sr.getScaledHeight();
 	}
 	
+	// the altitude display is placed where the food bar is
+	// the food bar is removed when riding boats, parachutes, etc.
 	public void updateWindowScale()
 	{
 		ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
@@ -58,8 +60,8 @@ public class AltitudeDisplay {
 		if (mc.inGameHasFocus && event.type == RenderGameOverlayEvent.ElementType.ALL) {
 			if (ParachuteCommonProxy.onParachute(mc.thePlayer)) {
 				updateWindowScale();
-				mc.fontRendererObj.drawStringWithShadow("Altitude: ", screenX, screenY, color1);
-				mc.fontRendererObj.drawStringWithShadow(altitude, screenX + 50, screenY, color2);
+				mc.fontRendererObj.drawStringWithShadow("Altitude: ", screenX, screenY, colorRed);
+				mc.fontRendererObj.drawStringWithShadow(altitude, screenX + 50, screenY, colorGreen);
 			}
 		}
 	}

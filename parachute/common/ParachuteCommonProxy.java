@@ -73,6 +73,8 @@ public class ParachuteCommonProxy {
 	
 	public void Init()
 	{
+		FMLCommonHandler.instance().bus().register(Parachute.instance);
+		
 		// recipes to craft the parachutes, ripcord and AAD
 		GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
 			"###", "X X", " L ", '#', Blocks.wool, 'X', Items.string, 'L', Items.leather
