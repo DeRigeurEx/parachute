@@ -35,6 +35,7 @@ public class Parachute {
 	
 	public static final String modid = "parachutemod";
 	public static final String modversion = "3.1.0";
+	public static final String mcversion = "1.8.0";
 	public static final String name = "Parachute Mod";
 	public static final String guifactory = "com.parachute.client.ParachuteConfigGUIFactory";
 	

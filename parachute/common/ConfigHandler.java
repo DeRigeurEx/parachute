@@ -45,7 +45,7 @@ public class ConfigHandler {
 	private static String type = parachuteName; // defaults to the normal parachute
 	
 	private static final String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
-				+ " For Minecraft Version " + Parachute.modversion + "\n";
+				+ " For Minecraft Version " + Parachute.mcversion + "\n";
 	private static final String usageComment = "set to true for hop-n-pop single use"; // false
 	private static final String heightComment = "0 (zero) disables altitude limiting"; // 256
 	private static final String thermalComment = "true|false enable/disable thermals"; // true

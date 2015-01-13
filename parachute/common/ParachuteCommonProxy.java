@@ -43,8 +43,8 @@ public class ParachuteCommonProxy {
 	private final int entityID = EntityRegistry.findGlobalUniqueEntityId();
 	static ItemArmor.ArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", "", 15, new int[] {2, 5, 4, 1}, 12); // same as CHAIN
 	static Item.ToolMaterial RIPSTOP = EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
-	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = legs,       3 = boots
-	public static final int armorSlot = 2;  // armor slot: 0 = ??,     1 = ??,         2 = chestplate, 3 = ??
+	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = leggings,   3 = boots
+	public static final int armorSlot = 2;  // armor slot: 0 = boots,  1 = leggings,   2 = chestplate, 3 = helmet
 	public static final String hopnpopName = "hop_and_pop";
 	public static final String parachuteName = "parachute";
 	public static final String ripcordName = "ripcord";
