@@ -19,7 +19,6 @@
 //
 package com.parachute.common;
 
-//import static com.parachute.common.Parachute.aadName;
 import static com.parachute.common.Parachute.modid;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -77,10 +76,10 @@ public class ItemAutoActivateDevice extends Item {
 	{
 		boolean altitudeReached = false;
 
-		int x = MathHelper.floor_double(player.posX);
-		int y = MathHelper.floor_double(player.posY - altitude);
-		int z = MathHelper.floor_double(player.posZ);
-		BlockPos blockPos = new BlockPos(x, y, z);
+//		int x = MathHelper.floor_double(player.posX);
+//		int y = MathHelper.floor_double(player.posY - altitude);
+//		int z = MathHelper.floor_double(player.posZ);
+		BlockPos blockPos = new BlockPos(player.posX, player.posY - altitude, player.posZ);
 
 		if (!player.worldObj.isAirBlock(blockPos) && player.fallDistance > fallThreshold) {
 			altitudeReached = true;

@@ -490,6 +490,18 @@ public class EntityParachute extends Entity {
 	}
 	
 	@Override
+	public void updateRiderPosition()
+    {
+        if (riddenByEntity != null) {
+            double x = posX + (Math.cos(rotationYaw * d2r) * 0.04);
+			double y = posY + getMountedYOffset() + riddenByEntity.getYOffset();
+            double z = posZ + (Math.sin(rotationYaw * d2r) * 0.04);
+            riddenByEntity.setPosition(x, y, z);
+        }
+    }
+
+	
+	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {}
 
 	@Override

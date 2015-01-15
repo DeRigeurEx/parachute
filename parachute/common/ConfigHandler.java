@@ -48,7 +48,7 @@ public class ConfigHandler {
 				+ " For Minecraft Version " + Parachute.mcversion + "\n";
 	private static final String usageComment = "set to true for hop-n-pop single use"; // false
 	private static final String heightComment = "0 (zero) disables altitude limiting"; // 256
-	private static final String thermalComment = "true|false enable/disable thermals"; // true
+	private static final String thermalComment = "enable thermal rise by pressing the space bar"; // true
 	private static final String lavaThermalComment = "use lava heat to get thermals to rise up, disables space bar thermals"; // false
 	private static final String minLavaDistanceComment = "minimum distance from lava to grab thermals, if you\n"
 			+ "go less than 3.0 you will most likely dismount in the lava!"; // 3.0
