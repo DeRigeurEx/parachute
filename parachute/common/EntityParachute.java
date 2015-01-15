@@ -214,7 +214,7 @@ public class EntityParachute extends Entity {
 		prevPosY = posY;
 		prevPosZ = posZ;
 		
-		if (!worldObj.isRemote) {
+		if (worldObj.isRemote) { // execute only on the client
 			AltitudeDisplay.setAltitudeString(String.format("%.1f", posY));
 		}
 
@@ -297,7 +297,7 @@ public class EntityParachute extends Entity {
 		rotationYaw += adjustedYaw;
 		setRotation(rotationYaw, rotationPitch);
 
-		if ((isBadWeather() || allowTurbulence) && rand.nextBoolean() == true) {
+		if (((weatherAffectsDrift && isBadWeather()) || allowTurbulence) && rand.nextBoolean() == true) {
 			applyTurbulence(worldObj.isThundering());
 		}
 
@@ -320,7 +320,7 @@ public class EntityParachute extends Entity {
 
 	public boolean isBadWeather()
 	{
-		return weatherAffectsDrift && (worldObj.isRaining() || worldObj.isThundering());
+		return (worldObj.isRaining() || worldObj.isThundering());
 	}
 
 	public double currentDescentRate()

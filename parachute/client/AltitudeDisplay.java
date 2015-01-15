@@ -33,6 +33,7 @@ public class AltitudeDisplay {
 	private int screenY;
 	private final int colorRed = 0xffcc0000;
 	private final int colorGreen = 0xff00cc00;
+	private final int nextX = 36;
 	
 	public AltitudeDisplay()
 	{
@@ -61,7 +62,7 @@ public class AltitudeDisplay {
 			if (ParachuteCommonProxy.onParachute(mc.thePlayer)) {
 				updateWindowScale();
 				mc.fontRendererObj.drawStringWithShadow("Altitude: ", screenX, screenY, colorRed);
-				mc.fontRendererObj.drawStringWithShadow(altitude, screenX + 50, screenY, colorGreen);
+				mc.fontRendererObj.drawStringWithShadow(altitude, screenX + nextX, screenY, colorGreen);
 			}
 		}
 	}
