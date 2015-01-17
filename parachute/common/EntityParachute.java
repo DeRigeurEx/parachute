@@ -506,8 +506,8 @@ public class EntityParachute extends Entity {
 		// count the number of blocks above sea level (63)
 		// start at block.y = 63 and count up until you hit air
 		for (bp1 = new BlockPos(bp.getX(), 63, bp.getZ()); !worldObj.isAirBlock(bp1.up()); bp1 = bp1.up()) {
-            ;// empty
-        }
+			;// empty
+		}
 		// calculate the current altitude above the ground MSL
 		return riddenByEntity.posY - (double)bp1.getY();
 	}
