@@ -84,7 +84,6 @@ public class EntityParachute extends Entity {
 		setSize(smallCanopy ? 3.0f : 4.0f, 0.0625f);
 		motionFactor = 0.07D;
 		ascendMode = false;
-//		ridingThermals = false;
 		maxThermalRise = 48;
 	}
 
@@ -215,7 +214,7 @@ public class EntityParachute extends Entity {
 		prevPosZ = posZ;
 		
 		if (worldObj.isRemote) { // execute only on the client
-			AltitudeDisplay.setAltitudeString(String.format("%.1f", posY));
+			AltitudeDisplay.setAltitudeString(String.format("%.1f", getAltitudeMSL(new BlockPos(this))));
 		}
 
 		// drop the chute when close to ground
@@ -499,6 +498,19 @@ public class EntityParachute extends Entity {
             riddenByEntity.setPosition(x, y, z);
         }
     }
+	
+	@SuppressWarnings("empty-statement")
+	public double getAltitudeMSL(BlockPos bp)
+	{
+		BlockPos bp1;
+		// count the number of blocks above sea level (63)
+		// start at block.y = 63 and count up until you hit air
+		for (bp1 = new BlockPos(bp.getX(), 63, bp.getZ()); !worldObj.isAirBlock(bp1.up()); bp1 = bp1.up()) {
+            ;// empty
+        }
+		// calculate the current altitude above the ground MSL
+		return riddenByEntity.posY - (double)bp1.getY();
+	}
 
 	
 	@Override

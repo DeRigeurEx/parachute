@@ -32,6 +32,5 @@ public class PacketHandler {
 	public static void init()
 	{
 		network.registerMessage(KeyPressMessage.Handler.class, KeyPressMessage.class, packetID, Side.SERVER);
-//		network.registerMessage(KeyPressMessage.Handler.class, KeyPressMessage.class, 0, Side.CLIENT);
 	}
 }
