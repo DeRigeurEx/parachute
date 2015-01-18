@@ -529,7 +529,7 @@ public class EntityParachute extends Entity {
 		}
 	}
 
-	// get the altitude in meters (blocks) above the ground.
+	// calculate the altitude in meters (blocks) above the ground.
 	public double getAltitudeAboveGround(BlockPos bp)
 	{
 		// count the number of blocks above sea level (63) by
