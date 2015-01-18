@@ -64,10 +64,8 @@ public class ConfigHandler {
 	private static final String trailsComment = "set to true to show contrails from parachute"; // false
 	private static final String altitudeMSLComment = "false to show altitude above ground, true shows altitude above the water level"; // false
 	private static final String colorComment = "Parachute Colors Allowed:\n"
-			+ "black, blue, brown, cyan,\n"
-			+ "gray, green, light_blue, lime,\n"
-			+ "magenta, orange, pink, purple,\n"
-			+ "red, silver, white, yellow,\n"
+			+ "black, blue, brown, cyan, gray, green, light_blue, lime,\n"
+			+ "magenta, orange, pink, purple, red, silver, white, yellow,\n"
 			+ "random - randomly chosen color each time chute is opened\n" // random is default
 			+ "custom[0-9] - allows use of a custom texture called 'custom' with a single number appended";
 			

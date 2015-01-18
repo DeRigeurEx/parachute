@@ -520,16 +520,23 @@ public class EntityParachute extends Entity {
 		}
 	}
 	
+	// only allow altitude calculations in the surface world
+	// return a weirdly random nuber if in nether or end.
 	public double getCurrentAltitude(BlockPos bp, boolean MSL)
 	{
-		if (MSL) {
-			return getAltitudeAboveMSL(bp); // altitude above the water level (MSL)
-		} else {
-			return getAltitudeAboveGround(bp); // altitude above the ground
+		if (worldObj.provider.isSurfaceWorld()) {
+			if (MSL) {
+				return getAltitudeAboveMSL(bp); // altitude above the water level (MSL)
+			} else {
+				return getAltitudeAboveGround(bp); // altitude above the ground
+			}
 		}
+		return -1000.0 * rand.nextDouble();
 	}
 
 	// calculate the altitude in meters (blocks) above the ground.
+	// this method produces negative number below the sea level, e.g.,
+	// underground.
 	public double getAltitudeAboveGround(BlockPos bp)
 	{
 		// count the number of blocks above sea level (63) by
@@ -543,6 +550,8 @@ public class EntityParachute extends Entity {
 	}
 	
 	// calculate the altitude above Mean Sea Level (63)
+	// this method produces negative number below the sea level, e.g.,
+	// underground.
 	public double getAltitudeAboveMSL(BlockPos bp)
 	{
 		// calculate the entity's current altitude above MSL
