@@ -222,7 +222,7 @@ public class EntityParachute extends Entity {
 		double initialVelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
 		if (showContrails && initialVelocity > 0.2) {
-			showContrails(initialVelocity);
+			generateContrails(initialVelocity);
 		}
 
 		prevPosX = posX;
@@ -494,7 +494,7 @@ public class EntityParachute extends Entity {
 		}
 	}
 
-	public void showContrails(double velocity)
+	public void generateContrails(double velocity)
 	{
 		double cosYaw = 2.0 * Math.cos(rotationYaw * d2r);
 		double sinYaw = 2.0 * Math.sin(rotationYaw * d2r);
@@ -531,7 +531,7 @@ public class EntityParachute extends Entity {
 				return getAltitudeAboveGround(bp); // altitude above the ground
 			}
 		}
-		return -1000.0 * rand.nextDouble();
+		return 1000.0 * rand.nextGaussian();
 	}
 
 	// calculate the altitude in meters (blocks) above the ground.
