@@ -33,7 +33,9 @@ public class AltitudeDisplay {
 	private int screenY;
 	private final int colorRed = 0xffcc0000;
 	private final int colorGreen = 0xff00cc00;
-	private final int nextX = 36;
+	
+	private final int w1 = mc.fontRendererObj.getStringWidth("Altitude: ");
+	private final int cw = mc.fontRendererObj.getCharWidth('0');
 	
 	public AltitudeDisplay()
 	{
@@ -61,6 +63,8 @@ public class AltitudeDisplay {
 		if (mc.inGameHasFocus && event.type == RenderGameOverlayEvent.ElementType.ALL) {
 			if (ParachuteCommonProxy.onParachute(mc.thePlayer)) {
 				updateWindowScale();
+				int w2 = mc.fontRendererObj.getStringWidth(altitude);
+				int nextX = w1 + (5 * cw) - w2;
 				mc.fontRendererObj.drawStringWithShadow("Altitude: ", screenX, screenY, colorRed);
 				mc.fontRendererObj.drawStringWithShadow(altitude, screenX + nextX, screenY, colorGreen);
 			}

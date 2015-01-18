@@ -2,12 +2,12 @@
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation; version 2 dated June, 1991.
-// 
-//  This program is distributed in the hope that it will be useful, 
+//
+//  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program;  if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
@@ -19,6 +19,7 @@
 package com.parachute.common;
 
 import com.parachute.client.AltitudeDisplay;
+import java.text.DecimalFormat;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockGrass;
@@ -37,6 +38,7 @@ import net.minecraft.world.World;
 
 public class EntityParachute extends Entity {
 
+	private long tickCount;
 	private double velocityX;
 	private double velocityY;
 	private double velocityZ;
@@ -51,7 +53,11 @@ public class EntityParachute extends Entity {
 	private boolean weatherAffectsDrift;
 	private boolean allowTurbulence;
 	private boolean showContrails;
+	private boolean altitudeMSL;
+	final private DecimalFormat df;
 
+	final static int Damping = 10; // ticks per second / 2
+	final static double MSL = 63.0;
 	final static double drift = 0.004;
 	final static double ascend = drift * -10.0;
 
@@ -68,6 +74,7 @@ public class EntityParachute extends Entity {
 	public EntityParachute(World world)
 	{
 		super(world);
+		df = new DecimalFormat("##0.0");
 
 		smallCanopy = ConfigHandler.isSmallCanopy();
 		weatherAffectsDrift = ConfigHandler.getWeatherAffectsDrift();
@@ -77,7 +84,8 @@ public class EntityParachute extends Entity {
 		allowThermals = ConfigHandler.getAllowThermals();
 		maxAltitude = ConfigHandler.getMaxAltitude();
 		lavaThermals = ConfigHandler.getAllowLavaThermals();
-		
+		altitudeMSL = ConfigHandler.getAltitudeMSL();
+
 		curLavaDistance = lavaDistance;
 		worldObj = world;
 		preventEntitySpawning = true;
@@ -85,12 +93,12 @@ public class EntityParachute extends Entity {
 		motionFactor = 0.07D;
 		ascendMode = false;
 		maxThermalRise = 48;
+		tickCount = 0;
 	}
 
 	public EntityParachute(World world, double x, double y, double z)
 	{
 		this(world);
-
 		setPosition(x, y, z);
 
 		motionX = 0.0D;
@@ -114,7 +122,9 @@ public class EntityParachute extends Entity {
 	}
 
 	@Override
-	protected void entityInit() {}
+	protected void entityInit()
+	{
+	}
 
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entity)
@@ -124,13 +134,13 @@ public class EntityParachute extends Entity {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public AxisAlignedBB getBoundingBox()
-    {
-        return getEntityBoundingBox();
-    }
-    
+	{
+		return getEntityBoundingBox();
+	}
+
     //
 	// skydiver should 'hang' when on the parachute and then
 	// 'pick up legs' when landing.
@@ -145,7 +155,7 @@ public class EntityParachute extends Entity {
 //	{
 //		return isNearGround(new BlockPos(this).add(new Vec3i(0.0, -(Math.abs(getMountedYOffset()) + 1.0), 0.0)));
 //	}
-	
+//	
 	@Override
 	public boolean shouldDismountInWater(Entity rider)
 	{
@@ -189,12 +199,18 @@ public class EntityParachute extends Entity {
 		velocityY = motionY = y;
 		velocityZ = motionZ = z;
 	}
+	
+	public String format(double d)
+	{
+		double dstr = new Double(df.format(d));
+		return String.format("%s", dstr);
+	}
 
 	@Override
 	public void onUpdate()
 	{
 		super.onUpdate();
-		
+
 		// the player has pressed LSHIFT or been killed,
 		// this is necessary for LSHIFT to kill the parachute
 		if (riddenByEntity == null && !worldObj.isRemote) {
@@ -204,17 +220,22 @@ public class EntityParachute extends Entity {
 
 		// initial forward velocity
 		double initialVelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
-		
+
 		if (showContrails && initialVelocity > 0.2) {
 			showContrails(initialVelocity);
 		}
-		
+
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
-		
-		if (worldObj.isRemote) { // execute only on the client
-			AltitudeDisplay.setAltitudeString(String.format("%.1f", getAltitudeMSL(new BlockPos(this))));
+
+		tickCount++;
+		if (worldObj.isRemote && (tickCount % Damping == 0)) { // execute only on the client
+			if (riddenByEntity != null) {
+				// use the rider's position for the altitude reference
+				BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY, riddenByEntity.posZ);
+				AltitudeDisplay.setAltitudeString(format(getCurrentAltitude(bp, altitudeMSL)));
+			}
 		}
 
 		// drop the chute when close to ground
@@ -307,7 +328,7 @@ public class EntityParachute extends Entity {
 		}
 
 	}
-	
+
 	public void killParachute(boolean drop)
 	{
 		if (drop) {
@@ -403,7 +424,7 @@ public class EntityParachute extends Entity {
 	public boolean checkForGroundProximity(BlockPos bp)
 	{
 		boolean result = false;
-		
+
 		if (!worldObj.isRemote && !isDead) {
 			Block block = worldObj.getBlockState(bp).getBlock();
 			boolean isAir = (block == Blocks.air);
@@ -412,7 +433,7 @@ public class EntityParachute extends Entity {
 		}
 		return result;
 	}
-	
+
 	public void dropParachute(Entity parachute)
 	{
 		if (parachute == null) {
@@ -436,7 +457,7 @@ public class EntityParachute extends Entity {
 			parachute.riddenByEntity = this;
 		}
 	}
-	
+
 	public void applyTurbulence(boolean roughWeather)
 	{
 		double rmin = 0.1;
@@ -480,49 +501,68 @@ public class EntityParachute extends Entity {
 
 		for (int j = 0; (double) j < 1.0 + velocity * 8.0; ++j) {
 			double s1 = (rand.nextDouble() * 2.0 - 1.0) * 0.2;
-			double s2 = (double)(rand.nextInt(2) * 2 - 1) * 0.7;
+			double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
 			double particleX = prevPosX - cosYaw * s1 * 0.8 + sinYaw * s2;
 			double particleZ = prevPosZ - sinYaw * s1 * 0.8 - cosYaw * s2;
 
 			worldObj.spawnParticle(EnumParticleTypes.CLOUD, particleX, posY - 0.25, particleZ, motionX, motionY, motionZ, new int[0]);
 		}
 	}
-	
+
 	@Override
 	public void updateRiderPosition()
-    {
-        if (riddenByEntity != null) {
-            double x = posX + (Math.cos(rotationYaw * d2r) * 0.04);
-			double y = posY + getMountedYOffset() + riddenByEntity.getYOffset();
-            double z = posZ + (Math.sin(rotationYaw * d2r) * 0.04);
-            riddenByEntity.setPosition(x, y, z);
-        }
-    }
-	
-	@SuppressWarnings("empty-statement")
-	public double getAltitudeMSL(BlockPos bp)
 	{
-		BlockPos bp1;
-		// count the number of blocks above sea level (63)
-		// start at block.y = 63 and count up until you hit air
-		for (bp1 = new BlockPos(bp.getX(), 63, bp.getZ()); !worldObj.isAirBlock(bp1.up()); bp1 = bp1.up()) {
-			;// empty
+		if (riddenByEntity != null) {
+			double x = posX + (Math.cos(rotationYaw * d2r) * 0.04);
+			double y = posY + getMountedYOffset() + riddenByEntity.getYOffset();
+			double z = posZ + (Math.sin(rotationYaw * d2r) * 0.04);
+			riddenByEntity.setPosition(x, y, z);
 		}
-		// calculate the current altitude above the ground MSL
-		return riddenByEntity.posY - (double)bp1.getY();
+	}
+	
+	public double getCurrentAltitude(BlockPos bp, boolean MSL)
+	{
+		if (MSL) {
+			return getAltitudeAboveMSL(bp); // altitude above the water level (MSL)
+		} else {
+			return getAltitudeAboveGround(bp); // altitude above the ground
+		}
 	}
 
+	// get the altitude in meters (blocks) above the ground.
+	public double getAltitudeAboveGround(BlockPos bp)
+	{
+		// count the number of blocks above sea level (63) by
+		// starting at block level 63 and count up until you hit an air block
+		BlockPos bp1 = new BlockPos(bp.getX(), MSL, bp.getZ());
+		while (!worldObj.isAirBlock(bp1.up())) {
+			bp1 = bp1.up();
+		}
+		// calculate the entity's current altitude above the ground
+		return bp.getY() - bp1.getY();
+	}
+	
+	// calculate the altitude above Mean Sea Level (63)
+	public double getAltitudeAboveMSL(BlockPos bp)
+	{
+		// calculate the entity's current altitude above MSL
+		return bp.getY() - MSL;
+	}
 	
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {}
+	protected void writeEntityToNBT(NBTTagCompound nbt)
+	{
+	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {}
-	
+	protected void readEntityFromNBT(NBTTagCompound nbt)
+	{
+	}
+
 	@Override
 	public String toString()
 	{
 		return String.format("%s: {x=%.1f, y=%.1f, z=%.1f}, {yaw=%.1f, pitch=%.1f}", getClass().getSimpleName(), posX, posY, posZ, rotationYaw, rotationPitch);
 	}
-	
+
 }
