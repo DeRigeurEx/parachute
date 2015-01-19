@@ -212,7 +212,11 @@ public class RenderParachute extends Render {
 	public static void setParachuteColor(String color)
 	{
 		if (color.equalsIgnoreCase("random")) {
-			parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + getRandomColor() + ".png");
+			if (rand.nextBoolean()) {
+					parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + getRandomColor() + ".png");
+				} else {
+					parachuteTexture = new ResourceLocation(Parachute.modid + ":textures/blocks/" + getRandomCustomColor() + ".png");
+				}
 		} else if (color.startsWith("custom")) {
 			parachuteTexture = new ResourceLocation(Parachute.modid + ":textures/blocks/" + color + ".png");
 		} else {
@@ -225,7 +229,11 @@ public class RenderParachute extends Render {
 	{
 		if (parachuteTexture == null) {
 			if (color.equalsIgnoreCase("random")) {
-				parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + getRandomColor() + ".png");
+				if (rand.nextBoolean()) {
+					parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + getRandomColor() + ".png");
+				} else {
+					parachuteTexture = new ResourceLocation(Parachute.modid + ":textures/blocks/" + getRandomCustomColor() + ".png");
+				}
 			} else if (color.startsWith("custom")) {
 				parachuteTexture = new ResourceLocation(Parachute.modid + ":textures/blocks/" + color + ".png");
 			} else {
@@ -258,6 +266,13 @@ public class RenderParachute extends Render {
 		};
 		
 		return colors[rand.nextInt(16)];
+	}
+	
+	// return the string 'custom' and append a random digit 
+	// between zero and nine
+	protected static String getRandomCustomColor()
+	{
+		return "custom" + rand.nextInt(10);
 	}
 
 	@Override

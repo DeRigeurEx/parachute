@@ -74,7 +74,7 @@ public class EntityParachute extends Entity {
 	public EntityParachute(World world)
 	{
 		super(world);
-		df = new DecimalFormat("##0.0");
+		df = new DecimalFormat("##0.0"); // for the alitude display
 
 		smallCanopy = ConfigHandler.isSmallCanopy();
 		weatherAffectsDrift = ConfigHandler.getWeatherAffectsDrift();
@@ -200,6 +200,7 @@ public class EntityParachute extends Entity {
 		velocityZ = motionZ = z;
 	}
 	
+	// format the altitude number to a string
 	public String format(double d)
 	{
 		double dstr = new Double(df.format(d));
@@ -229,6 +230,7 @@ public class EntityParachute extends Entity {
 		prevPosY = posY;
 		prevPosZ = posZ;
 
+		// Altimeter, the altitude display
 		tickCount++;
 		if (worldObj.isRemote && (tickCount % Damping == 0)) { // execute only on the client
 			if (riddenByEntity != null) {
@@ -434,6 +436,7 @@ public class EntityParachute extends Entity {
 		return result;
 	}
 
+	// parachute equivalent to (dis)mountEntity without the mounting option
 	public void dropParachute(Entity parachute)
 	{
 		if (parachute == null) {
@@ -458,6 +461,7 @@ public class EntityParachute extends Entity {
 		}
 	}
 
+	// apply 'turbulence' in the form of a collision force
 	public void applyTurbulence(boolean roughWeather)
 	{
 		double rmin = 0.1;
