@@ -38,7 +38,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
 public class ParachuteCommonProxy {
-	
+
 	private static final Logger logger = FMLLog.getLogger();
 	private final int entityID = EntityRegistry.findGlobalUniqueEntityId();
 	static ItemArmor.ArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", "", 15, new int[] {2, 5, 4, 1}, 12); // same as CHAIN
@@ -50,11 +50,11 @@ public class ParachuteCommonProxy {
 	public static final String ripcordName = "ripcord";
 	public static final String aadName = "auto_activation_device";
 	private static boolean deployed = false;
-	
+
 	public void preInit()
 	{
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, Parachute.instance, 80, 20, true);
-		
+
 		final int renderIndex = 0;
 		parachuteItem = (ItemParachute) (new ItemParachute(NYLON, renderIndex, armorType)).setUnlocalizedName(parachuteName);
 		GameRegistry.registerItem(parachuteItem, parachuteName);
@@ -67,14 +67,14 @@ public class ParachuteCommonProxy {
 
 		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
 		GameRegistry.registerItem(hopnpopItem, hopnpopName);
-		
+
 		PacketHandler.init();
 	}
-	
+
 	public void Init()
 	{
 		FMLCommonHandler.instance().bus().register(Parachute.instance);
-		
+
 		// recipes to craft the parachutes, ripcord and AAD
 		GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
 			"###", "X X", " L ", '#', Blocks.wool, 'X', Items.string, 'L', Items.leather
@@ -90,26 +90,26 @@ public class ParachuteCommonProxy {
 
 		GameRegistry.addRecipe(new ItemStack(aadItem, 1), new Object[] {
 			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', ripcordItem});
-		
+
 		FMLCommonHandler.instance().bus().register(new AADTick());
 		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
 	}
-	
+
 	public void postInit()
 	{
-		
+
 	}
-	
+
 	public void info(String s)
 	{
 		logger.info(s);
 	}
-	
+
 	public void warn(String s)
 	{
 		logger.warn(s);
 	}
-	
+
 	public static boolean playerIsWearingParachute(EntityPlayer player)
 	{
 		ItemStack stack = player == null ? null : player.getCurrentArmor(armorSlot);
@@ -126,17 +126,17 @@ public class ParachuteCommonProxy {
 	{
 		return (entity.fallDistance > 0.0F && !entity.onGround && !entity.isOnLadder());
 	}
-	
+
 	public static boolean onParachute(EntityPlayer entity)
 	{
 		return entity.isRiding() && deployed;
 	}
-	
+
 	public static boolean getDeployed()
 	{
 		return deployed;
 	}
-	
+
 	public static void setDeployed(boolean isDeployed)
 	{
 		deployed = isDeployed;

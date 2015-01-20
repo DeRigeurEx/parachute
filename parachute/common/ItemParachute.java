@@ -75,7 +75,7 @@ public class ItemParachute extends ItemArmor {
 		}
 		return true;
 	}
-	
+
 	private float pitch()
 	{
 		return 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F);

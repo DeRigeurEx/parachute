@@ -29,7 +29,7 @@ public class ParachuteConfigGUIFactory implements IModGuiFactory {
 	@Override
 	public void initialize(Minecraft minecraft)
 	{
-		
+
 	}
 
 	@Override
@@ -49,5 +49,5 @@ public class ParachuteConfigGUIFactory implements IModGuiFactory {
 	{
 		return null;
 	}
-	
+
 }

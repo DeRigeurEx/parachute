@@ -17,21 +17,19 @@
 //
 // Copyright 2011-2015 Michael Sheppard (crackedEgg)
 //
-
 package com.parachute.common;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 
-
 public class PlayerFallEvent {
-	
+
 	public PlayerFallEvent()
 	{
 		Parachute.proxy.info("PlayerFallEvent ctor");
 	}
-	
+
 	@SubscribeEvent
 	public void onFallEvent(LivingFallEvent event)
 	{

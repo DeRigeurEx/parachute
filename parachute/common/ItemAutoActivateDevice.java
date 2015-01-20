@@ -88,7 +88,7 @@ public class ItemAutoActivateDevice extends Item {
 	{
 		return Items.redstone == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
 	}
-	
+
 	@Override
 	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining)
 	{
@@ -98,22 +98,22 @@ public class ItemAutoActivateDevice extends Item {
 			return new ModelResourceLocation(modid + ":" + ParachuteCommonProxy.aadName + "_off", "inventory");
 		}
 	}
-	
+
 	@Override
 	public boolean showDurabilityBar(ItemStack stack)
-    {
-        return false;
-    }
-	
+	{
+		return false;
+	}
+
 	public static boolean getAADActive()
 	{
 		return active;
 	}
-	
+
 	@Override
 	public int getMetadata(int damage)
-    {
-        return active ? 1 : 0;
-    }
-	
+	{
+		return active ? 1 : 0;
+	}
+
 }

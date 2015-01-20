@@ -25,7 +25,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 
 // intercept the space bar to make the parachute go up
-
 public class KeyPressTick {
 
 	@SubscribeEvent
@@ -41,5 +40,5 @@ public class KeyPressTick {
 			}
 		}
 	}
-	
+
 }

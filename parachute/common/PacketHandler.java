@@ -17,18 +17,17 @@
 //
 // Copyright 2011-2015 Michael Sheppard (crackedEgg)
 //
-
 package com.parachute.common;
 
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-
 public class PacketHandler {
+
 	public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(Parachute.modid);
 	public static final int packetID = 0;
-	
+
 	public static void init()
 	{
 		network.registerMessage(KeyPressMessage.Handler.class, KeyPressMessage.class, packetID, Side.SERVER);

@@ -28,17 +28,16 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-
-@Mod( modid = Parachute.modid, name = Parachute.name, version = Parachute.modversion, guiFactory = Parachute.guifactory )
+@Mod(modid = Parachute.modid, name = Parachute.name, version = Parachute.modversion, guiFactory = Parachute.guifactory)
 
 public class Parachute {
-	
+
 	public static final String modid = "parachutemod";
 	public static final String modversion = "3.1.1";
 	public static final String mcversion = "1.8.0";
 	public static final String name = "Parachute Mod";
 	public static final String guifactory = "com.parachute.client.ParachuteConfigGUIFactory";
-	
+
 	@SidedProxy(
 			clientSide = "com.parachute.client.ParachuteClientProxy",
 			serverSide = "com.parachute.common.ParachuteServerProxy"
@@ -71,19 +70,20 @@ public class Parachute {
 	{
 		proxy.postInit();
 	}
-	
+
 	public String getVersion()
 	{
 		return Parachute.modversion;
 	}
-	
+
 	// user has changed entries in the GUI config. save the results.
 	@SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.modID.equals(Parachute.modid)) {
+	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
+	{
+		if (event.modID.equals(Parachute.modid)) {
 			Parachute.proxy.info("Configuration changes have been updated for the " + Parachute.name);
-            updateConfigInfo();
+			updateConfigInfo();
 		}
-    }
-	
+	}
+
 }

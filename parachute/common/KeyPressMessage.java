@@ -17,7 +17,6 @@
 //
 // Copyright 2011-2015 Michael Sheppard (crackedEgg)
 //
-
 package com.parachute.common;
 
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -27,17 +26,16 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 
-
 public class KeyPressMessage implements IMessage {
-	
+
 	private boolean keyPressed;
 	private int keyCode;
-	
+
 	public KeyPressMessage()
 	{
-		
+
 	}
-	
+
 	public KeyPressMessage(int keyCode, boolean keyPressed)
 	{
 		this.keyCode = keyCode;
@@ -60,7 +58,7 @@ public class KeyPressMessage implements IMessage {
 		bb.writeInt(keyCode);
 		bb.writeBoolean(keyPressed);
 	}
-	
+
 	public static class Handler implements IMessageHandler<KeyPressMessage, IMessage> {
 
 		@Override
@@ -75,5 +73,5 @@ public class KeyPressMessage implements IMessage {
 			return null;
 		}
 	}
-	
+
 }

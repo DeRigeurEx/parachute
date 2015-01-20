@@ -26,26 +26,26 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AltitudeDisplay {
-	
+
 	public static String altitude = "";
 	private final Minecraft mc = Minecraft.getMinecraft();
-    private int screenX;
+	private int screenX;
 	private int screenY;
 	private final int colorRed = 0xffcc0000;
 	private final int colorGreen = 0xff00cc00;
-	
+
 	private final String altStr = "Altitude: ";
 	private final int w1 = mc.fontRendererObj.getStringWidth(altStr);
 	private final int cw = mc.fontRendererObj.getCharWidth('0');
-	
+
 	public AltitudeDisplay()
 	{
 		super();
 		ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		screenX = sr.getScaledWidth();
-        screenY = sr.getScaledHeight();
+		screenY = sr.getScaledHeight();
 	}
-	
+
 	// the altitude display is placed in the food bar space
 	// the food bar is removed when riding boats, parachutes, etc.
 	// when in creativemode lower the display a bit
@@ -59,13 +59,14 @@ public class AltitudeDisplay {
 			screenY = sr.getScaledHeight() - 38;
 		}
 	}
-	
+
 	@SubscribeEvent()
-    public void onRender(RenderGameOverlayEvent event) {
-        if (event.isCancelable() || mc.gameSettings.showDebugInfo || mc.thePlayer.onGround) {
+	public void onRender(RenderGameOverlayEvent event)
+	{
+		if (event.isCancelable() || mc.gameSettings.showDebugInfo || mc.thePlayer.onGround) {
 			return;
 		}
-		
+
 		if (mc.inGameHasFocus && event.type == RenderGameOverlayEvent.ElementType.ALL) {
 			if (ParachuteCommonProxy.onParachute(mc.thePlayer)) {
 				updateWindowScale();
@@ -76,7 +77,7 @@ public class AltitudeDisplay {
 			}
 		}
 	}
-	
+
 	public static void setAltitudeString(String text)
 	{
 		altitude = text;

@@ -141,7 +141,7 @@ public class EntityParachute extends Entity {
 		return getEntityBoundingBox();
 	}
 
-    //
+	//
 	// skydiver should 'hang' when on the parachute and then
 	// 'pick up legs' when landing.
 	//
@@ -199,7 +199,7 @@ public class EntityParachute extends Entity {
 		velocityY = motionY = y;
 		velocityZ = motionZ = z;
 	}
-	
+
 	// format the altitude number to a string
 	public String format(double d)
 	{
@@ -528,7 +528,7 @@ public class EntityParachute extends Entity {
 			riddenByEntity.setPosition(x, y, z);
 		}
 	}
-	
+
 	// only allow altitude calculations in the surface world
 	// return a weirdly random nuber if in nether or end.
 	public double getCurrentAltitude(BlockPos bp, boolean MSL)
@@ -557,7 +557,7 @@ public class EntityParachute extends Entity {
 		// calculate the entity's current altitude above the ground
 		return bp.getY() - bp1.getY();
 	}
-	
+
 	// calculate the altitude above Mean Sea Level (63)
 	// this method produces negative number below the sea level, e.g.,
 	// underground.
@@ -566,7 +566,7 @@ public class EntityParachute extends Entity {
 		// calculate the entity's current altitude above MSL
 		return bp.getY() - MSL;
 	}
-	
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt)
 	{

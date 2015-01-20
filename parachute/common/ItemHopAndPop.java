@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 import net.minecraft.item.Item;
 
 public class ItemHopAndPop extends Item {
-	
+
 	final private float volume = 1.0F;
 
 	public ItemHopAndPop(ToolMaterial toolmaterial)
@@ -58,7 +58,7 @@ public class ItemHopAndPop extends Item {
 			chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
 			if (world.isRemote) {
 				RenderParachute.setParachuteColor(ConfigHandler.getChuteColor());
-			} else  {
+			} else {
 				world.spawnEntityInWorld(chute);
 			}
 			entityplayer.mountEntity(chute);
@@ -72,12 +72,12 @@ public class ItemHopAndPop extends Item {
 		}
 		return itemstack;
 	}
-	
+
 	private float pitch()
 	{
 		return 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F);
 	}
-	
+
 	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2)
 	{

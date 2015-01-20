@@ -39,7 +39,7 @@ public class RenderParachute extends Render {
 	protected static ModelBase modelParachute = new ModelParachute();
 	private static ResourceLocation parachuteTexture = null;
 	private static final Random rand = new Random(System.currentTimeMillis());
-	
+
 	public RenderParachute(RenderManager rm)
 	{
 		super(rm);
@@ -89,7 +89,7 @@ public class RenderParachute extends Render {
 		float zr = zOffset;
 
 		float b = rider.getBrightness(center);
-		
+
 		GlStateManager.pushMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -213,10 +213,10 @@ public class RenderParachute extends Render {
 	{
 		if (color.equalsIgnoreCase("random")) {
 			if (rand.nextBoolean()) {
-					parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + getRandomColor() + ".png");
-				} else {
-					parachuteTexture = new ResourceLocation(Parachute.modid + ":textures/blocks/" + getRandomCustomColor() + ".png");
-				}
+				parachuteTexture = new ResourceLocation("textures/blocks/wool_colored_" + getRandomColor() + ".png");
+			} else {
+				parachuteTexture = new ResourceLocation(Parachute.modid + ":textures/blocks/" + getRandomCustomColor() + ".png");
+			}
 		} else if (color.toLowerCase().startsWith("custom")) {
 			parachuteTexture = new ResourceLocation(Parachute.modid + ":textures/blocks/" + color + ".png");
 		} else {
@@ -243,10 +243,10 @@ public class RenderParachute extends Render {
 		}
 		return parachuteTexture;
 	}
-	
+
 	protected static String getRandomColor()
 	{
-		String [] colors = {
+		String[] colors = {
 			"black",
 			"blue",
 			"brown",
@@ -264,10 +264,10 @@ public class RenderParachute extends Render {
 			"white",
 			"yellow"
 		};
-		
+
 		return colors[rand.nextInt(16)];
 	}
-	
+
 	// return the string 'custom' and append a random digit 
 	// between zero and nine
 	protected static String getRandomCustomColor()
@@ -281,5 +281,5 @@ public class RenderParachute extends Render {
 		parachuteTexture = getParachuteColor(curColor);
 		return parachuteTexture;
 	}
-	
+
 }

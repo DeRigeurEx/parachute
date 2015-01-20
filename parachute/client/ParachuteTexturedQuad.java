@@ -58,7 +58,7 @@ public class ParachuteTexturedQuad {
 
 		vertexPositions = texCoords;
 	}
-	
+
 	public void draw(WorldRenderer worldrenderer, float face)
 	{
 		Vec3 vec3 = this.vertexPositions[1].vector3D.subtractReverse(this.vertexPositions[0].vector3D);

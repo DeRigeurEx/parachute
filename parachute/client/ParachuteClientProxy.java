@@ -37,36 +37,36 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class ParachuteClientProxy extends ParachuteCommonProxy {
-	
+
 	@Override
 	public void preInit()
 	{
 		super.preInit();
 		info(modid + " ConbinedClient preInit is complete.");
 	}
-	
+
 	@Override
 	public void Init()
 	{
 		super.Init();
 		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
 		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute(rm));
-		
+
 		FMLCommonHandler.instance().bus().register(new KeyPressTick());
 		MinecraftForge.EVENT_BUS.register(new AltitudeDisplay());
-		
+
 		ItemModelMesher mm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 		mm.register(parachuteItem, 0, new ModelResourceLocation(modid + ":" + parachuteName, "inventory"));
 		mm.register(ripcordItem, 0, new ModelResourceLocation(modid + ":" + ripcordName, "inventory"));
 		mm.register(hopnpopItem, 0, new ModelResourceLocation(modid + ":" + hopnpopName, "inventory"));
-		
+
 		ModelBakery.addVariantName(aadItem, new String[] {modid + ":" + aadName, modid + ":" + aadName + "_off"});
 		mm.register(aadItem, 1, new ModelResourceLocation(modid + ":" + aadName, "inventory"));
 		mm.register(aadItem, 0, new ModelResourceLocation(modid + ":" + aadName + "_off", "inventory"));
-		
+
 		info(modid + " ConbinedClient Init is complete.");
 	}
-	
+
 	@Override
 	public void postInit()
 	{

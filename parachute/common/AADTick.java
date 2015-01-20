@@ -34,7 +34,7 @@ public class AADTick {
 		}
 	}
 
-    // Handles the Automatic Activation Device
+	// Handles the Automatic Activation Device
 	// deploy the parachute if the player is at an altitude of Parachute.getAADAltitude()
 	// and deactivate the AAD, consider it a one shot, you must re-activate it.
 	private void onPlayerTick(EntityPlayer player)

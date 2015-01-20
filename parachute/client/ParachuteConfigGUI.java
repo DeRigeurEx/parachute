@@ -27,7 +27,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.GuiConfig;
 
 public class ParachuteConfigGUI extends GuiConfig {
-			
+
 	public ParachuteConfigGUI(GuiScreen parentScreen)
 	{
 		super(parentScreen,
