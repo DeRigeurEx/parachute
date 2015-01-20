@@ -32,6 +32,7 @@ import net.minecraft.item.ItemArmor;
 public class ItemParachute extends ItemArmor {
 
 	private final int damageAmount = 1;
+	private final float volume = 1.0F;
 
 	public ItemParachute(ArmorMaterial armorMaterial, int renderIndex, int armorType)
 	{
@@ -53,7 +54,7 @@ public class ItemParachute extends ItemArmor {
 				offset = 3.5F;  // large canopy
 			}
 			EntityParachute chute = new EntityParachute(world, entityplayer.posX, entityplayer.posY - offset, entityplayer.posZ);
-			chute.playSound("step.cloth", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
+			chute.playSound("step.cloth", volume, pitch());
 			chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
 			if (world.isRemote) {
 				RenderParachute.setParachuteColor(ConfigHandler.getChuteColor());
@@ -73,6 +74,11 @@ public class ItemParachute extends ItemArmor {
 			return false;
 		}
 		return true;
+	}
+	
+	private float pitch()
+	{
+		return 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F);
 	}
 
 	@Override

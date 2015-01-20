@@ -423,6 +423,11 @@ public class EntityParachute extends Entity {
 		return thermals;
 	}
 
+	// BlockPos bp is the rider's position. The rider's posY - 1.0
+	// to be exact. We check for air blocks, flowers, leaves, and grass at
+	// that position Y. The check for leaves means the parachute can get 
+	// hung up in the trees. Also means that the rider must manually
+	// dismount to land on trees.
 	public boolean checkForGroundProximity(BlockPos bp)
 	{
 		boolean result = false;
