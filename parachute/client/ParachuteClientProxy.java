@@ -22,11 +22,7 @@ package com.parachute.client;
 import com.parachute.common.ParachuteCommonProxy;
 import com.parachute.common.EntityParachute;
 import com.parachute.common.KeyPressTick;
-import static com.parachute.common.Parachute.aadItem;
-import static com.parachute.common.Parachute.hopnpopItem;
-import static com.parachute.common.Parachute.modid;
-import static com.parachute.common.Parachute.parachuteItem;
-import static com.parachute.common.Parachute.ripcordItem;
+import com.parachute.common.Parachute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -42,7 +38,7 @@ public class ParachuteClientProxy extends ParachuteCommonProxy {
 	public void preInit()
 	{
 		super.preInit();
-		info(modid + " ConbinedClient preInit is complete.");
+		info(Parachute.modid + " ConbinedClient preInit is complete.");
 	}
 
 	@Override
@@ -56,21 +52,21 @@ public class ParachuteClientProxy extends ParachuteCommonProxy {
 		MinecraftForge.EVENT_BUS.register(new AltitudeDisplay());
 
 		ItemModelMesher mm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-		mm.register(parachuteItem, 0, new ModelResourceLocation(modid + ":" + parachuteName, "inventory"));
-		mm.register(ripcordItem, 0, new ModelResourceLocation(modid + ":" + ripcordName, "inventory"));
-		mm.register(hopnpopItem, 0, new ModelResourceLocation(modid + ":" + hopnpopName, "inventory"));
+		mm.register(Parachute.parachuteItem, 0, new ModelResourceLocation(Parachute.modid + ":" + parachuteName, "inventory"));
+		mm.register(Parachute.ripcordItem, 0, new ModelResourceLocation(Parachute.modid + ":" + ripcordName, "inventory"));
+		mm.register(Parachute.hopnpopItem, 0, new ModelResourceLocation(Parachute.modid + ":" + hopnpopName, "inventory"));
 
-		ModelBakery.addVariantName(aadItem, new String[] {modid + ":" + aadName, modid + ":" + aadName + "_off"});
-		mm.register(aadItem, 1, new ModelResourceLocation(modid + ":" + aadName, "inventory"));
-		mm.register(aadItem, 0, new ModelResourceLocation(modid + ":" + aadName + "_off", "inventory"));
+		ModelBakery.addVariantName(Parachute.aadItem, new String[] {Parachute.modid + ":" + aadName, Parachute.modid + ":" + aadName + "_off"});
+		mm.register(Parachute.aadItem, 1, new ModelResourceLocation(Parachute.modid + ":" + aadName, "inventory"));
+		mm.register(Parachute.aadItem, 0, new ModelResourceLocation(Parachute.modid + ":" + aadName + "_off", "inventory"));
 
-		info(modid + " ConbinedClient Init is complete.");
+		info(Parachute.modid + " ConbinedClient Init is complete.");
 	}
 
 	@Override
 	public void postInit()
 	{
-		info(modid + " ConbinedClient postInit is complete.");
+		info(Parachute.modid + " ConbinedClient postInit is complete.");
 	}
 
 }

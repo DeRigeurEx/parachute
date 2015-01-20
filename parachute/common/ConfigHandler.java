@@ -19,9 +19,6 @@
 //
 package com.parachute.common;
 
-import static com.parachute.common.Parachute.hopnpopItem;
-import static com.parachute.common.ParachuteCommonProxy.hopnpopName;
-import static com.parachute.common.ParachuteCommonProxy.parachuteName;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -45,7 +42,7 @@ public class ConfigHandler {
 	private static boolean allowTurbulence;
 	private static boolean showContrails;
 	private static boolean altitudeMSL;
-	private static String type = parachuteName; // defaults to the normal parachute
+	private static String type = ParachuteCommonProxy.parachuteName;
 
 	private static final String aboutComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
 			+ " For Minecraft Version " + Parachute.mcversion + "\n";
@@ -189,7 +186,7 @@ public class ConfigHandler {
 	{
 		type = typeStr;
 		// force a small canopy for the hop-n-pop chute
-		if (type.equals(hopnpopName)) {
+		if (type.equals(ParachuteCommonProxy.hopnpopName)) {
 			smallCanopy = true;
 		}
 	}
@@ -202,7 +199,7 @@ public class ConfigHandler {
 	public static int getHopAndPopDamageAmount()
 	{
 		if (singleUse) {
-			return hopnpopItem.getMaxDamage() + 1;
+			return Parachute.hopnpopItem.getMaxDamage() + 1;
 		}
 		return 1;
 	}

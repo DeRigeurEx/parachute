@@ -19,7 +19,6 @@
 //
 package com.parachute.common;
 
-import static com.parachute.common.Parachute.modid;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -93,9 +92,9 @@ public class ItemAutoActivateDevice extends Item {
 	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining)
 	{
 		if (active) {
-			return new ModelResourceLocation(modid + ":" + ParachuteCommonProxy.aadName, "inventory");
+			return new ModelResourceLocation(Parachute.modid + ":" + ParachuteCommonProxy.aadName, "inventory");
 		} else {
-			return new ModelResourceLocation(modid + ":" + ParachuteCommonProxy.aadName + "_off", "inventory");
+			return new ModelResourceLocation(Parachute.modid + ":" + ParachuteCommonProxy.aadName + "_off", "inventory");
 		}
 	}
 

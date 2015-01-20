@@ -19,7 +19,6 @@
 //
 package com.parachute.common;
 
-import static com.parachute.common.ConfigHandler.updateConfigInfo;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -82,7 +81,7 @@ public class Parachute {
 	{
 		if (event.modID.equals(Parachute.modid)) {
 			Parachute.proxy.info("Configuration changes have been updated for the " + Parachute.name);
-			updateConfigInfo();
+			ConfigHandler.updateConfigInfo();
 		}
 	}
 

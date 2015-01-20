@@ -19,10 +19,6 @@
 //
 package com.parachute.common;
 
-import static com.parachute.common.Parachute.aadItem;
-import static com.parachute.common.Parachute.hopnpopItem;
-import static com.parachute.common.Parachute.parachuteItem;
-import static com.parachute.common.Parachute.ripcordItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -56,17 +52,17 @@ public class ParachuteCommonProxy {
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, Parachute.instance, 80, 20, true);
 
 		final int renderIndex = 0;
-		parachuteItem = (ItemParachute) (new ItemParachute(NYLON, renderIndex, armorType)).setUnlocalizedName(parachuteName);
-		GameRegistry.registerItem(parachuteItem, parachuteName);
+		Parachute.parachuteItem = (ItemParachute) (new ItemParachute(NYLON, renderIndex, armorType)).setUnlocalizedName(parachuteName);
+		GameRegistry.registerItem(Parachute.parachuteItem, parachuteName);
 
-		ripcordItem = (ItemRipCord) (new ItemRipCord()).setUnlocalizedName(ripcordName);
-		GameRegistry.registerItem(ripcordItem, ripcordName);
+		Parachute.ripcordItem = (ItemRipCord) (new ItemRipCord()).setUnlocalizedName(ripcordName);
+		GameRegistry.registerItem(Parachute.ripcordItem, ripcordName);
 
-		aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice()).setUnlocalizedName(aadName);
-		GameRegistry.registerItem(aadItem, aadName);
+		Parachute.aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice()).setUnlocalizedName(aadName);
+		GameRegistry.registerItem(Parachute.aadItem, aadName);
 
-		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
-		GameRegistry.registerItem(hopnpopItem, hopnpopName);
+		Parachute.hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
+		GameRegistry.registerItem(Parachute.hopnpopItem, hopnpopName);
 
 		PacketHandler.init();
 	}
@@ -76,20 +72,20 @@ public class ParachuteCommonProxy {
 		FMLCommonHandler.instance().bus().register(Parachute.instance);
 
 		// recipes to craft the parachutes, ripcord and AAD
-		GameRegistry.addRecipe(new ItemStack(parachuteItem, 1), new Object[] {
+		GameRegistry.addRecipe(new ItemStack(Parachute.parachuteItem, 1), new Object[] {
 			"###", "X X", " L ", '#', Blocks.wool, 'X', Items.string, 'L', Items.leather
 		});
 
-		GameRegistry.addRecipe(new ItemStack(hopnpopItem, 1), new Object[] {
+		GameRegistry.addRecipe(new ItemStack(Parachute.hopnpopItem, 1), new Object[] {
 			"###", "X X", " X ", '#', Blocks.wool, 'X', Items.string
 		});
 
-		GameRegistry.addRecipe(new ItemStack(ripcordItem, 1), new Object[] {
+		GameRegistry.addRecipe(new ItemStack(Parachute.ripcordItem, 1), new Object[] {
 			"#  ", " # ", "  *", '#', Items.string, '*', Items.iron_ingot
 		});
 
-		GameRegistry.addRecipe(new ItemStack(aadItem, 1), new Object[] {
-			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', ripcordItem});
+		GameRegistry.addRecipe(new ItemStack(Parachute.aadItem, 1), new Object[] {
+			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', Parachute.ripcordItem});
 
 		FMLCommonHandler.instance().bus().register(new AADTick());
 		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
