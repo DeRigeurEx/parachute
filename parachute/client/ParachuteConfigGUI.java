@@ -27,12 +27,12 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.GuiConfig;
 
 public class ParachuteConfigGUI extends GuiConfig {
-
+			
 	public ParachuteConfigGUI(GuiScreen parentScreen)
 	{
 		super(parentScreen,
 				new ConfigElement(ConfigHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
 				Parachute.modid, false, false, GuiConfig.getAbridgedConfigPath(ConfigHandler.config.toString()));
 	}
-	
+
 }

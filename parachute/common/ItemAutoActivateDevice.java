@@ -27,7 +27,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.util.BlockPos;
 
@@ -76,9 +75,6 @@ public class ItemAutoActivateDevice extends Item {
 	{
 		boolean altitudeReached = false;
 
-//		int x = MathHelper.floor_double(player.posX);
-//		int y = MathHelper.floor_double(player.posY - altitude);
-//		int z = MathHelper.floor_double(player.posZ);
 		BlockPos blockPos = new BlockPos(player.posX, player.posY - altitude, player.posZ);
 
 		if (!player.worldObj.isAirBlock(blockPos) && player.fallDistance > fallThreshold) {

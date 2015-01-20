@@ -48,11 +48,16 @@ public class AltitudeDisplay {
 	
 	// the altitude display is placed in the food bar space
 	// the food bar is removed when riding boats, parachutes, etc.
+	// when in creativemode lower the display a bit
 	public void updateWindowScale()
 	{
 		ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		screenX = (sr.getScaledWidth() / 2) + 10;
-        screenY = sr.getScaledHeight() - 38;
+		if (mc.thePlayer.capabilities.isCreativeMode) {
+			screenY = sr.getScaledHeight() - 30;
+		} else {
+			screenY = sr.getScaledHeight() - 38;
+		}
 	}
 	
 	@SubscribeEvent()

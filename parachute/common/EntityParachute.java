@@ -430,7 +430,7 @@ public class EntityParachute extends Entity {
 		if (!worldObj.isRemote && !isDead) {
 			Block block = worldObj.getBlockState(bp).getBlock();
 			boolean isAir = (block == Blocks.air);
-			boolean isVegetation = (block instanceof BlockFlower) && (block instanceof BlockGrass) && (block instanceof BlockLeaves);
+			boolean isVegetation = (block instanceof BlockFlower) || (block instanceof BlockGrass) || (block instanceof BlockLeaves);
 			result = (!isAir && !isVegetation);
 		}
 		return result;

@@ -28,6 +28,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class ConfigHandler {
 	
 	public static Configuration config;
+	public static final String aboutCategory = "About";
+	
 	private static boolean singleUse = false; // applies to the hop and pop chute only
 	private static int heightLimit = 256;
 	private static String chuteColor = "random";
@@ -45,7 +47,7 @@ public class ConfigHandler {
 	private static boolean altitudeMSL;
 	private static String type = parachuteName; // defaults to the normal parachute
 	
-	private static final String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
+	private static final String aboutComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
 				+ " For Minecraft Version " + Parachute.mcversion + "\n";
 	private static final String usageComment = "set to true for hop-n-pop single use"; // false
 	private static final String heightComment = "0 (zero) disables altitude limiting"; // 256
@@ -68,9 +70,9 @@ public class ConfigHandler {
 			+ "magenta, orange, pink, purple, red, silver, white, yellow,\n"
 			+ "random - randomly chosen color each time chute is opened\n" // random is default
 			+ "custom[0-9] - allows use of a custom texture called 'custom' with a single number appended";
-			
-	public static void startConfig(FMLPreInitializationEvent event) {
-
+	
+	public static void startConfig(FMLPreInitializationEvent event)
+	{
         config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load(); // only need to load config once during pre init
 		updateConfigInfo();
@@ -79,7 +81,7 @@ public class ConfigHandler {
 	public static void updateConfigInfo()
 	{
 		try {
-			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
+			config.addCustomCategoryComment(aboutCategory, aboutComments);
 
 			singleUse = config.get(Configuration.CATEGORY_GENERAL, "singleUse", false, usageComment).getBoolean(false);
 			heightLimit = config.get(Configuration.CATEGORY_GENERAL, "heightLimit", 256, heightComment).getInt();
