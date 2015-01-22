@@ -22,6 +22,7 @@ package com.parachute.common;
 import com.parachute.client.RenderParachute;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
@@ -82,6 +83,19 @@ public class ItemHopAndPop extends Item {
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2)
 	{
 		return Items.string == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
+	}
+	
+	// search inventory for a hop & pop
+	public static boolean inventoryContainsHaP(InventoryPlayer inventory)
+	{
+		boolean result = false;
+		for (ItemStack s : inventory.mainInventory) {
+			if (s != null && s.getItem() instanceof ItemHopAndPop) {
+				result = true;
+				break;
+			}
+		}
+		return result;
 	}
 
 }

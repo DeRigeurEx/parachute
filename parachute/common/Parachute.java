@@ -47,6 +47,7 @@ public class Parachute {
 	public static ItemHopAndPop hopnpopItem;
 	public static ItemRipCord ripcordItem;
 	public static ItemAutoActivateDevice aadItem;
+	public static ItemHapPack packItem;
 
 	@Mod.Instance(modid)
 	public static Parachute instance;

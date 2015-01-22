@@ -325,7 +325,7 @@ public class EntityParachute extends Entity {
 
 		// something bad happened, somehow the skydiver was killed.
 		if (!worldObj.isRemote && riddenByEntity != null && riddenByEntity.isDead) {
-			riddenByEntity = null;
+//			riddenByEntity = null;
 			killParachute(false);
 		}
 
@@ -336,6 +336,7 @@ public class EntityParachute extends Entity {
 		if (drop) {
 			dropParachute(this);
 		}
+		riddenByEntity = null;
 		ParachuteCommonProxy.setDeployed(false);
 		setDead();
 	}

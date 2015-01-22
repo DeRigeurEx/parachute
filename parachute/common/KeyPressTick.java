@@ -38,6 +38,13 @@ public class KeyPressTick {
 					PacketHandler.network.sendToServer(new KeyPressMessage(Keyboard.KEY_SPACE, keyPressed));
 				}
 			}
+//			if (Keyboard.getEventKey() == Keyboard.KEY_P) {
+//				EntityPlayer player = event.player;
+//				if (player != null) {
+//					boolean keyPressed = Keyboard.isKeyDown(Keyboard.KEY_P);
+//					PacketHandler.network.sendToServer(new KeyPressMessage(Keyboard.KEY_P, keyPressed));
+//				}
+//			}
 		}
 	}
 

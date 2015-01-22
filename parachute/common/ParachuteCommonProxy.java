@@ -20,12 +20,12 @@
 package com.parachute.common;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.FMLLog;
@@ -39,12 +39,13 @@ public class ParachuteCommonProxy {
 	private final int entityID = EntityRegistry.findGlobalUniqueEntityId();
 	static ItemArmor.ArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", "", 15, new int[] {2, 5, 4, 1}, 12); // same as CHAIN
 	static Item.ToolMaterial RIPSTOP = EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
-	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = leggings,   3 = boots
-	public static final int armorSlot = 2;  // armor slot: 0 = boots,  1 = leggings,   2 = chestplate, 3 = helmet
+	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = leggings, 3 = boots
+	public static final int armorSlot = 2;  // armor slot: 3 = helmet, 2 = chestplate, 1 = leggings, 0 = boots    
 	public static final String hopnpopName = "hop_and_pop";
 	public static final String parachuteName = "parachute";
 	public static final String ripcordName = "ripcord";
 	public static final String aadName = "auto_activation_device";
+	public static final String packName = "pack";
 	private static boolean deployed = false;
 
 	public void preInit()
@@ -63,6 +64,9 @@ public class ParachuteCommonProxy {
 
 		Parachute.hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
 		GameRegistry.registerItem(Parachute.hopnpopItem, hopnpopName);
+		
+		Parachute.packItem = (ItemHapPack) (new ItemHapPack(NYLON, renderIndex, armorType)).setUnlocalizedName(packName);
+		GameRegistry.registerItem(Parachute.packItem, packName);
 
 		PacketHandler.init();
 	}
@@ -87,8 +91,7 @@ public class ParachuteCommonProxy {
 		GameRegistry.addRecipe(new ItemStack(Parachute.aadItem, 1), new Object[] {
 			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', Parachute.ripcordItem});
 
-		FMLCommonHandler.instance().bus().register(new AADTick());
-		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
+		FMLCommonHandler.instance().bus().register(new PlayerTickEventHandler());
 	}
 
 	public void postInit()
@@ -112,6 +115,17 @@ public class ParachuteCommonProxy {
 		if (stack != null) {
 			Item item = stack.getItem();
 			if (item != null && item instanceof ItemParachute) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean inventoryContainsParachute(InventoryPlayer inventory)
+	{
+		for (ItemStack s : inventory.mainInventory) {
+			Item item = s == null ? null : s.getItem();
+			if (item != null && item instanceof ItemParachute || item instanceof ItemHopAndPop) {
 				return true;
 			}
 		}

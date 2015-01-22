@@ -55,6 +55,7 @@ public class ParachuteClientProxy extends ParachuteCommonProxy {
 		mm.register(Parachute.parachuteItem, 0, new ModelResourceLocation(Parachute.modid + ":" + parachuteName, "inventory"));
 		mm.register(Parachute.ripcordItem, 0, new ModelResourceLocation(Parachute.modid + ":" + ripcordName, "inventory"));
 		mm.register(Parachute.hopnpopItem, 0, new ModelResourceLocation(Parachute.modid + ":" + hopnpopName, "inventory"));
+		mm.register(Parachute.packItem, 0, new ModelResourceLocation(Parachute.modid + ":" + packName, "inventory"));
 
 		ModelBakery.addVariantName(Parachute.aadItem, new String[] {Parachute.modid + ":" + aadName, Parachute.modid + ":" + aadName + "_off"});
 		mm.register(Parachute.aadItem, 1, new ModelResourceLocation(Parachute.modid + ":" + aadName, "inventory"));

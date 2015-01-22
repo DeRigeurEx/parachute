@@ -67,8 +67,16 @@ public class KeyPressMessage implements IMessage {
 			EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
 			if (entityPlayer != null) {
 				if (msg.keyCode == Keyboard.KEY_SPACE) {
-					EntityParachute.setAscendMode(msg.keyPressed);
+					if (entityPlayer.ridingEntity instanceof EntityParachute) {
+						EntityParachute.setAscendMode(msg.keyPressed);
+//						Parachute.proxy.info(Parachute.modid + ": Keyboard.KEY_SPACE pressed");
+					}
 				}
+//				if (msg.keyCode == Keyboard.KEY_P) {
+//					if (msg.keyPressed && ParachuteCommonProxy.inventoryContainsParachute(entityPlayer.inventory)) {
+//						Parachute.proxy.info(Parachute.modid + ": Keyboard.KEY_P pressed");
+//					}
+//				}
 			}
 			return null;
 		}

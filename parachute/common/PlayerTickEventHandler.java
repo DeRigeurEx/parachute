@@ -21,16 +21,19 @@ package com.parachute.common;
 
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class AADTick {
+public class PlayerTickEventHandler {
 
 	@SubscribeEvent
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
 		if (event.phase.equals(TickEvent.Phase.START) && event.side.isServer()) {
 			onPlayerTick(event.player);
+		} else if (event.phase.equals(TickEvent.Phase.END) && event.side.isServer()) {
+			setPlayerParachutePack(event.player);
 		}
 	}
 
@@ -51,4 +54,29 @@ public class AADTick {
 			} // else fall to death!
 		}
 	}
+
+	// Check the players currently held item and if it is a 
+	// hop&pop set a parachuteItem in the chestplate armor slot.
+	// Remove the parachuteItem if the player is no longer holding the hop&pop
+	// and if the player is not on the parachute. If there is an armor item in the
+	// armor slot do nothing.
+	private void setPlayerParachutePack(EntityPlayer player)
+	{
+		if (player != null) {
+			ItemStack itemstack = player.inventory.armorInventory[ParachuteCommonProxy.armorSlot];
+			Item holding = player.inventory.getCurrentItem().getItem();
+			boolean deployed = ParachuteCommonProxy.getDeployed();
+			if (itemstack != null && holding != null) {
+				if (itemstack.getItem() instanceof ItemHapPack && !(holding instanceof ItemHopAndPop) && !deployed) {
+					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot] = (ItemStack) null;
+					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot].stackSize = 0;
+				}
+			} else {
+				if (holding != null && holding instanceof ItemHopAndPop) {
+					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot] = new ItemStack(Parachute.packItem);
+				}
+			}
+		}
+	}
+
 }

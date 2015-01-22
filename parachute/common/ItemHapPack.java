@@ -19,25 +19,28 @@
 //
 package com.parachute.common;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
+//import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemArmor;
 
-public class PlayerFallEvent {
+public class ItemHapPack extends ItemArmor {
 
-	public PlayerFallEvent()
+	public ItemHapPack(ItemArmor.ArmorMaterial armorMaterial, int renderIndex, int armorType)
 	{
-		Parachute.proxy.info("PlayerFallEvent ctor");
+		super(armorMaterial, renderIndex, armorType);
+		setMaxDamage(armorMaterial.getDurability(armorType));
+		maxStackSize = 1;
+//		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 	}
 
-	@SubscribeEvent
-	public void onFallEvent(LivingFallEvent event)
+	@Override
+	public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, String type)
 	{
-		EntityLivingBase rider = event.entityLiving;
-		if (rider.ridingEntity instanceof EntityParachute) {
-			rider.fallDistance = 0.0f;
-			rider.isCollided = false;
-			event.setCanceled(true);
+		if (itemstack.getItem() == Parachute.packItem) {
+			return Parachute.modid.toLowerCase() + ":textures/models/armor/hap-pack.png";
 		}
+		return Parachute.modid.toLowerCase() + ":textures/models/armor/hap-pack.png";
 	}
+
 }
