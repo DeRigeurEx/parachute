@@ -31,27 +31,7 @@ public class PlayerTickEventHandler {
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
 		if (event.phase.equals(TickEvent.Phase.START) && event.side.isServer()) {
-			onPlayerTick(event.player);
-		} else if (event.phase.equals(TickEvent.Phase.END) && event.side.isServer()) {
-			setPlayerParachutePack(event.player);
-		}
-	}
-
-	// Handles the Automatic Activation Device
-	// deploy the parachute if the player is at an altitude of Parachute.getAADAltitude()
-	// and deactivate the AAD, consider it a one shot, you must re-activate it.
-	private void onPlayerTick(EntityPlayer player)
-	{
-		if (ParachuteCommonProxy.playerIsWearingParachute(player)) {
-			ItemStack parachute = player.getCurrentArmor(ParachuteCommonProxy.armorSlot);
-			ItemStack aad = ItemAutoActivateDevice.inventoryContainsAAD(player.inventory);
-			if (aad != null) {
-				boolean autoAltitudeReached = ItemAutoActivateDevice.getAutoActivateAltitude(player);
-				boolean isActive = ItemAutoActivateDevice.getAADActive();
-				if (isActive && autoAltitudeReached && !player.onGround && !player.isOnLadder()) {
-					((ItemParachute) parachute.getItem()).deployParachute(player.worldObj, player);
-				}
-			} // else fall to death!
+			togglePlayerParachutePack(event.player);
 		}
 	}
 
@@ -60,19 +40,19 @@ public class PlayerTickEventHandler {
 	// Remove the parachuteItem if the player is no longer holding the hop&pop
 	// and if the player is not on the parachute. If there is an armor item in the
 	// armor slot do nothing.
-	private void setPlayerParachutePack(EntityPlayer player)
+	private void togglePlayerParachutePack(EntityPlayer player)
 	{
 		if (player != null) {
 			ItemStack itemstack = player.inventory.armorInventory[ParachuteCommonProxy.armorSlot];
 			Item holding = player.inventory.getCurrentItem().getItem();
 			boolean deployed = ParachuteCommonProxy.getDeployed();
 			if (itemstack != null && holding != null) {
-				if (itemstack.getItem() instanceof ItemHapPack && !(holding instanceof ItemHopAndPop) && !deployed) {
+				if (itemstack.getItem() instanceof ItemParachutePack && !(holding instanceof ItemParachute) && !deployed) {
 					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot] = (ItemStack) null;
 					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot].stackSize = 0;
 				}
 			} else {
-				if (holding != null && holding instanceof ItemHopAndPop) {
+				if (holding != null && holding instanceof ItemParachute) {
 					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot] = new ItemStack(Parachute.packItem);
 				}
 			}

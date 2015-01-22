@@ -26,7 +26,6 @@ import com.parachute.common.Parachute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -53,13 +52,7 @@ public class ParachuteClientProxy extends ParachuteCommonProxy {
 
 		ItemModelMesher mm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 		mm.register(Parachute.parachuteItem, 0, new ModelResourceLocation(Parachute.modid + ":" + parachuteName, "inventory"));
-		mm.register(Parachute.ripcordItem, 0, new ModelResourceLocation(Parachute.modid + ":" + ripcordName, "inventory"));
-		mm.register(Parachute.hopnpopItem, 0, new ModelResourceLocation(Parachute.modid + ":" + hopnpopName, "inventory"));
 		mm.register(Parachute.packItem, 0, new ModelResourceLocation(Parachute.modid + ":" + packName, "inventory"));
-
-		ModelBakery.addVariantName(Parachute.aadItem, new String[] {Parachute.modid + ":" + aadName, Parachute.modid + ":" + aadName + "_off"});
-		mm.register(Parachute.aadItem, 1, new ModelResourceLocation(Parachute.modid + ":" + aadName, "inventory"));
-		mm.register(Parachute.aadItem, 0, new ModelResourceLocation(Parachute.modid + ":" + aadName + "_off", "inventory"));
 
 		info(Parachute.modid + " ConbinedClient Init is complete.");
 	}

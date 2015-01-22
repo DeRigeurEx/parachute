@@ -32,7 +32,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Parachute {
 
 	public static final String modid = "parachutemod";
-	public static final String modversion = "3.1.1";
+	public static final String modversion = "4.0.0";
 	public static final String mcversion = "1.8.0";
 	public static final String name = "Parachute Mod";
 	public static final String guifactory = "com.parachute.client.ParachuteConfigGUIFactory";
@@ -44,10 +44,7 @@ public class Parachute {
 	public static ParachuteCommonProxy proxy;
 
 	public static ItemParachute parachuteItem;
-	public static ItemHopAndPop hopnpopItem;
-	public static ItemRipCord ripcordItem;
-	public static ItemAutoActivateDevice aadItem;
-	public static ItemHapPack packItem;
+	public static ItemParachutePack packItem;
 
 	@Mod.Instance(modid)
 	public static Parachute instance;

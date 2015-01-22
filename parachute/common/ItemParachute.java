@@ -22,38 +22,39 @@ package com.parachute.common;
 import com.parachute.client.RenderParachute;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.item.Item;
 
-public class ItemParachute extends ItemArmor {
+public class ItemParachute extends Item {
 
-	private final int damageAmount = 1;
-	private final float volume = 1.0F;
+	final private float volume = 1.0F;
 
-	public ItemParachute(ArmorMaterial armorMaterial, int renderIndex, int armorType)
+	public ItemParachute(ToolMaterial toolmaterial)
 	{
-		super(armorMaterial, renderIndex, armorType);
-		setMaxDamage(armorMaterial.getDurability(armorType));
-		maxStackSize = 1;
+		super();
+		setMaxDamage(toolmaterial.getMaxUses());
+		maxStackSize = 4;
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 		ConfigHandler.setType(ParachuteCommonProxy.parachuteName);
 	}
 
-	public boolean deployParachute(World world, EntityPlayer entityplayer)
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+	{
+		return deployParachute(itemstack, world, entityplayer);
+	}
+
+	public ItemStack deployParachute(ItemStack itemstack, World world, EntityPlayer entityplayer)
 	{
 		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
 		if (entityplayer != null && ParachuteCommonProxy.isFalling(entityplayer) && entityplayer.ridingEntity == null) {
-			float offset;
-			if (ConfigHandler.isSmallCanopy()) {
-				offset = 2.5F;  // small canopy
-			} else {
-				offset = 3.5F;  // large canopy
-			}
-			EntityParachute chute = new EntityParachute(world, entityplayer.posX, entityplayer.posY - offset, entityplayer.posZ);
+			float offset = 2.5F; // small parachute only
+
+			EntityParachute chute = new EntityParachute(world, entityplayer.posX, entityplayer.posY + offset, entityplayer.posZ);
 			chute.playSound("step.cloth", volume, pitch());
 			chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
 			if (world.isRemote) {
@@ -65,15 +66,12 @@ public class ItemParachute extends ItemArmor {
 			ParachuteCommonProxy.setDeployed(true);
 
 			if (!entityplayer.capabilities.isCreativeMode) {
-				ItemStack parachute = entityplayer.inventory.armorItemInSlot(ParachuteCommonProxy.armorSlot);
-				if (parachute != null) {
-					parachute.damageItem(damageAmount, entityplayer);
+				if (itemstack != null) {
+					itemstack.damageItem(ConfigHandler.getHopAndPopDamageAmount(), entityplayer);
 				}
 			}
-		} else {
-			return false;
 		}
-		return true;
+		return itemstack;
 	}
 
 	private float pitch()
@@ -82,27 +80,22 @@ public class ItemParachute extends ItemArmor {
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, String type)
-	{
-		if (itemstack.getItem() == Parachute.parachuteItem) {
-			return Parachute.modid.toLowerCase() + ":textures/models/armor/parachute-pack.png";
-		}
-		return Parachute.modid.toLowerCase() + ":textures/models/armor/parachute-pack.png";
-	}
-
-	@Override
 	public boolean getIsRepairable(ItemStack itemstack1, ItemStack itemstack2)
 	{
 		return Items.string == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
 	}
+	
+	// search inventory for a hop & pop
+	public static boolean inventoryContainsHaP(InventoryPlayer inventory)
+	{
+		boolean result = false;
+		for (ItemStack s : inventory.mainInventory) {
+			if (s != null && s.getItem() instanceof ItemParachute) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
 
-	// TODO create a custom parachute pack model
-//    @Override
-//    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
-//        return new ModelParachutePack();
-//    }
-//    @Override
-//    public boolean hasColor(ItemStack itemStack) {
-//        return false;
-//    }
 }

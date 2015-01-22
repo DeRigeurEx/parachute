@@ -24,9 +24,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemArmor;
 
-public class ItemHapPack extends ItemArmor {
+public class ItemParachutePack extends ItemArmor {
 
-	public ItemHapPack(ItemArmor.ArmorMaterial armorMaterial, int renderIndex, int armorType)
+	public ItemParachutePack(ItemArmor.ArmorMaterial armorMaterial, int renderIndex, int armorType)
 	{
 		super(armorMaterial, renderIndex, armorType);
 		setMaxDamage(armorMaterial.getDurability(armorType));
@@ -38,9 +38,9 @@ public class ItemHapPack extends ItemArmor {
 	public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, String type)
 	{
 		if (itemstack.getItem() == Parachute.packItem) {
-			return Parachute.modid.toLowerCase() + ":textures/models/armor/hap-pack.png";
+			return Parachute.modid.toLowerCase() + ":textures/models/armor/pack.png";
 		}
-		return Parachute.modid.toLowerCase() + ":textures/models/armor/hap-pack.png";
+		return Parachute.modid.toLowerCase() + ":textures/models/armor/pack.png";
 	}
 
 }

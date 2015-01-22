@@ -41,10 +41,7 @@ public class ParachuteCommonProxy {
 	static Item.ToolMaterial RIPSTOP = EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
 	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = leggings, 3 = boots
 	public static final int armorSlot = 2;  // armor slot: 3 = helmet, 2 = chestplate, 1 = leggings, 0 = boots    
-	public static final String hopnpopName = "hop_and_pop";
 	public static final String parachuteName = "parachute";
-	public static final String ripcordName = "ripcord";
-	public static final String aadName = "auto_activation_device";
 	public static final String packName = "pack";
 	private static boolean deployed = false;
 
@@ -53,19 +50,11 @@ public class ParachuteCommonProxy {
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, Parachute.instance, 80, 20, true);
 
 		final int renderIndex = 0;
-		Parachute.parachuteItem = (ItemParachute) (new ItemParachute(NYLON, renderIndex, armorType)).setUnlocalizedName(parachuteName);
+
+		Parachute.parachuteItem = (ItemParachute) (new ItemParachute(RIPSTOP)).setUnlocalizedName(parachuteName);
 		GameRegistry.registerItem(Parachute.parachuteItem, parachuteName);
-
-		Parachute.ripcordItem = (ItemRipCord) (new ItemRipCord()).setUnlocalizedName(ripcordName);
-		GameRegistry.registerItem(Parachute.ripcordItem, ripcordName);
-
-		Parachute.aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice()).setUnlocalizedName(aadName);
-		GameRegistry.registerItem(Parachute.aadItem, aadName);
-
-		Parachute.hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
-		GameRegistry.registerItem(Parachute.hopnpopItem, hopnpopName);
 		
-		Parachute.packItem = (ItemHapPack) (new ItemHapPack(NYLON, renderIndex, armorType)).setUnlocalizedName(packName);
+		Parachute.packItem = (ItemParachutePack) (new ItemParachutePack(NYLON, renderIndex, armorType)).setUnlocalizedName(packName);
 		GameRegistry.registerItem(Parachute.packItem, packName);
 
 		PacketHandler.init();
@@ -76,20 +65,10 @@ public class ParachuteCommonProxy {
 		FMLCommonHandler.instance().bus().register(Parachute.instance);
 
 		// recipes to craft the parachutes, ripcord and AAD
-		GameRegistry.addRecipe(new ItemStack(Parachute.parachuteItem, 1), new Object[] {
-			"###", "X X", " L ", '#', Blocks.wool, 'X', Items.string, 'L', Items.leather
-		});
 
-		GameRegistry.addRecipe(new ItemStack(Parachute.hopnpopItem, 1), new Object[] {
+		GameRegistry.addRecipe(new ItemStack(Parachute.parachuteItem, 1), new Object[] {
 			"###", "X X", " X ", '#', Blocks.wool, 'X', Items.string
 		});
-
-		GameRegistry.addRecipe(new ItemStack(Parachute.ripcordItem, 1), new Object[] {
-			"#  ", " # ", "  *", '#', Items.string, '*', Items.iron_ingot
-		});
-
-		GameRegistry.addRecipe(new ItemStack(Parachute.aadItem, 1), new Object[] {
-			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', Parachute.ripcordItem});
 
 		FMLCommonHandler.instance().bus().register(new PlayerTickEventHandler());
 	}
@@ -109,23 +88,11 @@ public class ParachuteCommonProxy {
 		logger.warn(s);
 	}
 
-	public static boolean playerIsWearingParachute(EntityPlayer player)
-	{
-		ItemStack stack = player == null ? null : player.getCurrentArmor(armorSlot);
-		if (stack != null) {
-			Item item = stack.getItem();
-			if (item != null && item instanceof ItemParachute) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public static boolean inventoryContainsParachute(InventoryPlayer inventory)
 	{
 		for (ItemStack s : inventory.mainInventory) {
 			Item item = s == null ? null : s.getItem();
-			if (item != null && item instanceof ItemParachute || item instanceof ItemHopAndPop) {
+			if (item != null && item instanceof ItemParachute) {
 				return true;
 			}
 		}

@@ -31,10 +31,8 @@ public class ConfigHandler {
 	private static int heightLimit = 256;
 	private static String chuteColor = "random";
 	private static boolean thermals = true;
-	private static double AADAltitude = 15.0;
 	private static boolean smallCanopy = true;
 	private static boolean autoDismount = true;
-	private static double fallThreshold = 5.0;
 	private static boolean weatherAffectsDrift;
 	private static boolean lavaThermals;
 	private static double minLavaDistance;
@@ -53,8 +51,6 @@ public class ConfigHandler {
 	private static final String minLavaDistanceComment = "minimum distance from lava to grab thermals, if you\n"
 			+ "go less than 3.0 you will most likely dismount in the lava!"; // 3.0
 	private static final String maxLavaDistanceComment = "maximum distance to rise from lava thermals"; // 48
-	private static final String aadAltitudeComment = "altitude (in meters) at which auto deploy occurs"; // 10
-	private static final String fallThresholdComment = "player must have fallen this far to activate AAD"; // 5.0
 	private static final String typeComment = "set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy"; // true
 	private static final String autoComment = "If true the parachute will dismount the player automatically,\n"
 			+ "if false the player has to use LSHIFT to dismount the parachute"; // true
@@ -86,8 +82,6 @@ public class ConfigHandler {
 			lavaThermals = config.get(Configuration.CATEGORY_GENERAL, "lavaThermals", false, lavaThermalComment).getBoolean(false);
 			minLavaDistance = config.get(Configuration.CATEGORY_GENERAL, "minLavaDistance", 3.0, minLavaDistanceComment).getDouble(3.0);
 			maxLavaDistance = config.get(Configuration.CATEGORY_GENERAL, "maxLavaDistance", 48.0, maxLavaDistanceComment).getDouble(48.0);
-			fallThreshold = config.get(Configuration.CATEGORY_GENERAL, "fallThreshold", 5.0, fallThresholdComment).getDouble(5.0);
-			AADAltitude = config.get(Configuration.CATEGORY_GENERAL, "AADAltitude", 15.0, aadAltitudeComment).getDouble(15.0);
 			smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", true, typeComment).getBoolean(true);
 			autoDismount = config.get(Configuration.CATEGORY_GENERAL, "autoDismount", true, autoComment).getBoolean(true);
 			chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", "random", colorComment).getString();
@@ -101,8 +95,6 @@ public class ConfigHandler {
 				thermals = false;
 				minLavaDistance = minLavaDistance < 2.0 ? 2.0 : minLavaDistance;
 			}
-			// clamp the fallThreshold to a minimum of 2
-			fallThreshold = fallThreshold < 2.0 ? 2.0 : fallThreshold;
 		} catch (Exception e) {
 			Parachute.proxy.info("failed to load or read the config file");
 		} finally {
@@ -127,15 +119,6 @@ public class ConfigHandler {
 		return chuteColor;
 	}
 
-	public static double getAADAltitude()
-	{
-		return AADAltitude;
-	}
-
-	public static double getFallThreshold()
-	{
-		return fallThreshold;
-	}
 
 	public static boolean getAllowLavaThermals()
 	{
@@ -185,10 +168,6 @@ public class ConfigHandler {
 	public static void setType(String typeStr)
 	{
 		type = typeStr;
-		// force a small canopy for the hop-n-pop chute
-		if (type.equals(ParachuteCommonProxy.hopnpopName)) {
-			smallCanopy = true;
-		}
 	}
 
 	public static String getType()
@@ -199,7 +178,7 @@ public class ConfigHandler {
 	public static int getHopAndPopDamageAmount()
 	{
 		if (singleUse) {
-			return Parachute.hopnpopItem.getMaxDamage() + 1;
+			return Parachute.parachuteItem.getMaxDamage() + 1;
 		}
 		return 1;
 	}
