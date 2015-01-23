@@ -45,7 +45,6 @@ public class EntityParachute extends Entity {
 	private double motionFactor;
 	private double maxAltitude;
 	private boolean allowThermals;
-	private boolean smallCanopy;
 	private boolean lavaThermals;
 	private double lavaDistance;
 	private double maxThermalRise;
@@ -76,7 +75,6 @@ public class EntityParachute extends Entity {
 		super(world);
 		df = new DecimalFormat("##0.0"); // for the alitude display
 
-		smallCanopy = ConfigHandler.isSmallCanopy();
 		weatherAffectsDrift = ConfigHandler.getWeatherAffectsDrift();
 		allowTurbulence = ConfigHandler.getAllowturbulence();
 		showContrails = ConfigHandler.getShowContrails();
@@ -89,7 +87,7 @@ public class EntityParachute extends Entity {
 		curLavaDistance = lavaDistance;
 		worldObj = world;
 		preventEntitySpawning = true;
-		setSize(smallCanopy ? 3.0f : 4.0f, 0.0625f);
+		setSize(3.0f, 0.0625f);
 		motionFactor = 0.07D;
 		ascendMode = false;
 		maxThermalRise = 48;
@@ -165,7 +163,7 @@ public class EntityParachute extends Entity {
 	@Override
 	public double getMountedYOffset()
 	{
-		return smallCanopy ? -2.5 : -3.5;
+		return -2.5;
 	}
 
 	@Override
@@ -203,8 +201,7 @@ public class EntityParachute extends Entity {
 	// format the altitude number to a string
 	public String format(double d)
 	{
-		double dstr = new Double(df.format(d));
-		return String.format("%s", dstr);
+		return String.format("%s", new Double(df.format(d)));
 	}
 
 	@Override
@@ -245,8 +242,6 @@ public class EntityParachute extends Entity {
 			if (riddenByEntity != null) {
 				BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
 				if (checkForGroundProximity(bp)) {
-//					Parachute.proxy.info(bp.toString());
-//					Parachute.proxy.info(this.toString());
 					killParachute(true);
 					return;
 				}
@@ -325,7 +320,6 @@ public class EntityParachute extends Entity {
 
 		// something bad happened, somehow the skydiver was killed.
 		if (!worldObj.isRemote && riddenByEntity != null && riddenByEntity.isDead) {
-//			riddenByEntity = null;
 			killParachute(false);
 		}
 

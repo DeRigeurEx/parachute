@@ -31,7 +31,6 @@ public class ConfigHandler {
 	private static int heightLimit = 256;
 	private static String chuteColor = "random";
 	private static boolean thermals = true;
-	private static boolean smallCanopy = true;
 	private static boolean autoDismount = true;
 	private static boolean weatherAffectsDrift;
 	private static boolean lavaThermals;
@@ -40,18 +39,16 @@ public class ConfigHandler {
 	private static boolean allowTurbulence;
 	private static boolean showContrails;
 	private static boolean altitudeMSL;
-	private static String type = ParachuteCommonProxy.parachuteName;
 
 	private static final String aboutComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
 			+ " For Minecraft Version " + Parachute.mcversion + "\n";
-	private static final String usageComment = "set to true for hop-n-pop single use"; // false
+	private static final String usageComment = "set to true for parachute single use"; // false
 	private static final String heightComment = "0 (zero) disables altitude limiting"; // 256
 	private static final String thermalComment = "enable thermal rise by pressing the space bar"; // true
 	private static final String lavaThermalComment = "use lava heat to get thermals to rise up, disables space bar thermals"; // false
 	private static final String minLavaDistanceComment = "minimum distance from lava to grab thermals, if you\n"
 			+ "go less than 3.0 you will most likely dismount in the lava!"; // 3.0
 	private static final String maxLavaDistanceComment = "maximum distance to rise from lava thermals"; // 48
-	private static final String typeComment = "set to true to use the smaller 3 panel canopy, false for the\nlarger 4 panel canopy"; // true
 	private static final String autoComment = "If true the parachute will dismount the player automatically,\n"
 			+ "if false the player has to use LSHIFT to dismount the parachute"; // true
 	private static final String weatherComment = "set to false if you don't want the drift rate to be affected by bad weather"; // true
@@ -82,7 +79,6 @@ public class ConfigHandler {
 			lavaThermals = config.get(Configuration.CATEGORY_GENERAL, "lavaThermals", false, lavaThermalComment).getBoolean(false);
 			minLavaDistance = config.get(Configuration.CATEGORY_GENERAL, "minLavaDistance", 3.0, minLavaDistanceComment).getDouble(3.0);
 			maxLavaDistance = config.get(Configuration.CATEGORY_GENERAL, "maxLavaDistance", 48.0, maxLavaDistanceComment).getDouble(48.0);
-			smallCanopy = config.get(Configuration.CATEGORY_GENERAL, "smallCanopy", true, typeComment).getBoolean(true);
 			autoDismount = config.get(Configuration.CATEGORY_GENERAL, "autoDismount", true, autoComment).getBoolean(true);
 			chuteColor = config.get(Configuration.CATEGORY_GENERAL, "chuteColor", "random", colorComment).getString();
 			weatherAffectsDrift = config.get(Configuration.CATEGORY_GENERAL, "weatherAffectsDrift", true, weatherComment).getBoolean(true);
@@ -119,7 +115,6 @@ public class ConfigHandler {
 		return chuteColor;
 	}
 
-
 	public static boolean getAllowLavaThermals()
 	{
 		return lavaThermals;
@@ -150,11 +145,6 @@ public class ConfigHandler {
 		return showContrails;
 	}
 
-	public static boolean isSmallCanopy()
-	{
-		return smallCanopy;
-	}
-
 	public static boolean isAutoDismount()
 	{
 		return autoDismount;
@@ -163,16 +153,6 @@ public class ConfigHandler {
 	public static boolean getAltitudeMSL()
 	{
 		return altitudeMSL;
-	}
-
-	public static void setType(String typeStr)
-	{
-		type = typeStr;
-	}
-
-	public static String getType()
-	{
-		return type;
 	}
 
 	public static int getHopAndPopDamageAmount()

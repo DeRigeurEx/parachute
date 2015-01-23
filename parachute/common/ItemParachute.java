@@ -39,7 +39,6 @@ public class ItemParachute extends Item {
 		setMaxDamage(toolmaterial.getMaxUses());
 		maxStackSize = 4;
 		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
-		ConfigHandler.setType(ParachuteCommonProxy.parachuteName);
 	}
 
 	@Override
@@ -85,17 +84,4 @@ public class ItemParachute extends Item {
 		return Items.string == itemstack2.getItem() ? true : super.getIsRepairable(itemstack1, itemstack2);
 	}
 	
-	// search inventory for a hop & pop
-	public static boolean inventoryContainsHaP(InventoryPlayer inventory)
-	{
-		boolean result = false;
-		for (ItemStack s : inventory.mainInventory) {
-			if (s != null && s.getItem() instanceof ItemParachute) {
-				result = true;
-				break;
-			}
-		}
-		return result;
-	}
-
 }

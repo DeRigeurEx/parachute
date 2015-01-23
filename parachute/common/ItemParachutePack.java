@@ -19,11 +19,13 @@
 //
 package com.parachute.common;
 
-//import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemArmor;
 
+
+// this item is eye candy only. The parachute pack is placed as armor
+// on the player when the parachute item is selected in the hot bar.
 public class ItemParachutePack extends ItemArmor {
 
 	public ItemParachutePack(ItemArmor.ArmorMaterial armorMaterial, int renderIndex, int armorType)
@@ -31,7 +33,6 @@ public class ItemParachutePack extends ItemArmor {
 		super(armorMaterial, renderIndex, armorType);
 		setMaxDamage(armorMaterial.getDurability(armorType));
 		maxStackSize = 1;
-//		setCreativeTab(CreativeTabs.tabTransport); // place in the transportation tab in creative mode
 	}
 
 	@Override

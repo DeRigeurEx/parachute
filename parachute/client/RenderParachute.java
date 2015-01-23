@@ -60,11 +60,7 @@ public class RenderParachute extends Render {
 
 		if (entityparachute.riddenByEntity != null) {
 			EntityPlayer rider = (EntityPlayer) entityparachute.riddenByEntity;
-			if (ConfigHandler.isSmallCanopy()) {
-				renderSmallParachuteCords(rider, center);
-			} else {
-				renderLargeParachuteCords(rider, center);
-			}
+				renderParachuteCords(rider, center);
 		}
 
 		GlStateManager.popMatrix();
@@ -77,91 +73,13 @@ public class RenderParachute extends Render {
 		renderParachute((EntityParachute) entity, x, y, z, rotation, center);
 	}
 
-	public void renderLargeParachuteCords(EntityPlayer rider, float center)
+	public void renderParachuteCords(EntityPlayer rider, float center)
 	{
 		float zOffset = 3.0F;
 		float x = 0.0F;
-		float y = 2.5F;
-		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) { // first person view
-			y = 1.5F;
-		}
+		float y = (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) ? 1.25f : 1.5F;
 		float zl = -zOffset;
 		float zr = zOffset;
-
-		float b = rider.getBrightness(center);
-
-		GlStateManager.pushMatrix();
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_LIGHTING);
-
-		GlStateManager.scale(0.0625F, -1.0F, 0.0625F);
-
-		GL11.glBegin(GL11.GL_LINES);
-		// left end
-		GlStateManager.color(b * 0.5F, b * 0.5F, b * 0.65F); // slightly blue
-
-		GL11.glVertex3f(-8F, 0.37F, -31.5F); 	// top - front
-		GL11.glVertex3f(x, y, zl); 		// bottom
-
-		GL11.glVertex3f(8F, 0.37F, -31.5F);     // ...back
-		GL11.glVertex3f(x, y, zl);
-
-		// left middle
-		GL11.glVertex3f(-8F, 0.12F, -16F);
-		GL11.glVertex3f(x, y, zl);
-
-		GL11.glVertex3f(8F, 0.12F, -16F);
-		GL11.glVertex3f(x, y, zl);
-
-		// right end
-		GlStateManager.color(b * 0.65F, b * 0.5F, b * 0.5F); // slightly red
-
-		GL11.glVertex3f(-8F, 0.37F, 31.5F);
-		GL11.glVertex3f(x, y, zr);
-
-		GL11.glVertex3f(8F, 0.37F, 31.5F);
-		GL11.glVertex3f(x, y, zr);
-
-		// right middle
-		GL11.glVertex3f(-8F, 0.12F, 16F);
-		GL11.glVertex3f(x, y, zr);
-
-		GL11.glVertex3f(8F, 0.12F, 16F);
-		GL11.glVertex3f(x, y, zr);
-
-		// center
-		GlStateManager.color(b * 0.5F, b * 0.65F, b * 0.5F); // slightly green
-
-		GL11.glVertex3f(-8F, 0F, 0F);
-		GL11.glVertex3f(x, y, zl); // first center cord goes to the left 
-
-		GL11.glVertex3f(8F, 0F, 0F);
-		GL11.glVertex3f(x, y, zl);
-
-		GL11.glVertex3f(-8F, 0F, 0F); // second center cord goes to the right
-		GL11.glVertex3f(x, y, zr);
-
-		GL11.glVertex3f(8F, 0F, 0F);
-		GL11.glVertex3f(x, y, zr);
-
-		GL11.glEnd();
-
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GlStateManager.popMatrix();
-	}
-
-	public void renderSmallParachuteCords(EntityPlayer rider, float center)
-	{
-		float zOffset = 3.0F;
-		float x = 0.0F;
-		float y = 1.5F;
-		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) { // first person view
-			y = 1.25F;
-		}
-		float zl = -zOffset;
-		float zr = zOffset;
-
 		float b = rider.getBrightness(center);
 
 		GlStateManager.pushMatrix();

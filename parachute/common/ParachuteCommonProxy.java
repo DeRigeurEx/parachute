@@ -64,8 +64,7 @@ public class ParachuteCommonProxy {
 	{
 		FMLCommonHandler.instance().bus().register(Parachute.instance);
 
-		// recipes to craft the parachutes, ripcord and AAD
-
+		// recipe to craft the parachute
 		GameRegistry.addRecipe(new ItemStack(Parachute.parachuteItem, 1), new Object[] {
 			"###", "X X", " X ", '#', Blocks.wool, 'X', Items.string
 		});
@@ -86,17 +85,6 @@ public class ParachuteCommonProxy {
 	public void warn(String s)
 	{
 		logger.warn(s);
-	}
-
-	public static boolean inventoryContainsParachute(InventoryPlayer inventory)
-	{
-		for (ItemStack s : inventory.mainInventory) {
-			Item item = s == null ? null : s.getItem();
-			if (item != null && item instanceof ItemParachute) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public static boolean isFalling(EntityPlayer entity)
