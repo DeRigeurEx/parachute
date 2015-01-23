@@ -27,17 +27,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class PlayerTickEventHandler {
 	
-	long tick = 0;
+//	long tick = 0;
 
 	@SubscribeEvent
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
-		if (tick % 10 == 0) {
+//		if (tick % 10 == 0) {
 			if (event.phase.equals(TickEvent.Phase.START) && event.side.isServer()) {
 				togglePlayerParachutePack((EntityPlayer)event.player);
 			}
-		}
-		tick++;
+//		}
+//		tick++;
 	}
 
 	// Check the players currently held item and if it is a 
@@ -49,12 +49,11 @@ public class PlayerTickEventHandler {
 	{
 		if (player != null) {
 			ItemStack itemstack = player.inventory.armorInventory[ParachuteCommonProxy.armorSlot];
-			Item holding = player.inventory.getCurrentItem().getItem();
+			Item holding = player.getCurrentEquippedItem().getItem();//player.inventory.getCurrentItem().getItem();
 			boolean deployed = ParachuteCommonProxy.onParachute(player);
 			if (itemstack != null && holding != null) {
 				if (itemstack.getItem() instanceof ItemParachutePack && !(holding instanceof ItemParachute) && !deployed) {
 					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot] = (ItemStack) null;
-					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot].stackSize = 0;
 				}
 			} else {
 				if (holding != null && holding instanceof ItemParachute) {
