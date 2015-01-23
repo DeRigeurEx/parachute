@@ -62,6 +62,7 @@ public class ItemParachute extends Item {
 			}
 			entityplayer.mountEntity(chute);
 			ParachuteCommonProxy.setDeployed(true);
+			ParachuteCommonProxy.setWasOnParachute(true);
 
 			if (!entityplayer.capabilities.isCreativeMode) {
 				if (itemstack != null) {

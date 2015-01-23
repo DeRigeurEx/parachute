@@ -25,6 +25,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.FMLLog;
@@ -43,6 +44,7 @@ public class ParachuteCommonProxy {
 	public static final String parachuteName = "parachute";
 	public static final String packName = "pack";
 	private static boolean deployed = false;
+	private static boolean wasOnParachute = false;
 
 	public void preInit()
 	{
@@ -62,6 +64,7 @@ public class ParachuteCommonProxy {
 	{
 		FMLCommonHandler.instance().bus().register(Parachute.instance);
 		FMLCommonHandler.instance().bus().register(new PlayerTickEventHandler());
+		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
 
 		// recipe to craft the parachute
 		GameRegistry.addRecipe(new ItemStack(Parachute.parachuteItem, 1), new Object[] {
@@ -102,5 +105,15 @@ public class ParachuteCommonProxy {
 	public static void setDeployed(boolean isDeployed)
 	{
 		deployed = isDeployed;
+	}
+	
+	public static boolean playerWasOnParachute()
+	{
+		return wasOnParachute;
+	}
+	
+	public static void setWasOnParachute(boolean on)
+	{
+		wasOnParachute = on;
 	}
 }

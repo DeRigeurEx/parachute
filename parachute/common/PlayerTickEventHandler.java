@@ -26,18 +26,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class PlayerTickEventHandler {
-	
-//	long tick = 0;
 
 	@SubscribeEvent
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
-//		if (tick % 10 == 0) {
-			if (event.phase.equals(TickEvent.Phase.START) && event.side.isServer()) {
-				togglePlayerParachutePack((EntityPlayer)event.player);
-			}
-//		}
-//		tick++;
+		if (event.phase.equals(TickEvent.Phase.START) && event.side.isServer()) {
+			togglePlayerParachutePack((EntityPlayer) event.player);
+		}
 	}
 
 	// Check the players currently held item and if it is a 
@@ -48,15 +43,15 @@ public class PlayerTickEventHandler {
 	private void togglePlayerParachutePack(EntityPlayer player)
 	{
 		if (player != null) {
-			ItemStack itemstack = player.inventory.armorInventory[ParachuteCommonProxy.armorSlot];
-			Item holding = player.getCurrentEquippedItem().getItem();//player.inventory.getCurrentItem().getItem();
+			ItemStack armor = player.inventory.armorInventory[ParachuteCommonProxy.armorSlot];
+			Item heldItem = player.getCurrentEquippedItem().getItem();
 			boolean deployed = ParachuteCommonProxy.onParachute(player);
-			if (itemstack != null && holding != null) {
-				if (itemstack.getItem() instanceof ItemParachutePack && !(holding instanceof ItemParachute) && !deployed) {
+			if (armor != null && heldItem != null) {
+				if (armor.getItem() instanceof ItemParachutePack && !(heldItem instanceof ItemParachute) && !deployed) {
 					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot] = (ItemStack) null;
 				}
 			} else {
-				if (holding != null && holding instanceof ItemParachute) {
+				if (heldItem != null && heldItem instanceof ItemParachute) {
 					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot] = new ItemStack(Parachute.packItem);
 				}
 			}

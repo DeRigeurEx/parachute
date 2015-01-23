@@ -37,7 +37,7 @@ public class Parachute {
 	public static final String name = "Parachute Mod";
 	public static final String guifactory = "com.parachute.client.ParachuteConfigGUIFactory";
 
-	@SidedProxy( clientSide = "com.parachute.client.ParachuteClientProxy", serverSide = "com.parachute.common.ParachuteServerProxy" )
+	@SidedProxy(clientSide = "com.parachute.client.ParachuteClientProxy", serverSide = "com.parachute.common.ParachuteServerProxy")
 	public static ParachuteCommonProxy proxy;
 
 	public static ItemParachute parachuteItem;
