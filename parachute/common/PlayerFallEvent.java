@@ -26,11 +26,6 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 
 public class PlayerFallEvent {
 
-	public PlayerFallEvent()
-	{
-		Parachute.proxy.info("PlayerFallEvent ctor");
-	}
-
 	@SubscribeEvent
 	public void onFallEvent(LivingFallEvent event)
 	{
