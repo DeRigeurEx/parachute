@@ -49,11 +49,10 @@ public class ParachuteCommonProxy {
 	{
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, Parachute.instance, 80, 20, true);
 
-		final int renderIndex = 0;
-
 		Parachute.parachuteItem = (ItemParachute) (new ItemParachute(RIPSTOP)).setUnlocalizedName(parachuteName);
 		GameRegistry.registerItem(Parachute.parachuteItem, parachuteName);
 		
+		final int renderIndex = 0;
 		Parachute.packItem = (ItemParachutePack) (new ItemParachutePack(NYLON, renderIndex, armorType)).setUnlocalizedName(packName);
 		GameRegistry.registerItem(Parachute.packItem, packName);
 
@@ -63,18 +62,17 @@ public class ParachuteCommonProxy {
 	public void Init()
 	{
 		FMLCommonHandler.instance().bus().register(Parachute.instance);
+		FMLCommonHandler.instance().bus().register(new PlayerTickEventHandler());
 
 		// recipe to craft the parachute
 		GameRegistry.addRecipe(new ItemStack(Parachute.parachuteItem, 1), new Object[] {
 			"###", "X X", " X ", '#', Blocks.wool, 'X', Items.string
 		});
-
-		FMLCommonHandler.instance().bus().register(new PlayerTickEventHandler());
 	}
 
 	public void postInit()
 	{
-
+		// nothing to see here...
 	}
 
 	public void info(String s)
