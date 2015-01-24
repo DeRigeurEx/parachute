@@ -509,10 +509,9 @@ public class EntityParachute extends Entity {
 		double sinYaw = 2.0 * Math.sin(rotationYaw * d2r);
 
 		for (int j = 0; (double) j < 1.0 + velocity * 8.0; ++j) {
-			double s1 = (rand.nextDouble() * 2.0 - 1.0) * 0.2;
 			double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
-			double particleX = prevPosX - cosYaw * s1 * 0.8 + sinYaw * s2;
-			double particleZ = prevPosZ - sinYaw * s1 * 0.8 - cosYaw * s2;
+			double particleX = prevPosX - cosYaw * -0.25 + sinYaw * s2;
+			double particleZ = prevPosZ - sinYaw * -0.25 - cosYaw * s2;
 
 			worldObj.spawnParticle(EnumParticleTypes.CLOUD, particleX, posY - 0.25, particleZ, motionX, motionY, motionZ, new int[0]);
 		}
