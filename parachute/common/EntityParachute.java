@@ -87,7 +87,7 @@ public class EntityParachute extends Entity {
 		curLavaDistance = lavaDistance;
 		worldObj = world;
 		preventEntitySpawning = true;
-		setSize(3.0f, 0.0625f);
+		setSize(1.5f, 0.0625f);
 		motionFactor = 0.07D;
 		ascendMode = false;
 		maxThermalRise = 48;
@@ -228,7 +228,6 @@ public class EntityParachute extends Entity {
 		prevPosZ = posZ;
 
 		// Altimeter, the altitude display
-		tickCount++;
 		if (worldObj.isRemote && (tickCount % Damping == 0)) { // execute only on the client
 			if (riddenByEntity != null) {
 				// use the rider's position for the altitude reference
@@ -322,7 +321,7 @@ public class EntityParachute extends Entity {
 		if (!worldObj.isRemote && riddenByEntity != null && riddenByEntity.isDead) {
 			killParachute(false);
 		}
-
+		tickCount++;
 	}
 
 	public void killParachute(boolean drop)
@@ -503,11 +502,10 @@ public class EntityParachute extends Entity {
 		double cosYaw = 2.0 * Math.cos(rotationYaw * d2r);
 		double sinYaw = 2.0 * Math.sin(rotationYaw * d2r);
 
-		for (int j = 0; (double) j < 1.0 + velocity * 8.0; ++j) {
-			double s1 = (rand.nextDouble() * 2.0 - 1.0) * 0.2;
+		for (int j = 0; (double) j < 1.0 + velocity; ++j) {
 			double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
-			double particleX = prevPosX - cosYaw * s1 * 0.8 + sinYaw * s2;
-			double particleZ = prevPosZ - sinYaw * s1 * 0.8 - cosYaw * s2;
+			double particleX = prevPosX - cosYaw * -0.35 + sinYaw * s2;
+			double particleZ = prevPosZ - sinYaw * -0.35 - cosYaw * s2;
 
 			worldObj.spawnParticle(EnumParticleTypes.CLOUD, particleX, posY - 0.25, particleZ, motionX, motionY, motionZ, new int[0]);
 		}
