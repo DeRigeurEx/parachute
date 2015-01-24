@@ -64,7 +64,6 @@ public class ParachuteCommonProxy {
 	{
 		FMLCommonHandler.instance().bus().register(Parachute.instance);
 		FMLCommonHandler.instance().bus().register(new PlayerTickEventHandler());
-		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
 
 		// recipe to craft the parachute
 		GameRegistry.addRecipe(new ItemStack(Parachute.parachuteItem, 1), new Object[] {
