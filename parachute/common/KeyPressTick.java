@@ -24,27 +24,22 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 
-// intercept the space bar to make the parachute go up
+// intercept the ascend key to make the parachute go up
+// the ascend key defaults to the space bar or jump key.
 public class KeyPressTick {
+	private final int ascendKey = ParachuteCommonProxy.getAscendKey();
 
 	@SubscribeEvent
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
 		if (event.phase.equals(TickEvent.Phase.START)) {
-			if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
+			if (Keyboard.getEventKey() == ascendKey) {
 				EntityPlayer player = event.player;
 				if (player != null) {
-					boolean keyPressed = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-					PacketHandler.network.sendToServer(new KeyPressMessage(Keyboard.KEY_SPACE, keyPressed));
+					boolean keyPressed = Keyboard.isKeyDown(ascendKey);
+					PacketHandler.network.sendToServer(new KeyPressMessage(ascendKey, keyPressed));
 				}
 			}
-//			if (Keyboard.getEventKey() == Keyboard.KEY_P) {
-//				EntityPlayer player = event.player;
-//				if (player != null) {
-//					boolean keyPressed = Keyboard.isKeyDown(Keyboard.KEY_P);
-//					PacketHandler.network.sendToServer(new KeyPressMessage(Keyboard.KEY_P, keyPressed));
-//				}
-//			}
 		}
 	}
 

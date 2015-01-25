@@ -19,6 +19,9 @@
 //
 package com.parachute.common;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -44,6 +47,8 @@ public class ParachuteCommonProxy {
 	public static final String packName = "pack";
 	private static boolean deployed = false;
 	private static final double offsetY = 2.5;
+	// grab the 'jump' key from the game settings. defaults to the space bar.
+	private static final int ascendKey = Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode();
 
 	public void preInit()
 	{
@@ -108,5 +113,10 @@ public class ParachuteCommonProxy {
 	public static double getOffsetY()
 	{
 		return offsetY;
+	}
+	
+	public static int getAscendKey()
+	{
+		return ascendKey;
 	}
 }

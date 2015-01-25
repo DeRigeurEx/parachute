@@ -55,10 +55,10 @@ public class EntityParachute extends Entity {
 	private boolean altitudeMSL;
 	final private DecimalFormat df;
 
-	final static int Damping = 10; // ticks per second / 2
-	final static double MSL = 63.0;
-	final static double drift = 0.004;
-	final static double ascend = drift * -10.0;
+	final static int Damping = 10; // value allows the altitude display to update about every half second
+	final static double MSL = 63.0; // sea level - Mean Sea Level
+	final static double drift = 0.004; // value applied to motionY to descend or drift downward
+	final static double ascend = drift * -10.0; // -0.04 - value applied to motionY to ascend
 
 	final static int modeDrift = 0;  // key up
 	final static int modeAscend = 1; // key down
