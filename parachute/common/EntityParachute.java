@@ -140,20 +140,25 @@ public class EntityParachute extends Entity {
 	}
 
 	//
+	// FIXME: Unfortunately this stopped working around 1.6.x, movement packets
+	// are not sent to the server if the 'shouldRiderSit' methods returns false.
+	// We need for the 'shouldRiderSit' method to return true in order to receive
+	// packets, we need for it to return false for player to not be in the sitting
+	// position on the parachute.
+	//
 	// skydiver should 'hang' when on the parachute and then
 	// 'pick up legs' when landing.
-	//
-	// FIXME: Unfortunately this stopped working around 1.6.x, movement packets
-	// are not sent to server if shouldRiderSit returns false. need for shouldRiderSit
-	// to return true in order to receive packets. need for it to return false for
-	// player to not be in the sitting position on the parachute.
-	//
-//	@Override
-//	public boolean shouldRiderSit()
-//	{
-//		return isNearGround(new BlockPos(this).add(new Vec3i(0.0, -(Math.abs(getMountedYOffset()) + 1.0), 0.0)));
-//	}
-//	
+	@Override
+	public boolean shouldRiderSit()
+	{
+		boolean sitting = false;
+		if (riddenByEntity != null) {
+			BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
+			sitting = checkForGroundProximity(bp);
+		}
+		return sitting;
+	}
+	
 	@Override
 	public boolean shouldDismountInWater(Entity rider)
 	{
@@ -339,6 +344,9 @@ public class EntityParachute extends Entity {
 		return (worldObj.isRaining() || worldObj.isThundering());
 	}
 
+	// determines the descent rate based on whether or not
+	// the space bar has been pressed. several factors affect
+	// the final result.
 	public double currentDescentRate()
 	{
 		double descentRate = drift; // defaults to drift
@@ -375,6 +383,8 @@ public class EntityParachute extends Entity {
 		return descentRate;
 	}
 
+	// the following three methods detect lava below the player
+	// at upto 'maxThermalRise' distance.
 	public boolean isLavaAt(BlockPos bp)
 	{
 		Block block = worldObj.getBlockState(bp).getBlock();
@@ -497,17 +507,23 @@ public class EntityParachute extends Entity {
 		}
 	}
 
+	// generate condensation trails at the trailing edge
+	// of the parachute. Yes I know that most parachutes
+	// aren't fast or high enough to generate contrails,
+	// but most worlds aren't made of blocks with cubic
+	// cows either.
 	public void generateContrails(double velocity)
 	{
 		double cosYaw = 2.0 * Math.cos(rotationYaw * d2r);
 		double sinYaw = 2.0 * Math.sin(rotationYaw * d2r);
 
-		for (int j = 0; (double) j < 1.0 + velocity; ++j) {
-			double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
-			double particleX = prevPosX - cosYaw * -0.35 + sinYaw * s2;
-			double particleZ = prevPosZ - sinYaw * -0.35 - cosYaw * s2;
+		for (int k = 0; (double) k < 1.0 + velocity; k++) {
+			double sign = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
+			double x = prevPosX - cosYaw * -0.35 + sinYaw * sign;
+			double y = posY - 0.25;
+			double z = prevPosZ - sinYaw * -0.35 - cosYaw * sign;
 
-			worldObj.spawnParticle(EnumParticleTypes.CLOUD, particleX, posY - 0.25, particleZ, motionX, motionY, motionZ, new int[0]);
+			worldObj.spawnParticle(EnumParticleTypes.CLOUD, x, y, z, motionX, motionY, motionZ, new int[0]);
 		}
 	}
 
@@ -523,7 +539,7 @@ public class EntityParachute extends Entity {
 	}
 
 	// only allow altitude calculations in the surface world
-	// return a weirdly random nuber if in nether or end.
+	// return a weirdly random number if in nether or end.
 	public double getCurrentAltitude(BlockPos bp, boolean MSL)
 	{
 		if (worldObj.provider.isSurfaceWorld()) {
