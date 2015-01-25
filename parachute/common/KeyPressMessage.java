@@ -24,10 +24,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.input.Keyboard;
 
 public class KeyPressMessage implements IMessage {
 
+	private static final int ascendKey = ParachuteCommonProxy.getAscendKey();
 	private boolean keyPressed;
 	private int keyCode;
 
@@ -66,7 +66,7 @@ public class KeyPressMessage implements IMessage {
 		{
 			EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
 			if (entityPlayer != null) {
-				if (msg.keyCode == Keyboard.KEY_SPACE) {
+				if (msg.keyCode == ascendKey) {
 					EntityParachute.setAscendMode(msg.keyPressed);
 				}
 			}

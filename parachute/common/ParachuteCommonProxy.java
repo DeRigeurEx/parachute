@@ -19,6 +19,7 @@
 //
 package com.parachute.common;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -46,6 +47,8 @@ public class ParachuteCommonProxy {
 	public static final String ripcordName = "ripcord";
 	public static final String aadName = "auto_activation_device";
 	private static boolean deployed = false;
+	// grab the 'jump' key from the game settings. defaults to the space bar.
+	private static final int ascendKey = Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode();
 
 	public void preInit()
 	{
@@ -136,5 +139,10 @@ public class ParachuteCommonProxy {
 	public static void setDeployed(boolean isDeployed)
 	{
 		deployed = isDeployed;
+	}
+	
+	public static int getAscendKey()
+	{
+		return ascendKey;
 	}
 }
