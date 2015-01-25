@@ -43,7 +43,7 @@ public class ParachuteCommonProxy {
 	public static final String parachuteName = "parachute";
 	public static final String packName = "pack";
 	private static boolean deployed = false;
-	private static boolean wasOnParachute = false;
+	private static final double offsetY = 2.5;
 
 	public void preInit()
 	{
@@ -51,7 +51,7 @@ public class ParachuteCommonProxy {
 
 		Parachute.parachuteItem = (ItemParachute) (new ItemParachute(RIPSTOP)).setUnlocalizedName(parachuteName);
 		GameRegistry.registerItem(Parachute.parachuteItem, parachuteName);
-		
+
 		final int renderIndex = 0;
 		Parachute.packItem = (ItemParachutePack) (new ItemParachutePack(NYLON, renderIndex, armorType)).setUnlocalizedName(packName);
 		GameRegistry.registerItem(Parachute.packItem, packName);
@@ -105,13 +105,8 @@ public class ParachuteCommonProxy {
 		deployed = isDeployed;
 	}
 	
-	public static boolean playerWasOnParachute()
+	public static double getOffsetY()
 	{
-		return wasOnParachute;
-	}
-	
-	public static void setWasOnParachute(boolean on)
-	{
-		wasOnParachute = on;
+		return offsetY;
 	}
 }

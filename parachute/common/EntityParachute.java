@@ -168,7 +168,7 @@ public class EntityParachute extends Entity {
 	@Override
 	public double getMountedYOffset()
 	{
-		return -2.5;
+		return -(ParachuteCommonProxy.getOffsetY());
 	}
 
 	@Override
@@ -412,7 +412,7 @@ public class EntityParachute extends Entity {
 		double thermals = drift;
 		final double inc = 0.5;
 
-		BlockPos blockPos = new BlockPos(posX, posY - Math.abs(getMountedYOffset()) - maxThermalRise, posZ);
+		BlockPos blockPos = new BlockPos(posX, posY - ParachuteCommonProxy.getOffsetY() - maxThermalRise, posZ);
 
 		if (isLavaBelowInRange(blockPos)) {
 			curLavaDistance += inc;
