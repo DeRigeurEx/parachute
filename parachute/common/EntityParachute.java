@@ -148,16 +148,16 @@ public class EntityParachute extends Entity {
 	//
 	// skydiver should 'hang' when on the parachute and then
 	// 'pick up legs' when landing.
-	@Override
-	public boolean shouldRiderSit()
-	{
-		boolean sitting = false;
-		if (riddenByEntity != null) {
-			BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
-			sitting = checkForGroundProximity(bp);
-		}
-		return sitting;
-	}
+//	@Override
+//	public boolean shouldRiderSit()
+//	{
+//		boolean sitting = false;
+//		if (riddenByEntity != null) {
+//			BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
+//			sitting = checkForGroundProximity(bp);
+//		}
+//		return sitting;
+//	}
 	
 	@Override
 	public boolean shouldDismountInWater(Entity rider)
