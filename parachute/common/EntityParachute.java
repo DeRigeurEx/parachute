@@ -450,20 +450,20 @@ public class EntityParachute extends Entity {
 				ridingEntity.riddenByEntity = null;
 			}
 			ridingEntity = null;
-		} else {
-			if (ridingEntity != null) {
-				ridingEntity.riddenByEntity = null;
-			}
-			if (parachute != null) {
-				for (Entity entity = parachute.ridingEntity; entity != null; entity = entity.ridingEntity) {
-					if (entity == this) {
-						return;
-					}
-				}
-			}
-			ridingEntity = parachute;
-			parachute.riddenByEntity = this;
-		}
+		} //else {
+//			if (ridingEntity != null) {
+//				ridingEntity.riddenByEntity = null;
+//			}
+//			if (parachute != null) {
+//				for (Entity entity = parachute.ridingEntity; entity != null; entity = entity.ridingEntity) {
+//					if (entity == this) {
+//						return;
+//					}
+//				}
+//			}
+//			ridingEntity = parachute;
+//			parachute.riddenByEntity = this;
+//		}
 	}
 
 	// apply 'turbulence' in the form of a collision force
