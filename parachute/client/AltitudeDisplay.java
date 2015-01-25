@@ -27,11 +27,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AltitudeDisplay {
 
-	public static String altitude = "";
+	public static String altitude = "0.0";
 	private final Minecraft mc = Minecraft.getMinecraft();
 	private int screenX;
 	private int screenY;
-	private final int colorRed = 0xffcc0000;
+	private final int colorWhite = 0xffffffff;
+	private final int colorYellow = 0xffffff00;
+	private final int colorRed = 0xffcc0000; // alpha.red.green.blue
 	private final int colorGreen = 0xff00cc00;
 
 	private final String altStr = "Altitude: ";
@@ -72,8 +74,8 @@ public class AltitudeDisplay {
 				updateWindowScale();
 				int w2 = mc.fontRendererObj.getStringWidth(altitude);
 				int nextX = w1 + (5 * cw) - w2;
-				mc.fontRendererObj.drawStringWithShadow(altStr, screenX, screenY, colorRed);
-				mc.fontRendererObj.drawStringWithShadow(altitude, screenX + nextX, screenY, colorGreen);
+				mc.fontRendererObj.drawStringWithShadow(altStr, screenX, screenY, colorWhite);
+				mc.fontRendererObj.drawStringWithShadow(altitude, screenX + nextX, screenY, colorString());
 			}
 		}
 	}
@@ -81,5 +83,11 @@ public class AltitudeDisplay {
 	public static void setAltitudeString(String text)
 	{
 		altitude = text;
+	}
+	
+	private int colorString()
+	{
+		double alt = Double.parseDouble(altitude);
+		return (alt <= 8.0 && alt >= 0.0) ? colorRed : alt < 0.0 ? colorYellow : colorGreen;
 	}
 }
