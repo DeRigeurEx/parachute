@@ -69,7 +69,6 @@ public class KeyPressMessage implements IMessage {
 				if (msg.keyCode == ascendKey) {
 					if (entityPlayer.ridingEntity instanceof EntityParachute) {
 						EntityParachute.setAscendMode(msg.keyPressed);
-//						Parachute.proxy.info(Parachute.modid + ": ascendKey (" + ascendKey + ") pressed");
 					}
 				}
 			}
