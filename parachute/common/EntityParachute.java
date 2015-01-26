@@ -215,7 +215,7 @@ public class EntityParachute extends Entity {
 		// the player has pressed LSHIFT or been killed,
 		// this is necessary for LSHIFT to kill the parachute
 		if (riddenByEntity == null && !worldObj.isRemote) {
-			killParachute(false);
+			killParachute();
 			return;
 		}
 
@@ -245,9 +245,7 @@ public class EntityParachute extends Entity {
 			if (riddenByEntity != null) {
 				BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
 				if (checkForGroundProximity(bp)) {
-//					Parachute.proxy.info(bp.toString());
-//					Parachute.proxy.info(this.toString());
-					killParachute(true);
+					killParachute();
 					return;
 				}
 			}
@@ -326,16 +324,13 @@ public class EntityParachute extends Entity {
 		// something bad happened, somehow the skydiver was killed.
 		if (!worldObj.isRemote && riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
-			killParachute(false);
+			killParachute();
 		}
 
 	}
 
-	public void killParachute(boolean drop)
+	public void killParachute()
 	{
-		if (drop) {
-			dropParachute(this);
-		}
 		ParachuteCommonProxy.setDeployed(false);
 		setDead();
 	}
@@ -439,31 +434,6 @@ public class EntityParachute extends Entity {
 			result = (!isAir && !isVegetation);
 		}
 		return result;
-	}
-
-	// parachute equivalent to (dis)mountEntity without the mounting option
-	public void dropParachute(Entity parachute)
-	{
-		if (parachute == null) {
-			if (ridingEntity != null) {
-				setLocationAndAngles(ridingEntity.posX, ridingEntity.getEntityBoundingBox().minY + (double) ridingEntity.height, ridingEntity.posZ, rotationYaw, rotationPitch);
-				ridingEntity.riddenByEntity = null;
-			}
-			ridingEntity = null;
-		} //else {
-//			if (ridingEntity != null) {
-//				ridingEntity.riddenByEntity = null;
-//			}
-//			if (parachute != null) {
-//				for (Entity entity = parachute.ridingEntity; entity != null; entity = entity.ridingEntity) {
-//					if (entity == this) {
-//						return;
-//					}
-//				}
-//			}
-//			ridingEntity = parachute;
-//			parachute.riddenByEntity = this;
-//		}
 	}
 
 	// apply 'turbulence' in the form of a collision force
