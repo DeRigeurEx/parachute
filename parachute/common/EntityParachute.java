@@ -209,6 +209,7 @@ public class EntityParachute extends Entity {
 		return String.format("%s", new Double(df.format(d)));
 	}
 
+	// update the parachute approx 20 times per second
 	@Override
 	public void onUpdate()
 	{
@@ -221,7 +222,7 @@ public class EntityParachute extends Entity {
 			return;
 		}
 
-		// initial forward velocity
+		// initial forward velocity for this update
 		double initialVelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 
 		if (showContrails && initialVelocity > 0.2) {
@@ -252,7 +253,7 @@ public class EntityParachute extends Entity {
 			}
 		}
 
-		// forward velocity for 'W' key press
+		// update forward velocity for 'W' key press
 		// moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
 		// when allowThermals is false forwardMovement is set to the constant 'forwardSpeed'
 		// and applied to motionX and motionZ
@@ -268,14 +269,14 @@ public class EntityParachute extends Entity {
 
 		// forward velocity after forwardMovement is applied
 		double adjustedVelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
-
+		// clamp the adjustedVelocity and modify motionX/Z
 		if (adjustedVelocity > 0.35D) {
 			double motionAdj = 0.35D / adjustedVelocity;
 			motionX *= motionAdj;
 			motionZ *= motionAdj;
 			adjustedVelocity = 0.35D;
 		}
-
+		// clamp the motionFactor between 0.07 and 0.35
 		if (adjustedVelocity > initialVelocity && motionFactor < 0.35D) {
 			motionFactor += (0.35D - motionFactor) / 35.0D;
 			if (motionFactor > 0.35D) {
@@ -288,8 +289,10 @@ public class EntityParachute extends Entity {
 			}
 		}
 
+		// calculate the descent rate
 		motionY -= currentDescentRate();
 
+		// move the parachute with the motion equations applied
 		moveEntity(motionX, motionY, motionZ);
 
 		// apply drag
@@ -297,27 +300,30 @@ public class EntityParachute extends Entity {
 		motionY *= 0.95D;
 		motionZ *= 0.99D;
 
-		rotationPitch = 0.0F;
+		// update pitch and yaw. Pitch is always 0.0
+		rotationPitch = 0.0f;
 		double yaw = rotationYaw;
 		double delta_X = prevPosX - posX;
 		double delta_Z = prevPosZ - posZ;
 
+		// update yaw
 		if (delta_X * delta_X + delta_Z * delta_Z > 0.001D) {
 			yaw = ((Math.atan2(delta_Z, delta_X) * r2d));
 		}
 
+		// update and clamp yaw between -180 and 180
 		double adjustedYaw = MathHelper.wrapAngleTo180_double(yaw - rotationYaw);
-
+		// further clamp yaw between -20 and 20 per update, slower turn radius
 		if (adjustedYaw > 20.0D) {
 			adjustedYaw = 20.0D;
 		}
 		if (adjustedYaw < -20.0D) {
 			adjustedYaw = -20.0D;
 		}
-
+		// update final yaw and apply to parachute
 		rotationYaw += adjustedYaw;
 		setRotation(rotationYaw, rotationPitch);
-
+		// finally apply turbulence if flags allow
 		if (((weatherAffectsDrift && isBadWeather()) || allowTurbulence) && rand.nextBoolean() == true) {
 			applyTurbulence(worldObj.isThundering());
 		}
@@ -326,6 +332,7 @@ public class EntityParachute extends Entity {
 		if (!worldObj.isRemote && riddenByEntity != null && riddenByEntity.isDead) {
 			killParachute(false);
 		}
+		// increment tick count for altitude display damping
 		tickCount++;
 	}
 

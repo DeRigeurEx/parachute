@@ -45,7 +45,8 @@ public class ParachuteCommonProxy {
 	public static final String packName = "pack";
 	private static boolean deployed = false;
 	private static final double offsetY = 2.5;
-	// grab the 'jump' key from the game settings. defaults to the space bar.
+	// grab the 'jump' key from the game settings. defaults to the space bar. This allows the
+	// player to change the jump key and the parachute will use the new jump key
 	private static final int ascendKey = Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode();
 
 	public void preInit()
@@ -78,6 +79,7 @@ public class ParachuteCommonProxy {
 		// nothing to see here...
 	}
 
+	// logging convenience functions
 	public void info(String s)
 	{
 		logger.info(s);
@@ -86,6 +88,11 @@ public class ParachuteCommonProxy {
 	public void warn(String s)
 	{
 		logger.warn(s);
+	}
+	
+	public void error(String s)
+	{
+		logger.error(s);
 	}
 
 	public static boolean isFalling(EntityPlayer entity)
