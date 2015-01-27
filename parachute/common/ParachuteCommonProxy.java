@@ -23,10 +23,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -37,8 +36,6 @@ public class ParachuteCommonProxy {
 
 	private static final Logger logger = LogManager.getLogger(Parachute.modid);
 	private final int entityID = EntityRegistry.findGlobalUniqueEntityId();
-	static ItemArmor.ArmorMaterial NYLON = EnumHelper.addArmorMaterial("nylon", "", 15, new int[] {2, 5, 4, 1}, 12); // same as CHAIN
-	static Item.ToolMaterial RIPSTOP = EnumHelper.addToolMaterial("ripstop", 0, 59, 2.0F, 0, 15); // same as WOOD
 	private static final int armorType = 1; // armor type: 0 = helmet, 1 = chestplate, 2 = leggings, 3 = boots
 	public static final int armorSlot = 2;  // armor slot: 3 = helmet, 2 = chestplate, 1 = leggings, 0 = boots    
 	public static final String parachuteName = "parachute";
@@ -53,11 +50,11 @@ public class ParachuteCommonProxy {
 	{
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, Parachute.instance, 80, 20, true);
 
-		Parachute.parachuteItem = (ItemParachute) (new ItemParachute(RIPSTOP)).setUnlocalizedName(parachuteName);
+		Parachute.parachuteItem = (ItemParachute) (new ItemParachute(ToolMaterial.IRON)).setUnlocalizedName(parachuteName);
 		GameRegistry.registerItem(Parachute.parachuteItem, parachuteName);
 
 		final int renderIndex = 0;
-		Parachute.packItem = (ItemParachutePack) (new ItemParachutePack(NYLON, renderIndex, armorType)).setUnlocalizedName(packName);
+		Parachute.packItem = (ItemParachutePack) (new ItemParachutePack(ArmorMaterial.LEATHER, renderIndex, armorType)).setUnlocalizedName(packName);
 		GameRegistry.registerItem(Parachute.packItem, packName);
 
 		PacketHandler.init();

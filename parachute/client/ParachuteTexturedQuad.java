@@ -39,13 +39,13 @@ public class ParachuteTexturedQuad {
 		nVertices = texCoords.length;
 	}
 
-	public ParachuteTexturedQuad(PositionTextureVertex texCoords[], int i, int j, int k, int l)
+	public ParachuteTexturedQuad(PositionTextureVertex texCoords[], int texU1, int texV1, int texU2, int texV2)
 	{
 		this(texCoords);
-		texCoords[0] = texCoords[0].setTexturePosition((float) k / texSize, (float) j / texSize);
-		texCoords[1] = texCoords[1].setTexturePosition((float) i / texSize, (float) j / texSize);
-		texCoords[2] = texCoords[2].setTexturePosition((float) i / texSize, (float) l / texSize);
-		texCoords[3] = texCoords[3].setTexturePosition((float) k / texSize, (float) l / texSize);
+		texCoords[0] = texCoords[0].setTexturePosition((float) texU2 / texSize, (float) texV1 / texSize);
+		texCoords[1] = texCoords[1].setTexturePosition((float) texU1 / texSize, (float) texV1 / texSize);
+		texCoords[2] = texCoords[2].setTexturePosition((float) texU1 / texSize, (float) texV2 / texSize);
+		texCoords[3] = texCoords[3].setTexturePosition((float) texU2 / texSize, (float) texV2 / texSize);
 	}
 
 	public void flipFace()

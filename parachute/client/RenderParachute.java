@@ -46,12 +46,12 @@ public class RenderParachute extends Render {
 		shadowSize = 0.0F;
 	}
 
-	public void renderParachute(EntityParachute entityparachute, double x, double y, double z, float rotation, float center)
+	public void renderParachute(EntityParachute entityparachute, double x, double y, double z, float rotationYaw, float unused)
 	{
 		GlStateManager.pushMatrix();
 
 		GlStateManager.translate((float) x, (float) y, (float) z);
-		GlStateManager.rotate(180.0F - rotation, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(180.0F - rotationYaw, 0.0F, 1.0F, 0.0F);
 
 		if (!bindEntityTexture(entityparachute)) {
 			return;
@@ -60,27 +60,27 @@ public class RenderParachute extends Render {
 
 		if (entityparachute.riddenByEntity != null) {
 			EntityPlayer rider = (EntityPlayer) entityparachute.riddenByEntity;
-				renderParachuteCords(rider, center);
+			renderParachuteCords(rider, unused);
 		}
 
 		GlStateManager.popMatrix();
-		super.doRender(entityparachute, x, y, z, rotation, center);
+		super.doRender(entityparachute, x, y, z, rotationYaw, unused);
 	}
 
 	@Override
-	public void doRender(Entity entity, double x, double y, double z, float rotation, float center)
+	public void doRender(Entity entity, double x, double y, double z, float rotation, float unused)
 	{
-		renderParachute((EntityParachute) entity, x, y, z, rotation, center);
+		renderParachute((EntityParachute) entity, x, y, z, rotation, unused);
 	}
 
-	public void renderParachuteCords(EntityPlayer rider, float center)
+	public void renderParachuteCords(EntityPlayer rider, float unused)
 	{
 		float zOffset = 3.0F;
 		float x = 0.0F;
 		float y = (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) ? 1.25f : 1.5F;
 		float zl = -zOffset;
 		float zr = zOffset;
-		float b = rider.getBrightness(center);
+		float b = rider.getBrightness(unused);
 
 		GlStateManager.pushMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
