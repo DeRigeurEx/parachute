@@ -56,7 +56,7 @@ public class EntityParachute extends Entity {
 	final private DecimalFormat df;
 
 	final static int Damping = 10; // value allows the altitude display to update about every half second
-	final static double MSL = 63.0; // sea level - Mean Sea Level
+	final static double MSL = 64.0; // sea level - Mean Sea Level
 	final static double drift = 0.004; // value applied to motionY to descend or drift downward
 	final static double ascend = drift * -10.0; // -0.04 - value applied to motionY to ascend
 
@@ -237,8 +237,8 @@ public class EntityParachute extends Entity {
 		if (worldObj.isRemote && (tickCount % Damping == 0)) { // execute only on the client
 			if (riddenByEntity != null) {
 				// use the rider's position for the altitude reference
-				BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY, riddenByEntity.posZ);
-				AltitudeDisplay.setAltitudeString(format(getCurrentAltitude(bp, altitudeMSL)));
+				BlockPos entityPos = new BlockPos(riddenByEntity.posX, riddenByEntity.posY, riddenByEntity.posZ);
+				AltitudeDisplay.setAltitudeString(format(getCurrentAltitude(entityPos, altitudeMSL)));
 			}
 		}
 
@@ -306,9 +306,9 @@ public class EntityParachute extends Entity {
 		double delta_X = prevPosX - posX;
 		double delta_Z = prevPosZ - posZ;
 
-		// update yaw
+		// update direction (yaw)
 		if (delta_X * delta_X + delta_Z * delta_Z > 0.001D) {
-			yaw = ((Math.atan2(delta_Z, delta_X) * r2d));
+			yaw = Math.atan2(delta_Z, delta_X) * r2d;
 		}
 
 		// update and clamp yaw between -180 and 180
@@ -519,40 +519,49 @@ public class EntityParachute extends Entity {
 
 	// only allow altitude calculations in the surface world
 	// return a weirdly random number if in nether or end.
-	public double getCurrentAltitude(BlockPos bp, boolean MSL)
+	public double getCurrentAltitude(BlockPos entityPos, boolean MSL)
 	{
 		if (worldObj.provider.isSurfaceWorld()) {
 			if (MSL) {
-				return getAltitudeAboveMSL(bp); // altitude above the water level (MSL)
+				return getAltitudeAboveMSL(entityPos); // altitude above the water level (MSL)
 			} else {
-				return getAltitudeAboveGround(bp); // altitude above the ground
+				return getAltitudeAboveGround(entityPos); // altitude above the ground
 			}
 		}
 		return 1000.0 * rand.nextGaussian();
 	}
-
-	// calculate the altitude in meters (blocks) above the ground.
-	// this method produces negative number below the sea level, e.g.,
-	// underground.
-	public double getAltitudeAboveGround(BlockPos bp)
+	
+	// calculate altitude in meters above ground. starting at the entity
+	// count down until a non-air block is encountered.
+	public double getAltitudeAboveGround(BlockPos entityPos)
 	{
-		// count the number of blocks above sea level (63) by
-		// starting at block level 63 and count up until you hit an air block
-		BlockPos bp1 = new BlockPos(bp.getX(), MSL, bp.getZ());
+		BlockPos ground = new BlockPos(entityPos.getX(), entityPos.getY(), entityPos.getZ());
+		while (worldObj.isAirBlock(ground.down())) {
+			ground = ground.down();
+		}
+		// calculate the entity's current altitude above the ground
+		return entityPos.getY() - ground.getY();
+	}
+
+	// calculate altitude in meters above the ground. starting at block
+	// level 64 count up until an air block is encountered.
+	// this method produces negative numbers below the sea level (64)
+	public double getAltitudeAboveGroundMSL(BlockPos entityPos)
+	{
+		BlockPos bp1 = new BlockPos(entityPos.getX(), MSL, entityPos.getZ());
 		while (!worldObj.isAirBlock(bp1.up())) {
 			bp1 = bp1.up();
 		}
 		// calculate the entity's current altitude above the ground
-		return bp.getY() - bp1.getY();
+		return entityPos.getY() - bp1.getY();
 	}
 
-	// calculate the altitude above Mean Sea Level (63)
-	// this method produces negative number below the sea level, e.g.,
-	// underground.
-	public double getAltitudeAboveMSL(BlockPos bp)
+	// calculate the altitude above Mean Sea Level (64)
+	// this method produces negative number below the sea level
+	public double getAltitudeAboveMSL(BlockPos entityPos)
 	{
 		// calculate the entity's current altitude above MSL
-		return bp.getY() - MSL;
+		return entityPos.getY() - MSL;
 	}
 
 	@Override

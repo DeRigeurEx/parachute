@@ -25,8 +25,8 @@ import net.minecraft.entity.Entity;
 public class ModelParachute extends ModelBase {
 
 	static final int w = 16;
-	static final int d = 16;
 	static final int h = 1;
+	static final int d = 16;
 	
 	public ParachuteModelRenderer[] sections = new ParachuteModelRenderer[3];
 

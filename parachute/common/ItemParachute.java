@@ -53,8 +53,9 @@ public class ItemParachute extends Item {
 			double offset = ParachuteCommonProxy.getOffsetY();
 
 			EntityParachute chute = new EntityParachute(world, entityplayer.posX, entityplayer.posY + offset, entityplayer.posZ);
-			chute.playSound("step.cloth", volume, pitch());
 			chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
+			chute.playSound("step.cloth", volume, pitch());
+			
 			if (world.isRemote) {
 				RenderParachute.setParachuteColor(ConfigHandler.getChuteColor());
 			} else {
