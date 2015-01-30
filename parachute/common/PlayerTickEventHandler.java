@@ -42,15 +42,14 @@ public class PlayerTickEventHandler {
 	private void togglePlayerParachutePack(EntityPlayer player)
 	{
 		if (player != null) {
-			ItemStack armor = player.getCurrentArmor(ParachuteCommonProxy.armorSlot);//.inventory.armorInventory[ParachuteCommonProxy.armorSlot];
-			ItemStack heldItem = player.getCurrentEquippedItem();//.inventory.mainInventory[player.inventory.currentItem];
+			ItemStack armor = player.getCurrentArmor(ParachuteCommonProxy.armorSlot);
+			ItemStack heldItem = player.getCurrentEquippedItem();
 			boolean deployed = ParachuteCommonProxy.onParachute(player);
 			if (armor != null && heldItem == null) { // parachute item has been removed from slot in the hot bar
 				if (!deployed && armor.getItem() instanceof ItemParachutePack) {
 					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot] = (ItemStack) null;
 				}
-			}
-			if (armor != null && heldItem != null) { // player has selected another slot in the hot bar
+			} else if (armor != null && heldItem != null) { // player has selected another slot in the hot bar
 				if (!deployed && armor.getItem() instanceof ItemParachutePack && !(heldItem.getItem() instanceof ItemParachute)) {
 					player.inventory.armorInventory[ParachuteCommonProxy.armorSlot] = (ItemStack) null;
 				}
