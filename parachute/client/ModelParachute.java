@@ -24,33 +24,33 @@ import net.minecraft.entity.Entity;
 
 public class ModelParachute extends ModelBase {
 
-	static final int w = 16;
-	static final int h = 1;
-	static final int d = 16;
+	final float width = 16.0f;
+	final float height = 0.35f;
+	final float depth = 16.0f;
+	final int nSections = 3;
 	
-	public ParachuteModelRenderer[] sections = new ParachuteModelRenderer[3];
+	public ParachuteModelRenderer[] sections = new ParachuteModelRenderer[nSections];
 
 	public ModelParachute()
 	{
-		// small canopy sections
 		sections[0] = new ParachuteModelRenderer(0, 0);
-		sections[0].addBox(-8F, 0F, -8F, w, h, d);
+		sections[0].addBox(-8F, 0F, -8F, width, height, depth);
 
 		sections[1] = new ParachuteModelRenderer(0, 0);
-		sections[1].addBox(-8F, 0F, -16F, w, h, d);
+		sections[1].addBox(-8F, 0F, -16F, width, height, depth);
 		sections[1].setRotationPoint(0F, 0F, -8F);
 		sections[1].rotateAngleX = 6.021385919380437F;
 
 		sections[2] = new ParachuteModelRenderer(0, 0);
-		sections[2].addBox(-8F, 0F, 0F, w, h, d);
+		sections[2].addBox(-8F, 0F, 0F, width, height, depth);
 		sections[2].setRotationPoint(0F, 0F, 8F);
 		sections[2].rotateAngleX = 0.2617993877991494F;
 	}
 
 	public void renderCanopy(float center)
 	{
-		for (int k = 0; k < 3; k++) {
-			sections[k].render(center);
+		for (ParachuteModelRenderer pmr : sections) {
+			pmr.render(center);
 		}
 	}
 

@@ -453,18 +453,20 @@ public class EntityParachute extends Entity {
 	public void applyTurbulence(boolean roughWeather)
 	{
 		double rmin = 0.1;
-		double rmax = roughWeather ? 0.8 : 0.5;
-		double deltaX = rmin + (rmax - rmin) * rand.nextDouble();
-		double deltaY = rmin + 0.2 * rand.nextDouble();
-		double deltaZ = rmin + (rmax - rmin) * rand.nextDouble();
 		double deltaPos = rmin + 0.9 * rand.nextDouble();
 
 		if (deltaPos >= 0.20) {
+			double rmax = roughWeather ? 0.8 : 0.5;
+			double deltaX = rmin + (rmax - rmin) * rand.nextDouble();
+			double deltaY = rmin + 0.2 * rand.nextDouble();
+			double deltaZ = rmin + (rmax - rmin) * rand.nextDouble();
+			
 			deltaPos = MathHelper.sqrt_double(deltaPos);
+			double deltaInv = 1.0 / deltaPos;
+			
 			deltaX /= deltaPos;
 			deltaY /= deltaPos;
 			deltaZ /= deltaPos;
-			double deltaInv = 1.0 / deltaPos;
 
 			if (deltaInv > 1.0) {
 				deltaInv = 1.0;
@@ -523,9 +525,9 @@ public class EntityParachute extends Entity {
 	{
 		if (worldObj.provider.isSurfaceWorld()) {
 			if (MSL) {
-				return getAltitudeAboveMSL(entityPos); // altitude above the water level (MSL)
+				return getAltitudeAboveGroundMSL(entityPos); // altitude above ground (MSL)
 			} else {
-				return getAltitudeAboveGround(entityPos); // altitude above the ground
+				return getAltitudeAboveGround(entityPos); // altitude above ground
 			}
 		}
 		return 1000.0 * rand.nextGaussian();
@@ -535,12 +537,12 @@ public class EntityParachute extends Entity {
 	// count down until a non-air block is encountered.
 	public double getAltitudeAboveGround(BlockPos entityPos)
 	{
-		BlockPos ground = new BlockPos(entityPos.getX(), entityPos.getY(), entityPos.getZ());
-		while (worldObj.isAirBlock(ground.down())) {
-			ground = ground.down();
+		BlockPos blockPos = new BlockPos(entityPos.getX(), entityPos.getY(), entityPos.getZ());
+		while (worldObj.isAirBlock(blockPos.down())) {
+			blockPos = blockPos.down();
 		}
 		// calculate the entity's current altitude above the ground
-		return entityPos.getY() - ground.getY();
+		return entityPos.getY() - blockPos.getY();
 	}
 
 	// calculate altitude in meters above the ground. starting at block
@@ -558,11 +560,11 @@ public class EntityParachute extends Entity {
 
 	// calculate the altitude above Mean Sea Level (64)
 	// this method produces negative number below the sea level
-	public double getAltitudeAboveMSL(BlockPos entityPos)
-	{
-		// calculate the entity's current altitude above MSL
-		return entityPos.getY() - MSL;
-	}
+//	public double getAltitudeAboveMSL(BlockPos entityPos)
+//	{
+//		// calculate the entity's current altitude above MSL
+//		return entityPos.getY() - MSL;
+//	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt)

@@ -33,7 +33,7 @@ public class AltitudeDisplay {
 	private int screenY;
 	private final int colorWhite = 0xffffffff;
 	private final int colorYellow = 0xffffff00;
-	private final int colorRed = 0xffcc0000; // alpha.red.green.blue
+	private final int colorRed = 0xffcc0000; // format: alpha.red.green.blue
 	private final int colorGreen = 0xff00cc00;
 
 	private final String altitudeStr = "Altitude: ";
@@ -49,9 +49,9 @@ public class AltitudeDisplay {
 		screenY = sr.getScaledHeight();
 	}
 
-	// the altitude display is placed in the food bar space
+	// the altitude display is placed in the food bar space because
 	// the food bar is removed when riding boats, parachutes, etc.
-	// when in creativemode lower the display a bit
+	// when in creativemode we lower the display a bit
 	public void updateWindowScale()
 	{
 		ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);

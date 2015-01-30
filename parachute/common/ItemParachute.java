@@ -21,6 +21,8 @@ package com.parachute.common;
 
 import com.parachute.client.RenderParachute;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -64,8 +66,9 @@ public class ItemParachute extends Item {
 			entityplayer.mountEntity(chute);
 			ParachuteCommonProxy.setDeployed(true);
 
-			if (!entityplayer.capabilities.isCreativeMode) {
-				if (itemstack != null) {
+			if (itemstack != null) {
+				boolean enchanted = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemstack) > 0;
+				if (!entityplayer.capabilities.isCreativeMode || !enchanted) {
 					itemstack.damageItem(ConfigHandler.getHopAndPopDamageAmount(), entityplayer);
 				}
 			}

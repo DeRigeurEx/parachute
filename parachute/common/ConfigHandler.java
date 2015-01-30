@@ -54,7 +54,7 @@ public class ConfigHandler {
 	private static final String weatherComment = "set to false if you don't want the drift rate to be affected by bad weather"; // true
 	private static final String turbulenceComment = "set to true to feel the turbulent world of Minecraft"; // false
 	private static final String trailsComment = "set to true to show contrails from parachute"; // false
-	private static final String altitudeMSLComment = "false to show altitude above ground, true shows altitude above the water level"; // false
+	private static final String altitudeMSLComment = "false to show altitude above ground, true shows altitude above ground (MSL)"; // false
 	private static final String colorComment = "Parachute Colors Allowed:\n"
 			+ "black, blue, brown, cyan, gray, green, light_blue, lime,\n"
 			+ "magenta, orange, pink, purple, red, silver, white, yellow,\n"

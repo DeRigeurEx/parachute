@@ -73,7 +73,7 @@ public class ParachuteCommonProxy {
 
 	public void postInit()
 	{
-		// nothing to see here...
+		// move along, nothing to see here...
 	}
 
 	// logging convenience functions
