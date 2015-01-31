@@ -55,7 +55,7 @@ public class ItemParachute extends ItemArmor {
 			}
 			EntityParachute chute = new EntityParachute(world, entityplayer.posX, entityplayer.posY - offset, entityplayer.posZ);
 			chute.playSound("step.cloth", volume, pitch());
-			chute.rotationYaw = (float) (((MathHelper.floor_double((double) (entityplayer.rotationYaw / 90.0F) + 0.5D) & 3) - 1) * 90);
+			chute.rotationYaw = entityplayer.rotationYaw - 90.0f; // set parachute facing player direction
 			if (world.isRemote) {
 				RenderParachute.setParachuteColor(ConfigHandler.getChuteColor());
 			} else {
