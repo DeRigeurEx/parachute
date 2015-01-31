@@ -478,12 +478,13 @@ public class EntityParachute extends Entity {
 		double cosYaw = 2.0 * Math.cos(rotationYaw * d2r);
 		double sinYaw = 2.0 * Math.sin(rotationYaw * d2r);
 
-		for (int j = 0; (double) j < 1.0 + velocity * 8.0; ++j) {
-			double s2 = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
-			double particleX = prevPosX - cosYaw * -0.25 + sinYaw * s2;
-			double particleZ = prevPosZ - sinYaw * -0.25 - cosYaw * s2;
+		for (int k = 0; (double) k < 1.0 + velocity; k++) {
+			double sign = (double) (rand.nextInt(2) * 2 - 1) * 0.7;
+			double x = prevPosX - cosYaw * -0.35 + sinYaw * sign;
+			double y = posY - 0.25;
+			double z = prevPosZ - sinYaw * -0.35 - cosYaw * sign;
 
-			worldObj.spawnParticle(EnumParticleTypes.CLOUD, particleX, posY - 0.25, particleZ, motionX, motionY, motionZ, new int[0]);
+			worldObj.spawnParticle(EnumParticleTypes.CLOUD, x, y, z, motionX, motionY, motionZ, new int[0]);
 		}
 	}
 
@@ -504,18 +505,30 @@ public class EntityParachute extends Entity {
 	{
 		if (worldObj.provider.isSurfaceWorld()) {
 			if (MSL) {
-				return getAltitudeAboveMSL(bp); // altitude above the water level (MSL)
+				return getAltitudeAboveGroundMSL(bp); // altitude above ground (MSL)
 			} else {
 				return getAltitudeAboveGround(bp); // altitude above the ground
 			}
 		}
 		return 1000.0 * rand.nextGaussian();
 	}
+	
+	// calculate altitude in meters above ground. starting at the entity
+	// count down until a non-air block is encountered.
+	public double getAltitudeAboveGround(BlockPos entityPos)
+	{
+		BlockPos blockPos = new BlockPos(entityPos.getX(), entityPos.getY(), entityPos.getZ());
+		while (worldObj.isAirBlock(blockPos.down())) {
+			blockPos = blockPos.down();
+		}
+		// calculate the entity's current altitude above the ground
+		return entityPos.getY() - blockPos.getY();
+	}
 
 	// calculate the altitude in meters (blocks) above the ground.
 	// this method produces negative number below the sea level, e.g.,
 	// underground.
-	public double getAltitudeAboveGround(BlockPos bp)
+	public double getAltitudeAboveGroundMSL(BlockPos bp)
 	{
 		// count the number of blocks above sea level (63) by
 		// starting at block level 63 and count up until you hit an air block

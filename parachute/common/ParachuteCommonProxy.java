@@ -26,7 +26,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.FMLLog;
@@ -91,7 +90,6 @@ public class ParachuteCommonProxy {
 			" * ", " % ", " # ", '*', Items.comparator, '%', Items.redstone, '#', Parachute.ripcordItem});
 
 		FMLCommonHandler.instance().bus().register(new AADTick());
-		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
 	}
 
 	public void postInit()
