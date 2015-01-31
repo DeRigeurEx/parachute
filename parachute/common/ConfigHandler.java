@@ -27,7 +27,7 @@ public class ConfigHandler {
 	public static Configuration config;
 	public static final String aboutCategory = "About";
 
-	private static boolean singleUse = false; // applies to the hop and pop chute only
+	private static boolean singleUse = false;
 	private static int heightLimit = 256;
 	private static String chuteColor = "random";
 	private static boolean thermals = true;
@@ -155,7 +155,7 @@ public class ConfigHandler {
 		return altitudeMSL;
 	}
 
-	public static int getHopAndPopDamageAmount()
+	public static int getParachuteDamageAmount()
 	{
 		if (singleUse) {
 			return Parachute.parachuteItem.getMaxDamage() + 1;

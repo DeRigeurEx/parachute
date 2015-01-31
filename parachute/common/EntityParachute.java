@@ -141,7 +141,7 @@ public class EntityParachute extends Entity {
 
 	//
 	// FIXME: Unfortunately this stopped working around 1.6.x, movement packets
-	// are not sent to the server if the 'shouldRiderSit' methods returns false.
+	// are not sent to the server if the 'shouldRiderSit' method returns false.
 	// We need for the 'shouldRiderSit' method to return true in order to receive
 	// packets, we need for it to return false for player to not be in the sitting
 	// position on the parachute.
@@ -209,7 +209,6 @@ public class EntityParachute extends Entity {
 		return String.format("%s", new Double(df.format(d)));
 	}
 
-	// update the parachute approx 20 times per second
 	@Override
 	public void onUpdate()
 	{

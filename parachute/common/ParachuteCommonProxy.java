@@ -50,11 +50,13 @@ public class ParachuteCommonProxy {
 	{
 		EntityRegistry.registerModEntity(EntityParachute.class, parachuteName, entityID, Parachute.instance, 80, 20, true);
 
-		Parachute.parachuteItem = (ItemParachute) (new ItemParachute(ToolMaterial.IRON)).setUnlocalizedName(parachuteName);
+		Parachute.parachuteItem = (ItemParachute) (new ItemParachute(ToolMaterial.IRON));
+		Parachute.parachuteItem.setUnlocalizedName(parachuteName);
 		GameRegistry.registerItem(Parachute.parachuteItem, parachuteName);
 
 		final int renderIndex = 0;
-		Parachute.packItem = (ItemParachutePack) (new ItemParachutePack(ArmorMaterial.LEATHER, renderIndex, armorType)).setUnlocalizedName(packName);
+		Parachute.packItem = (ItemParachutePack) (new ItemParachutePack(ArmorMaterial.LEATHER, renderIndex, armorType));
+		Parachute.packItem.setUnlocalizedName(packName);
 		GameRegistry.registerItem(Parachute.packItem, packName);
 
 		PacketHandler.init();
