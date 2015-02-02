@@ -53,17 +53,16 @@ public class EntityParachute extends Entity {
 	private boolean allowTurbulence;
 	private boolean showContrails;
 	private boolean altitudeMSL;
+	private boolean autoDismount;
 	final private DecimalFormat df;
 
-	final static int Damping = 10; // value allows the altitude display to update about every half second
+	final static int Damping = 5; // value of 10 allows the altitude display to update about every half second
 	final static double MSL = 64.0; // sea level - Mean Sea Level
 	final static double drift = 0.004; // value applied to motionY to descend or drift downward
 	final static double ascend = drift * -10.0; // -0.04 - value applied to motionY to ascend
 
 	final static int modeDrift = 0;  // key up
 	final static int modeAscend = 1; // key down
-
-	final static double forwardSpeed = 0.75;
 
 	private final double d2r = 0.0174532925199433; // degrees to radians
 	private final double r2d = 57.2957795130823;   // radians to degrees
@@ -83,6 +82,7 @@ public class EntityParachute extends Entity {
 		maxAltitude = ConfigHandler.getMaxAltitude();
 		lavaThermals = ConfigHandler.getAllowLavaThermals();
 		altitudeMSL = ConfigHandler.getAltitudeMSL();
+		autoDismount = ConfigHandler.isAutoDismount();
 
 		curLavaDistance = lavaDistance;
 		worldObj = world;
@@ -233,37 +233,30 @@ public class EntityParachute extends Entity {
 		prevPosZ = posZ;
 
 		// Altimeter, the altitude display
-		if (worldObj.isRemote && (tickCount % Damping == 0)) { // execute only on the client
-			if (riddenByEntity != null) {
-				// use the rider's position for the altitude reference
-				BlockPos entityPos = new BlockPos(riddenByEntity.posX, riddenByEntity.posY, riddenByEntity.posZ);
-				AltitudeDisplay.setAltitudeString(format(getCurrentAltitude(entityPos, altitudeMSL)));
-			}
+		if (riddenByEntity != null && worldObj.isRemote && (tickCount % Damping == 0)) { // execute only on the client
+			// use the rider's position for the altitude reference
+			BlockPos entityPos = new BlockPos(riddenByEntity.posX, riddenByEntity.posY, riddenByEntity.posZ);
+			AltitudeDisplay.setAltitudeString(format(getCurrentAltitude(entityPos, altitudeMSL)));
 		}
 
 		// drop the chute when close to ground
-		if (ConfigHandler.isAutoDismount()) {
-			if (riddenByEntity != null) {
-				BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
-				if (checkForGroundProximity(bp)) {
-					killParachute();
-					return;
-				}
+		if (autoDismount && riddenByEntity != null) {
+			BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
+			if (checkForGroundProximity(bp)) {
+				killParachute();
+				return;
 			}
 		}
 
 		// update forward velocity for 'W' key press
-		// moveForward happens when the 'W' key is pressed. Value is either 0.0 | ~0.98
+		// moveForward is > 0.0 when the 'W' key is pressed. Value is either 0.0 | ~0.98
 		// when allowThermals is false forwardMovement is set to the constant 'forwardSpeed'
 		// and applied to motionX and motionZ
 		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
 			EntityLivingBase rider = (EntityLivingBase) riddenByEntity;
-			double forwardMovement = (allowThermals || lavaThermals) ? rider.moveForward : forwardSpeed;
-			if (forwardMovement > 0.0) {
-				double yaw = rider.rotationYaw + -rider.moveStrafing * 90.0;
-				motionX += (-Math.sin((yaw * d2r)) * motionFactor * 0.05) * forwardMovement;
-				motionZ += (Math.cos((yaw * d2r)) * motionFactor * 0.05) * forwardMovement;
-			}
+			double yaw = rider.rotationYaw + -rider.moveStrafing * 90.0;
+			motionX += -Math.sin((yaw * d2r)) * motionFactor * 0.05 * rider.moveForward;//forwardMovement;
+			motionZ += Math.cos((yaw * d2r)) * motionFactor * 0.05 * rider.moveForward;//forwardMovement;
 		}
 
 		// forward velocity after forwardMovement is applied
@@ -486,7 +479,7 @@ public class EntityParachute extends Entity {
 			}
 		}
 	}
-
+	
 	// generate condensation trails at the trailing edge
 	// of the parachute. Yes I know that most parachutes
 	// aren't fast or high enough to generate contrails,
