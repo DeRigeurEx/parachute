@@ -32,7 +32,7 @@ public class KeyPressTick {
 	public void onTick(TickEvent.PlayerTickEvent event)
 	{
 		if (event.phase.equals(TickEvent.Phase.START)) {
-			if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
+			if (Keyboard.getEventKey() == ascendKey) {
 				EntityPlayer player = event.player;
 				if (player != null) {
 					boolean keyPressed = Keyboard.isKeyDown(ascendKey);
