@@ -26,7 +26,7 @@ import org.lwjgl.input.Keyboard;
 
 // intercept the space bar to make the parachute go up
 public class KeyPressTick {
-	private final int ascendKey = ParachuteCommonProxy.getAscendKey();
+	private final int ascendKey = Keyboard.KEY_SPACE;//ParachuteCommonProxy.getAscendKey();
 
 	@SubscribeEvent
 	public void onTick(TickEvent.PlayerTickEvent event)
