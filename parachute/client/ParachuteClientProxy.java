@@ -21,8 +21,8 @@ package com.parachute.client;
 
 import com.parachute.common.ParachuteCommonProxy;
 import com.parachute.common.EntityParachute;
-import com.parachute.common.KeyPressTick;
 import com.parachute.common.Parachute;
+import com.parachute.client.KeyPressTick;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.entity.RenderManager;
