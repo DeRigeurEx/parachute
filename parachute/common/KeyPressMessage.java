@@ -24,22 +24,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.input.Keyboard;
 
 public class KeyPressMessage implements IMessage {
 
 	private boolean keyPressed;
-	private int keyCode;
-	private static final int ascendKey = Keyboard.KEY_SPACE;//ParachuteCommonProxy.getAscendKey();
 
 	public KeyPressMessage()
 	{
 
 	}
 
-	public KeyPressMessage(int keyCode, boolean keyPressed)
+	public KeyPressMessage(boolean keyPressed)
 	{
-		this.keyCode = keyCode;
 		this.keyPressed = keyPressed;
 	}
 
@@ -48,7 +44,6 @@ public class KeyPressMessage implements IMessage {
 	@Override
 	public void fromBytes(ByteBuf bb)
 	{
-		keyCode = bb.readInt();
 		keyPressed = bb.readBoolean();
 	}
 
@@ -56,7 +51,6 @@ public class KeyPressMessage implements IMessage {
 	@Override
 	public void toBytes(ByteBuf bb)
 	{
-		bb.writeInt(keyCode);
 		bb.writeBoolean(keyPressed);
 	}
 
@@ -67,10 +61,8 @@ public class KeyPressMessage implements IMessage {
 		{
 			EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
 			if (entityPlayer != null) {
-				if (msg.keyCode == ascendKey) {
-					if (entityPlayer.ridingEntity instanceof EntityParachute) {
-						EntityParachute.setAscendMode(msg.keyPressed);
-					}
+				if (entityPlayer.ridingEntity instanceof EntityParachute) {
+					EntityParachute.setAscendMode(msg.keyPressed);
 				}
 			}
 			return null;

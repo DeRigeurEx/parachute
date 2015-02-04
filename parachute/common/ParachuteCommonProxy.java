@@ -19,7 +19,6 @@
 //
 package com.parachute.common;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -42,7 +41,6 @@ public class ParachuteCommonProxy {
 	public static final String packName = "pack";
 	private static boolean deployed = false;
 	private static final double offsetY = 2.5;
-//	public static int ascendKey = 0;
 
 	public void preInit()
 	{
@@ -56,7 +54,6 @@ public class ParachuteCommonProxy {
 		Parachute.packItem = (ItemParachutePack) (new ItemParachutePack(ArmorMaterial.LEATHER, renderIndex, armorType));
 		Parachute.packItem.setUnlocalizedName(packName);
 		GameRegistry.registerItem(Parachute.packItem, packName);
-//		ascendKey = Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode();
 
 		PacketHandler.init();
 	}
@@ -117,10 +114,5 @@ public class ParachuteCommonProxy {
 	{
 		return offsetY;
 	}
-	
-//	public static int getAscendKey()
-//	{
-//		return ascendKey;
-//	}
 	
 }
