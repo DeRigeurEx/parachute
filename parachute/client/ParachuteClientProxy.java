@@ -32,6 +32,10 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class ParachuteClientProxy extends ParachuteCommonProxy {
+	
+	// grab the 'jump' key from the game settings. defaults to the space bar. This allows the
+	// player to change the jump key and the parachute will use the new jump key
+	//public static final int ascendKey = Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode();
 
 	@Override
 	public void preInit()
@@ -46,14 +50,14 @@ public class ParachuteClientProxy extends ParachuteCommonProxy {
 		super.Init();
 		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
 		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, new RenderParachute(rm));
-
+		
 		FMLCommonHandler.instance().bus().register(new KeyPressTick());
 		MinecraftForge.EVENT_BUS.register(new AltitudeDisplay());
 
 		ItemModelMesher mm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 		mm.register(Parachute.parachuteItem, 0, new ModelResourceLocation(Parachute.modid + ":" + parachuteName, "inventory"));
 		mm.register(Parachute.packItem, 0, new ModelResourceLocation(Parachute.modid + ":" + packName, "inventory"));
-
+		
 		info(Parachute.modid + " ConbinedClient Init is complete.");
 	}
 
@@ -62,5 +66,10 @@ public class ParachuteClientProxy extends ParachuteCommonProxy {
 	{
 		info(Parachute.modid + " ConbinedClient postInit is complete.");
 	}
+	
+//	public static int getAscendKey()
+//	{
+//		return ascendKey;
+//	}
 
 }

@@ -42,9 +42,7 @@ public class ParachuteCommonProxy {
 	public static final String packName = "pack";
 	private static boolean deployed = false;
 	private static final double offsetY = 2.5;
-	// grab the 'jump' key from the game settings. defaults to the space bar. This allows the
-	// player to change the jump key and the parachute will use the new jump key
-	private static final int ascendKey = Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode();
+//	public static int ascendKey = 0;
 
 	public void preInit()
 	{
@@ -58,6 +56,7 @@ public class ParachuteCommonProxy {
 		Parachute.packItem = (ItemParachutePack) (new ItemParachutePack(ArmorMaterial.LEATHER, renderIndex, armorType));
 		Parachute.packItem.setUnlocalizedName(packName);
 		GameRegistry.registerItem(Parachute.packItem, packName);
+//		ascendKey = Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode();
 
 		PacketHandler.init();
 	}
@@ -119,8 +118,9 @@ public class ParachuteCommonProxy {
 		return offsetY;
 	}
 	
-	public static int getAscendKey()
-	{
-		return ascendKey;
-	}
+//	public static int getAscendKey()
+//	{
+//		return ascendKey;
+//	}
+	
 }

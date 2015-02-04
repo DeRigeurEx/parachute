@@ -24,12 +24,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import org.lwjgl.input.Keyboard;
 
 public class KeyPressMessage implements IMessage {
 
 	private boolean keyPressed;
 	private int keyCode;
-	private static final int ascendKey = ParachuteCommonProxy.getAscendKey();
+	private static final int ascendKey = Keyboard.KEY_SPACE;//ParachuteCommonProxy.getAscendKey();
 
 	public KeyPressMessage()
 	{
