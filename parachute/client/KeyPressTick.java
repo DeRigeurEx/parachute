@@ -23,7 +23,6 @@ import com.parachute.common.KeyPressMessage;
 import com.parachute.common.PacketHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 
 // intercept the ascend key to make the parachute go up
@@ -42,11 +41,7 @@ public class KeyPressTick {
 	{
 		if (event.phase.equals(TickEvent.Phase.START)) {
 			if (Keyboard.getEventKey() == ascendKey) { // only send if it's the ascend key
-				EntityPlayer player = event.player;
-				if (player != null) {
-					boolean keyPressed = Keyboard.isKeyDown(ascendKey);
-					PacketHandler.network.sendToServer(new KeyPressMessage(keyPressed));
-				}
+				PacketHandler.network.sendToServer(new KeyPressMessage(Keyboard.isKeyDown(ascendKey)));
 			}
 		}
 	}
