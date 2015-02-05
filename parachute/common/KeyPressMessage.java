@@ -60,10 +60,8 @@ public class KeyPressMessage implements IMessage {
 		public IMessage onMessage(KeyPressMessage msg, MessageContext ctx)
 		{
 			EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
-			if (entityPlayer != null) {
-				if (entityPlayer.ridingEntity instanceof EntityParachute) {
-					EntityParachute.setAscendMode(msg.keyPressed);
-				}
+			if (entityPlayer != null && entityPlayer.ridingEntity instanceof EntityParachute) {
+				EntityParachute.setAscendMode(msg.keyPressed);
 			}
 			return null;
 		}
