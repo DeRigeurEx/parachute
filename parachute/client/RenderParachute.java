@@ -58,7 +58,7 @@ public class RenderParachute extends Render {
 		}
 		modelParachute.render(entityparachute, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 
-		if (entityparachute.riddenByEntity != null) {
+		if (entityparachute.riddenByEntity != null && Minecraft.getMinecraft().gameSettings.thirdPersonView > 0) {
 			EntityPlayer rider = (EntityPlayer) entityparachute.riddenByEntity;
 			renderParachuteCords(rider, unused);
 		}
@@ -75,9 +75,10 @@ public class RenderParachute extends Render {
 
 	public void renderParachuteCords(EntityPlayer rider, float unused)
 	{
-		float zOffset = 3.0F;
-		float x = 0.0F;
+		final float x = 0.0F;
 		float y = (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) ? 1.25f : 1.5F;
+		final float zOffset = 3.0F;
+		
 		float zl = -zOffset;
 		float zr = zOffset;
 		float b = rider.getBrightness(unused);
