@@ -41,7 +41,7 @@ public class KeyPressTick {
 	{
 		if (event.phase.equals(TickEvent.Phase.START)) {
 			if (Keyboard.getEventKey() == ascendKey) { // only send if it's the ascend key
-				PacketHandler.network.sendToServer(new KeyPressMessage(Keyboard.isKeyDown(ascendKey)));
+				PacketHandler.network.sendToServer(new KeyPressMessage(Keyboard.getEventKeyState()));
 			}
 		}
 	}

@@ -392,12 +392,10 @@ public class EntityParachute extends Entity {
 		Vec3 v1 = new Vec3(posX, posY, posZ);
 		Vec3 v2 = new Vec3(bp.getX(), bp.getY(), bp.getZ());
 		MovingObjectPosition mop = worldObj.rayTraceBlocks(v1, v2, true);
-		if (mop != null) {
-			if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-				BlockPos blockpos = mop.getBlockPos();
-				if (isLavaAt(blockpos)) {
-					return true;
-				}
+		if (mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+			BlockPos blockpos = mop.getBlockPos();
+			if (isLavaAt(blockpos)) {
+				return true;
 			}
 		}
 		return false;
