@@ -138,7 +138,7 @@ public class EntityParachute extends Entity {
 	{
 		return getEntityBoundingBox();
 	}
-
+	
 	//
 	// FIXME: Unfortunately this stopped working around 1.6.x, movement packets
 	// are not sent to the server if the 'shouldRiderSit' method returns false.
@@ -425,7 +425,8 @@ public class EntityParachute extends Entity {
 	// to be exact. We check for air blocks, flowers, leaves, and grass at
 	// that position Y. The check for leaves means the parachute can get 
 	// hung up in the trees. Also means that the rider must manually
-	// dismount to land on trees.
+	// dismount to land on trees. Dismounting over water is handled by the
+	// shouldDismountInWater method.
 	public boolean checkForGroundProximity(BlockPos bp)
 	{
 		boolean result = false;
@@ -538,6 +539,8 @@ public class EntityParachute extends Entity {
 	// calculate altitude in meters above the ground. starting at block
 	// level 64 count up until an air block is encountered.
 	// this method produces negative numbers below the sea level (64)
+	// Also it won't get overhangs, the counting will stop at the first
+	// airblock encountered while counting up.
 	public double getAltitudeAboveGroundMSL(BlockPos entityPos)
 	{
 		BlockPos bp1 = new BlockPos(entityPos.getX(), MSL, entityPos.getZ());
