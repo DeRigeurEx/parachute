@@ -59,5 +59,5 @@ public class ModelParachute extends ModelBase {
 	{
 		renderCanopy(f5);
 	}
-
+	
 }

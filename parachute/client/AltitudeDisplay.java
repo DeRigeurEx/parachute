@@ -63,7 +63,7 @@ public class AltitudeDisplay {
 		}
 	}
 
-	@SubscribeEvent()
+	@SubscribeEvent
 	public void onRender(RenderGameOverlayEvent event)
 	{
 		if (event.isCancelable() || mc.gameSettings.showDebugInfo || mc.thePlayer.onGround) {

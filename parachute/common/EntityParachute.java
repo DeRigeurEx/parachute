@@ -14,7 +14,7 @@
 //  =====================================================================
 //
 //
-// Copyright 2011-2015 Michael Sheppard (crackedEgg)
+// Copyright © 2011-2015 Michael Sheppard (crackedEgg)
 //
 package com.parachute.common;
 
@@ -57,7 +57,7 @@ public class EntityParachute extends Entity {
 	final private DecimalFormat df;
 
 	final static int Damping = 5; // value of 10 allows the altitude display to update about every half second
-	final static double MSL = 64.0; // sea level - Mean Sea Level
+	final static double MSL = 63.0; // sea level - Mean Sea Level
 	final static double drift = 0.004; // value applied to motionY to descend or drift downward
 	final static double ascend = drift * -10.0; // -0.04 - value applied to motionY to ascend
 
@@ -142,7 +142,7 @@ public class EntityParachute extends Entity {
 	//
 	// FIXME: Unfortunately this stopped working around 1.6.x, movement packets
 	// are not sent to the server if the 'shouldRiderSit' method returns false.
-	// We need for the 'shouldRiderSit' method to return true in order to receive
+	// We need for the 'shouldRiderSit' method to return true in order to send
 	// packets, we need for it to return false for player to not be in the sitting
 	// position on the parachute.
 	//
@@ -241,7 +241,8 @@ public class EntityParachute extends Entity {
 
 		// drop the chute when close to ground
 		if (autoDismount && riddenByEntity != null) {
-			BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
+			double riderFeetPos = riddenByEntity.getEntityBoundingBox().minY;
+			BlockPos bp = new BlockPos(riddenByEntity.posX, riderFeetPos - 1.0, riddenByEntity.posZ);
 			if (checkForGroundProximity(bp)) {
 				killParachute();
 				return;
