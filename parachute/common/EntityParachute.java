@@ -241,13 +241,12 @@ public class EntityParachute extends Entity {
 		}
 
 		// drop the chute when close to ground
-		if (ConfigHandler.isAutoDismount()) {
-			if (riddenByEntity != null) {
-				BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY - 1.0, riddenByEntity.posZ);
-				if (checkForGroundProximity(bp)) {
-					killParachute();
-					return;
-				}
+		if (ConfigHandler.isAutoDismount() && riddenByEntity != null) {
+			double riderFeetPos = riddenByEntity.getEntityBoundingBox().minY;
+			BlockPos bp = new BlockPos(riddenByEntity.posX, riderFeetPos - 1.0, riddenByEntity.posZ);
+			if (checkForGroundProximity(bp)) {
+				killParachute();
+				return;
 			}
 		}
 
@@ -512,7 +511,7 @@ public class EntityParachute extends Entity {
 		}
 		return 1000.0 * rand.nextGaussian();
 	}
-	
+
 	// calculate altitude in meters above ground. starting at the entity
 	// count down until a non-air block is encountered.
 	public double getAltitudeAboveGround(BlockPos entityPos)
