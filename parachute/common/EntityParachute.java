@@ -54,6 +54,7 @@ public class EntityParachute extends Entity {
 	private boolean allowTurbulence;
 	private boolean showContrails;
 	private boolean altitudeMSL;
+	private boolean autoDismount;
 	final private DecimalFormat df;
 
 	final static int Damping = 10; // ticks per second / 2
@@ -85,6 +86,7 @@ public class EntityParachute extends Entity {
 		maxAltitude = ConfigHandler.getMaxAltitude();
 		lavaThermals = ConfigHandler.getAllowLavaThermals();
 		altitudeMSL = ConfigHandler.getAltitudeMSL();
+		autoDismount = ConfigHandler.isAutoDismount();
 
 		curLavaDistance = lavaDistance;
 		worldObj = world;
@@ -241,7 +243,7 @@ public class EntityParachute extends Entity {
 		}
 
 		// drop the chute when close to ground
-		if (ConfigHandler.isAutoDismount() && riddenByEntity != null) {
+		if (autoDismount && riddenByEntity != null) {
 			double riderFeetPos = riddenByEntity.getEntityBoundingBox().minY;
 			BlockPos bp = new BlockPos(riddenByEntity.posX, riderFeetPos - 1.0, riddenByEntity.posZ);
 			if (checkForGroundProximity(bp)) {
