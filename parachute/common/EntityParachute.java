@@ -88,7 +88,7 @@ public class EntityParachute extends Entity {
 		worldObj = world;
 		preventEntitySpawning = true;
 		setSize(1.5f, 0.0625f);
-		motionFactor = 0.07D;
+		motionFactor = 0.07;
 		ascendMode = false;
 		maxThermalRise = 48;
 		tickCount = 0;
@@ -160,7 +160,7 @@ public class EntityParachute extends Entity {
 //	}
 	
 	@Override
-	public boolean shouldDismountInWater(Entity rider)
+	public boolean shouldDismountInWater(Entity pilot)
 	{
 		return true;
 	}
@@ -234,15 +234,15 @@ public class EntityParachute extends Entity {
 
 		// Altimeter, the altitude display
 		if (riddenByEntity != null && worldObj.isRemote && (tickCount % Damping == 0)) { // execute only on the client
-			// use the rider's position for the altitude reference
+			// use the pilot's position for the altitude reference
 			BlockPos entityPos = new BlockPos(riddenByEntity.posX, riddenByEntity.posY, riddenByEntity.posZ);
 			AltitudeDisplay.setAltitudeString(format(getCurrentAltitude(entityPos, altitudeMSL)));
 		}
 
 		// drop the chute when close to ground
 		if (autoDismount && riddenByEntity != null) {
-			double riderFeetPos = riddenByEntity.getEntityBoundingBox().minY;
-			BlockPos bp = new BlockPos(riddenByEntity.posX, riderFeetPos - 1.0, riddenByEntity.posZ);
+			double pilotFeetPos = riddenByEntity.getEntityBoundingBox().minY;
+			BlockPos bp = new BlockPos(riddenByEntity.posX, pilotFeetPos - 1.0, riddenByEntity.posZ);
 			if (checkForGroundProximity(bp)) {
 				killParachute();
 				return;
@@ -251,16 +251,18 @@ public class EntityParachute extends Entity {
 
 		// update forward velocity for 'W' key press
 		// moveForward is > 0.0 when the 'W' key is pressed. Value is either 0.0 | ~0.98
-		// when allowThermals is false forwardMovement is set to the constant 'forwardSpeed'
-		// and applied to motionX and motionZ
 		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
-			EntityLivingBase rider = (EntityLivingBase) riddenByEntity;
-			double yaw = rider.rotationYaw + -rider.moveStrafing * 90.0;
-			motionX += -Math.sin((yaw * d2r)) * motionFactor * 0.05 * rider.moveForward;//forwardMovement;
-			motionZ += Math.cos((yaw * d2r)) * motionFactor * 0.05 * rider.moveForward;//forwardMovement;
+			EntityLivingBase pilot = (EntityLivingBase) riddenByEntity;
+			double yaw = pilot.rotationYaw + -pilot.moveStrafing * 90.0;
+			// forward motion constant, governed by glide rate
+//			motionX += -Math.sin(yaw * d2r) * motionFactor * 0.049;
+//			motionZ += Math.cos(yaw * d2r) * motionFactor * 0.049;
+			// forward speed determined by 'W' keypress
+			motionX += -Math.sin(yaw * d2r) * motionFactor * 0.05 * pilot.moveForward;
+			motionZ += Math.cos(yaw * d2r) * motionFactor * 0.05 * pilot.moveForward;
 		}
 
-		// forward velocity after forwardMovement is applied
+		// forward velocity after forward movement is applied
 		double adjustedVelocity = Math.sqrt(motionX * motionX + motionZ * motionZ);
 		// clamp the adjustedVelocity and modify motionX/Z
 		if (adjustedVelocity > 0.35D) {
@@ -422,10 +424,10 @@ public class EntityParachute extends Entity {
 		return thermals;
 	}
 
-	// BlockPos bp is the rider's position. The rider's posY - 1.0
+	// BlockPos bp is the pilot's position. The pilot's posY - 1.0
 	// to be exact. We check for air blocks, flowers, leaves, and grass at
 	// that position Y. The check for leaves means the parachute can get 
-	// hung up in the trees. Also means that the rider must manually
+	// hung up in the trees. Also means that the pilot must manually
 	// dismount to land on trees. Dismounting over water is handled by the
 	// shouldDismountInWater method.
 	public boolean checkForGroundProximity(BlockPos bp)
