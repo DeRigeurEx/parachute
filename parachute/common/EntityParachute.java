@@ -247,6 +247,7 @@ public class EntityParachute extends Entity {
 			double riderFeetPos = riddenByEntity.getEntityBoundingBox().minY;
 			BlockPos bp = new BlockPos(riddenByEntity.posX, riderFeetPos - 1.0, riddenByEntity.posZ);
 			if (checkForGroundProximity(bp)) {
+				riddenByEntity.mountEntity(this);
 				killParachute();
 				return;
 			}
