@@ -26,6 +26,7 @@ import net.minecraft.block.BlockGrass;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -54,6 +55,7 @@ public class EntityParachute extends Entity {
 	private boolean showContrails;
 	private boolean altitudeMSL;
 	private boolean autoDismount;
+	private boolean fixedGlideRate;
 	final private DecimalFormat df;
 
 	final static int Damping = 5; // value of 10 allows the altitude display to update about every half second
@@ -83,6 +85,7 @@ public class EntityParachute extends Entity {
 		lavaThermals = ConfigHandler.getAllowLavaThermals();
 		altitudeMSL = ConfigHandler.getAltitudeMSL();
 		autoDismount = ConfigHandler.isAutoDismount();
+		fixedGlideRate = ConfigHandler.getFixedGlideRate();
 
 		curLavaDistance = lavaDistance;
 		worldObj = world;
@@ -244,6 +247,7 @@ public class EntityParachute extends Entity {
 			double pilotFeetPos = riddenByEntity.getEntityBoundingBox().minY;
 			BlockPos bp = new BlockPos(riddenByEntity.posX, pilotFeetPos - 1.0, riddenByEntity.posZ);
 			if (checkForGroundProximity(bp)) {
+				riddenByEntity.mountEntity(this);
 				killParachute();
 				return;
 			}
@@ -254,12 +258,13 @@ public class EntityParachute extends Entity {
 		if (riddenByEntity != null && riddenByEntity instanceof EntityLivingBase) {
 			EntityLivingBase pilot = (EntityLivingBase) riddenByEntity;
 			double yaw = pilot.rotationYaw + -pilot.moveStrafing * 90.0;
-			// forward motion constant, governed by glide rate
-//			motionX += -Math.sin(yaw * d2r) * motionFactor * 0.049;
-//			motionZ += Math.cos(yaw * d2r) * motionFactor * 0.049;
-			// forward speed determined by 'W' keypress
-			motionX += -Math.sin(yaw * d2r) * motionFactor * 0.05 * pilot.moveForward;
-			motionZ += Math.cos(yaw * d2r) * motionFactor * 0.05 * pilot.moveForward;
+			if (fixedGlideRate) { // forward motion constant, governed by glide rate
+				motionX += -Math.sin(yaw * d2r) * motionFactor * 0.049;
+				motionZ += Math.cos(yaw * d2r) * motionFactor * 0.049;
+			} else { // forward speed determined by 'W' keypress
+				motionX += -Math.sin(yaw * d2r) * motionFactor * 0.05 * pilot.moveForward;
+				motionZ += Math.cos(yaw * d2r) * motionFactor * 0.05 * pilot.moveForward;
+			}
 		}
 
 		// forward velocity after forward movement is applied
@@ -330,7 +335,7 @@ public class EntityParachute extends Entity {
 		// increment tick count for altitude display damping
 		tickCount++;
 	}
-
+	
 	public void killParachute()
 	{
 		riddenByEntity = null;

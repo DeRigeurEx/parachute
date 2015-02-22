@@ -25,6 +25,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -62,6 +63,7 @@ public class ParachuteCommonProxy {
 	{
 		FMLCommonHandler.instance().bus().register(Parachute.instance);
 		FMLCommonHandler.instance().bus().register(new PlayerTickEventHandler());
+		MinecraftForge.EVENT_BUS.register(new PlayerFallEvent());
 
 		// recipe to craft the parachute
 		GameRegistry.addRecipe(new ItemStack(Parachute.parachuteItem, 1), new Object[] {
