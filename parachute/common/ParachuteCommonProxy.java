@@ -45,6 +45,7 @@ public class ParachuteCommonProxy {
 	public static final String ripcordName = "ripcord";
 	public static final String aadName = "auto_activation_device";
 	private static boolean deployed = false;
+	private static final double offsetY = 2.5;
 
 	public void preInit()
 	{
@@ -134,6 +135,11 @@ public class ParachuteCommonProxy {
 	public static void setDeployed(boolean isDeployed)
 	{
 		deployed = isDeployed;
+	}
+	
+	public static double getOffsetY()
+	{
+		return offsetY;
 	}
 	
 }

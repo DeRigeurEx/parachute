@@ -50,7 +50,7 @@ public class ItemHopAndPop extends Item {
 	{
 		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
 		if (entityplayer != null && ParachuteCommonProxy.isFalling(entityplayer) && entityplayer.ridingEntity == null) {
-			float offset = 2.5F; // small parachute only
+			double offset = ParachuteCommonProxy.getOffsetY();
 
 			EntityParachute chute = new EntityParachute(world, entityplayer.posX, entityplayer.posY + offset, entityplayer.posZ);
 			chute.playSound("step.cloth", volume, pitch());

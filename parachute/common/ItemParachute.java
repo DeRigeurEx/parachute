@@ -46,13 +46,11 @@ public class ItemParachute extends ItemArmor {
 	{
 		// only deploy if entityplayer exists and if player is falling and not already on a parachute.
 		if (entityplayer != null && ParachuteCommonProxy.isFalling(entityplayer) && entityplayer.ridingEntity == null) {
-			float offset;
-			if (ConfigHandler.isSmallCanopy()) {
-				offset = 2.5F;  // small canopy
-			} else {
-				offset = 3.5F;  // large canopy
+			double offset = ParachuteCommonProxy.getOffsetY();
+			if (!ConfigHandler.isSmallCanopy()) {
+				offset += 1.0; // large canopy
 			}
-			EntityParachute chute = new EntityParachute(world, entityplayer.posX, entityplayer.posY - offset, entityplayer.posZ);
+			EntityParachute chute = new EntityParachute(world, entityplayer.posX, entityplayer.posY + offset, entityplayer.posZ);
 			chute.playSound("step.cloth", volume, pitch());
 			chute.rotationYaw = entityplayer.rotationYaw - 90.0f; // set parachute facing player direction
 			if (world.isRemote) {
