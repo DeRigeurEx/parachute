@@ -20,17 +20,15 @@
 package com.parachute.client;
 
 import com.parachute.common.ParachuteCommonProxy;
+import java.text.DecimalFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.text.DecimalFormat;
-
 public class AltitudeDisplay {
 
-	private static final DecimalFormat df = new DecimalFormat();;
-	public static String altitudeStr = "0.0";
+	private final DecimalFormat df = new DecimalFormat();
 	public static double altitude = 0.0;
 	private final Minecraft mc = Minecraft.getMinecraft();
 	private int screenX;
@@ -70,7 +68,7 @@ public class AltitudeDisplay {
 		}
 	}
 
-	@SubscribeEvent()
+	@SubscribeEvent
 	public void onRender(RenderGameOverlayEvent event)
 	{
 		if (event.isCancelable() || mc.gameSettings.showDebugInfo || mc.thePlayer.onGround) {
@@ -80,6 +78,7 @@ public class AltitudeDisplay {
 		if (mc.inGameHasFocus && event.type == RenderGameOverlayEvent.ElementType.ALL) {
 			if (ParachuteCommonProxy.onParachute(mc.thePlayer)) {
 				updateWindowScale();
+				String altitudeStr = format(altitude);
 				int stringWidth = mc.fontRendererObj.getStringWidth(altitudeStr);
 				int nextX = totalWidth - stringWidth;
 				mc.fontRendererObj.drawStringWithShadow(altitudeLabel, screenX, screenY, colorWhite);
@@ -88,26 +87,19 @@ public class AltitudeDisplay {
 		}
 	}
 	
-	public static String format(double d)
+	public String format(double d)
 	{
 		double dstr = new Double(df.format(d));
 		return String.format("%s", dstr);
 	}
-
-//	public static void setAltitudeString(String text)
-//	{
-//		altitudeStr = text;
-//	}
 	
 	public static void setAltitudeDouble(double alt)
 	{
 		altitude = alt;
-		altitudeStr = format(alt);
 	}
-	
+
 	private int colorString()
 	{
-//		double altitude = Double.parseDouble(altitudeStr);
 		return (altitude <= 8.0 && altitude >= 0.0) ? colorRed : altitude < 0.0 ? colorYellow : colorGreen;
 	}
 }
