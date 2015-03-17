@@ -20,6 +20,9 @@ package com.parachute.common;
 
 import com.parachute.client.AltitudeDisplay;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockGrass;
@@ -75,7 +78,15 @@ public class EntityParachute extends Entity {
 	public EntityParachute(World world)
 	{
 		super(world);
-		df = new DecimalFormat("##0.0"); // for the alitude display
+		
+		// FIXME: force to US locale, look for a locale friendly solution
+		// Not all countries use the decimal point to separate fractional
+		// parts, some use a comma.
+		df = new DecimalFormat();//(DecimalFormat)NumberFormat.getNumberInstance(Locale.US);
+//		DecimalFormatSymbols symbols = df.getDecimalFormatSymbols();
+//		char sep = symbols.getDecimalSeparator();
+		char sep = df.getDecimalFormatSymbols().getDecimalSeparator();
+		df.applyPattern("##0" + sep + "0"); // for the alitude display
 
 		smallCanopy = ConfigHandler.isSmallCanopy();
 		weatherAffectsDrift = ConfigHandler.getWeatherAffectsDrift();
