@@ -19,10 +19,7 @@
 package com.parachute.common;
 
 import com.parachute.client.AltitudeDisplay;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-import java.util.Locale;
+//import java.text.DecimalFormat;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockGrass;
@@ -58,7 +55,7 @@ public class EntityParachute extends Entity {
 	private boolean showContrails;
 	private boolean altitudeMSL;
 	private boolean autoDismount;
-	final private DecimalFormat df;
+//	final private DecimalFormat df;
 
 	final static int Damping = 10; // ticks per second / 2
 	final static double MSL = 63.0;
@@ -79,14 +76,9 @@ public class EntityParachute extends Entity {
 	{
 		super(world);
 		
-		// FIXME: force to US locale, look for a locale friendly solution
-		// Not all countries use the decimal point to separate fractional
-		// parts, some use a comma.
-		df = new DecimalFormat();//(DecimalFormat)NumberFormat.getNumberInstance(Locale.US);
-//		DecimalFormatSymbols symbols = df.getDecimalFormatSymbols();
-//		char sep = symbols.getDecimalSeparator();
-		char sep = df.getDecimalFormatSymbols().getDecimalSeparator();
-		df.applyPattern("##0" + sep + "0"); // for the alitude display
+//		df = new DecimalFormat();
+//		char sep = df.getDecimalFormatSymbols().getDecimalSeparator();
+//		df.applyPattern("##0" + sep + "0"); // for the alitude display
 
 		smallCanopy = ConfigHandler.isSmallCanopy();
 		weatherAffectsDrift = ConfigHandler.getWeatherAffectsDrift();
@@ -214,11 +206,11 @@ public class EntityParachute extends Entity {
 	}
 
 	// format the altitude number to a string
-	public String format(double d)
-	{
-		double dstr = new Double(df.format(d));
-		return String.format("%s", dstr);
-	}
+//	public String format(double d)
+//	{
+//		double dstr = new Double(df.format(d));
+//		return String.format("%s", dstr);
+//	}
 
 	@Override
 	public void onUpdate()
@@ -249,7 +241,8 @@ public class EntityParachute extends Entity {
 			if (riddenByEntity != null) {
 				// use the rider's position for the altitude reference
 				BlockPos bp = new BlockPos(riddenByEntity.posX, riddenByEntity.posY, riddenByEntity.posZ);
-				AltitudeDisplay.setAltitudeString(format(getCurrentAltitude(bp, altitudeMSL)));
+//				AltitudeDisplay.setAltitudeString(format(getCurrentAltitude(bp, altitudeMSL)));
+				AltitudeDisplay.setAltitudeDouble(getCurrentAltitude(bp, altitudeMSL));
 			}
 		}
 
