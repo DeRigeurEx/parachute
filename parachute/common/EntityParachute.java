@@ -74,12 +74,10 @@ public class EntityParachute extends Entity {
 	public EntityParachute(World world)
 	{
 		super(world);
-		// FIXME: force to US locale, look for a locale friendly solution
+		// This should get the locale appropriate number separator.
 		// Not all countries use the decimal point to separate fractional
 		// parts, some use a comma.
-		df = new DecimalFormat();//(DecimalFormat)NumberFormat.getNumberInstance(Locale.US);
-//		DecimalFormatSymbols symbols = df.getDecimalFormatSymbols();
-//		char sep = symbols.getDecimalSeparator();
+		df = new DecimalFormat();
 		char sep = df.getDecimalFormatSymbols().getDecimalSeparator();
 		df.applyPattern("##0" + sep + "0"); // for the alitude display
 
