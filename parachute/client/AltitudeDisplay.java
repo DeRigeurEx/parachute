@@ -28,7 +28,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AltitudeDisplay {
 
-	private static final DecimalFormat df = new DecimalFormat();
+	private final DecimalFormat df = new DecimalFormat();
 	public static double altitude = 0.0;
 	private final Minecraft mc = Minecraft.getMinecraft();
 	private int screenX;
@@ -87,7 +87,7 @@ public class AltitudeDisplay {
 		}
 	}
 	
-	public static String format(double d)
+	public String format(double d)
 	{
 		double dstr = new Double(df.format(d));
 		return String.format("%s", dstr);
