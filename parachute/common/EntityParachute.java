@@ -19,7 +19,7 @@
 package com.parachute.common;
 
 import com.parachute.client.AltitudeDisplay;
-import java.text.DecimalFormat;
+//import java.text.DecimalFormat;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockGrass;
@@ -56,7 +56,7 @@ public class EntityParachute extends Entity {
 	private boolean altitudeMSL;
 	private boolean autoDismount;
 	private boolean fixedGlideRate;
-	final private DecimalFormat df;
+//	final private DecimalFormat df;
 
 	final static int Damping = 5; // value of 10 allows the altitude display to update about every half second
 	final static double MSL = 63.0; // sea level - Mean Sea Level
@@ -77,9 +77,9 @@ public class EntityParachute extends Entity {
 		// This should get the locale appropriate number separator.
 		// Not all countries use the decimal point to separate fractional
 		// parts, some use a comma.
-		df = new DecimalFormat();
-		char sep = df.getDecimalFormatSymbols().getDecimalSeparator();
-		df.applyPattern("##0" + sep + "0"); // for the alitude display
+//		df = new DecimalFormat();
+//		char sep = df.getDecimalFormatSymbols().getDecimalSeparator();
+//		df.applyPattern("##0" + sep + "0"); // for the alitude display
 
 		weatherAffectsDrift = ConfigHandler.getWeatherAffectsDrift();
 		allowTurbulence = ConfigHandler.getAllowturbulence();
@@ -212,10 +212,10 @@ public class EntityParachute extends Entity {
 	}
 
 	// format the altitude number to a string
-	public String format(double d)
-	{
-		return String.format("%s", new Double(df.format(d)));
-	}
+//	public String format(double d)
+//	{
+//		return String.format("%s", new Double(df.format(d)));
+//	}
 
 	@Override
 	public void onUpdate()
@@ -244,7 +244,8 @@ public class EntityParachute extends Entity {
 		if (riddenByEntity != null && worldObj.isRemote && (tickCount % Damping == 0)) { // execute only on the client
 			// use the pilot's position for the altitude reference
 			BlockPos entityPos = new BlockPos(riddenByEntity.posX, riddenByEntity.posY, riddenByEntity.posZ);
-			AltitudeDisplay.setAltitudeString(format(getCurrentAltitude(entityPos, altitudeMSL)));
+//			AltitudeDisplay.setAltitudeString(format(getCurrentAltitude(entityPos, altitudeMSL)));
+			AltitudeDisplay.setAltitudeDouble(getCurrentAltitude(entityPos, altitudeMSL));
 		}
 
 		// drop the chute when close to ground

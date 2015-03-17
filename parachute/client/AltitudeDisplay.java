@@ -20,6 +20,7 @@
 package com.parachute.client;
 
 import com.parachute.common.ParachuteCommonProxy;
+import java.text.DecimalFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -27,7 +28,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AltitudeDisplay {
 
-	public static String altitude = "0.0";
+	private static final DecimalFormat df = new DecimalFormat();
+	public static double altitude = 0.0;
 	private final Minecraft mc = Minecraft.getMinecraft();
 	private int screenX;
 	private int screenY;
@@ -36,8 +38,8 @@ public class AltitudeDisplay {
 	private final int colorRed = 0xffcc0000; // format: alpha.red.green.blue
 	private final int colorGreen = 0xff00cc00;
 
-	private final String altitudeStr = "Altitude: ";
-	private final int titleWidth = mc.fontRendererObj.getStringWidth(altitudeStr);
+	private final String altitudeLabel = "Altitude: ";
+	private final int titleWidth = mc.fontRendererObj.getStringWidth(altitudeLabel);
 	private final int fieldWidth = mc.fontRendererObj.getStringWidth("000.0");
 	private final int totalWidth = titleWidth + fieldWidth;
 
@@ -47,9 +49,12 @@ public class AltitudeDisplay {
 		ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		screenX = sr.getScaledWidth();
 		screenY = sr.getScaledHeight();
+		
+		char sep = df.getDecimalFormatSymbols().getDecimalSeparator();
+		df.applyPattern("##0" + sep + "0"); // for the alitude display
 	}
 
-	// the altitude display is placed in the food bar space because
+	// the altitudeStr display is placed in the food bar space because
 	// the food bar is removed when riding boats, parachutes, etc.
 	// when in creativemode we lower the display a bit
 	public void updateWindowScale()
@@ -73,22 +78,28 @@ public class AltitudeDisplay {
 		if (mc.inGameHasFocus && event.type == RenderGameOverlayEvent.ElementType.ALL) {
 			if (ParachuteCommonProxy.onParachute(mc.thePlayer)) {
 				updateWindowScale();
-				int stringWidth = mc.fontRendererObj.getStringWidth(altitude);
+				String altitudeStr = format(altitude);
+				int stringWidth = mc.fontRendererObj.getStringWidth(altitudeStr);
 				int nextX = totalWidth - stringWidth;
-				mc.fontRendererObj.drawStringWithShadow(altitudeStr, screenX, screenY, colorWhite);
-				mc.fontRendererObj.drawStringWithShadow(altitude, screenX + nextX, screenY, colorString());
+				mc.fontRendererObj.drawStringWithShadow(altitudeLabel, screenX, screenY, colorWhite);
+				mc.fontRendererObj.drawStringWithShadow(altitudeStr, screenX + nextX, screenY, colorString());
 			}
 		}
 	}
-
-	public static void setAltitudeString(String text)
+	
+	public static String format(double d)
 	{
-		altitude = text;
+		double dstr = new Double(df.format(d));
+		return String.format("%s", dstr);
 	}
 	
+	public static void setAltitudeDouble(double alt)
+	{
+		altitude = alt;
+	}
+
 	private int colorString()
 	{
-		double alt = Double.parseDouble(altitude);
-		return (alt <= 8.0 && alt >= 0.0) ? colorRed : alt < 0.0 ? colorYellow : colorGreen;
+		return (altitude <= 8.0 && altitude >= 0.0) ? colorRed : altitude < 0.0 ? colorYellow : colorGreen;
 	}
 }
