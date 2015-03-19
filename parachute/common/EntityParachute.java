@@ -507,10 +507,10 @@ public class EntityParachute extends Entity {
 
 	// only allow altitude calculations in the surface world
 	// return a weirdly random nuber if in nether or end.
-	public double getCurrentAltitude(BlockPos bp, boolean MSL)
+	public double getCurrentAltitude(BlockPos bp, boolean referenceMSL)
 	{
 		if (worldObj.provider.isSurfaceWorld()) {
-			if (MSL) {
+			if (referenceMSL) {
 				return getAltitudeAboveGroundMSL(bp); // altitude above ground (MSL)
 			} else {
 				return getAltitudeAboveGround(bp); // altitude above the ground
